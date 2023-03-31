@@ -1,0 +1,3 @@
+MAILTO=example@example.com
+* * * * * ~/bin/laravel-artisan-schedule-run.sh > /dev/null
+21 */4 * * * ~/bin/laravel-backup-rsync.sh > /dev/null

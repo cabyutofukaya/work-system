@@ -1,0 +1,44 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "devDependencies": {
+        "axios": "^0.27",
+        "browser-sync": "^2.27.10",
+        "browser-sync-webpack-plugin": "^2.3.0",
+        "deepmerge": "^4.2.2",
+        "laravel-mix": "^6.0.49",
+        "lodash": "^4.17.21",
+        "postcss": "^8.4.16",
+        "resolve-url-loader": "^4.0.0",
+        "sass": "1.32.13",
+        "sass-loader": "^12.6.0",
+        "vue-loader": "^15.10.0",
+        "vue-template-compiler": "^2.7.8",
+        "vuetify-loader": "^1.9.2",
+        "vuetifyjs-mix-extension": "^0.0.20"
+    },
+    "dependencies": {
+        "@inertiajs/inertia": "^0.11.0",
+        "@inertiajs/inertia-vue": "^0.8.0",
+        "@inertiajs/progress": "^0.2.7",
+        "@sentry/tracing": "^6.19.7",
+        "@sentry/vue": "^6.19.7",
+        "chart.js": "^2.9.4",
+        "chartjs-plugin-datalabels": "^1.0.0",
+        "gmap-vue": "^1.5.0",
+        "vue": "^2.7.8",
+        "vue-chartjs": "^3.5.1",
+        "vue-currency-filter": "^5.2.0",
+        "vue-toasted": "^1.1.28",
+        "vuetify": "^2.6.9",
+        "vuetify-confirm": "^2.0.6"
+    }
+}
