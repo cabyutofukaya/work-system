@@ -32,6 +32,8 @@ class NoticeController extends Controller
             ::with(['user:id,name,deleted_at'])
             ->paginate();
 
+            dd($notices);
+
         return inertia('Notices', [
             'notices' => $notices,
         ]);
@@ -45,6 +47,7 @@ class NoticeController extends Controller
      */
     public function store(StoreNotice $request): \Illuminate\Http\RedirectResponse
     {
+
         (new Notice())
             ->fill($request->safe()->merge(['user_id' => Auth::id()])->all())
             ->save();
@@ -65,6 +68,7 @@ class NoticeController extends Controller
      */
     public function show(Notice $notice): Response|ResponseFactory
     {
+    
         $notice->load(['user:id,name,deleted_at']);
 
         return inertia('NoticesShow', [

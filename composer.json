@@ -36,9 +36,9 @@
         "tightenco/ziggy": "^1.4"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.8",
         "barryvdh/laravel-ide-helper": "^2.10",
         "doctrine/dbal": "^3.1",
-        "spatie/laravel-ignition": "^1.0",
         "laravel/dusk": "^6.21",
         "laravel/homestead": "^13.0",
         "laravel/sail": "^1.0.1",
@@ -47,6 +47,7 @@
         "phpunit/phpunit": "^9.5.10",
         "reliese/laravel": "^1.1",
         "shibuyakosuke/laravel-language-setting": "^1.2",
+        "spatie/laravel-ignition": "^1.0",
         "staudenmeir/dusk-updater": "^1.1"
     },
     "autoload": {

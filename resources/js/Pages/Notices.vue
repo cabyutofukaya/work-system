@@ -1,8 +1,6 @@
 <template>
   <Layout>
-    <v-card
-        flat tile
-    >
+    <v-card flat tile>
       <v-card-title>
         <v-icon dark left>mdi-information</v-icon>
         お知らせ
@@ -17,10 +15,7 @@
       <v-card-text>
         <v-row>
           <v-col class="text-right">
-            <Button
-                :small="$vuetify.breakpoint.xs"
-                @click.native="showDialog = true"
-            >
+            <Button :small="$vuetify.breakpoint.xs" @click.native="showDialog = true">
               <v-icon left>
                 mdi-plus
               </v-icon>
@@ -34,15 +29,15 @@
 
       <v-list>
         <div v-for="notice in notices['data']" :key="notice.id">
-          <Link as="v-list-item" three-line :href="$route('notices.show', {id: notice.id})" dusk="noticeShow">
-            <v-list-item-content>
-              <v-list-item-title class="mb-1">{{ notice["created_at"] }}</v-list-item-title>
+          <Link as="v-list-item" three-line :href="$route('notices.show', { id: notice.id })" dusk="noticeShow">
+          <v-list-item-content>
+            <v-list-item-title class="mb-1">{{ notice["created_at"] }}</v-list-item-title>
 
-              <v-list-item-subtitle>
-                <div class="mb-1">{{ notice["title"] }}</div>
-                <div>{{ notice["user"]["name"] }}</div>
-              </v-list-item-subtitle>
-            </v-list-item-content>
+            <v-list-item-subtitle>
+              <div class="mb-1">{{ notice["title"] }}</div>
+              <div>{{ notice["user"]["name"] }}</div>
+            </v-list-item-subtitle>
+          </v-list-item-content>
           </Link>
 
           <v-divider class="mx-4"></v-divider>
@@ -54,11 +49,7 @@
       </v-card-text>
 
       <v-card-text>
-        <v-pagination
-            v-model="page"
-            :length="length"
-            @input="changePage"
-        ></v-pagination>
+        <v-pagination v-model="page" :length="length" @input="changePage"></v-pagination>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -69,46 +60,24 @@
     </v-card>
 
     <!-- お知らせ追加ダイアログ -->
-    <v-dialog
-        v-model="showDialog"
-        :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-        @click:outside="form.clearErrors()"
-    >
+    <v-dialog v-model="showDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="form.clearErrors()">
       <v-card flat tile>
         <v-card-title>
           お知らせの追加
         </v-card-title>
 
         <v-card-text>
-          <v-text-field
-              dense filled
-              prepend-inner-icon="mdi-pencil"
-              label="タイトル"
-              name="title"
-              v-model="form.title"
-              maxlength="200"
-              :error="Boolean(form.errors.title)"
-              :error-messages="form.errors.title"
-          ></v-text-field>
+          <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="タイトル" name="title" v-model="form.title"
+            maxlength="200" :error="Boolean(form.errors.title)" :error-messages="form.errors.title"></v-text-field>
 
-          <v-textarea
-              dense filled
-              prepend-inner-icon="mdi-pencil"
-              label="本文"
-              name="description"
-              v-model="form.description"
-              :error="Boolean(form.errors.description)"
-              :error-messages="form.errors.description"
-          ></v-textarea>
+          <v-textarea dense filled prepend-inner-icon="mdi-pencil" label="本文" name="description"
+            v-model="form.description" :error="Boolean(form.errors.description)"
+            :error-messages="form.errors.description"></v-textarea>
         </v-card-text>
 
         <v-card-text class="text-center">
-          <Button
-              color="primary"
-              :small="$vuetify.breakpoint.xs"
-              @click.native="create"
-              :loading="loading['create']"
-          >
+          <Button color="primary" :small="$vuetify.breakpoint.xs" @click.native="create" :loading="loading['create']">
             <v-icon left>
               mdi-content-save-edit-outline
             </v-icon>
@@ -119,11 +88,7 @@
         <v-divider></v-divider>
 
         <v-card-text class="text-right">
-          <Button
-              class="mt-4"
-              :small="$vuetify.breakpoint.xs"
-              @click.native="form.clearErrors(); showDialog = false"
-          >
+          <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="form.clearErrors(); showDialog = false">
             <v-icon>
               mdi-close
             </v-icon>
@@ -137,10 +102,10 @@
 
 <script>
 import Layout from "./Layout";
-import {Link} from "@inertiajs/inertia-vue";
+import { Link } from "@inertiajs/inertia-vue";
 
 export default {
-  components: {Layout, Link},
+  components: { Layout, Link },
 
   props: ['notices'],
 
@@ -148,6 +113,8 @@ export default {
     return {
       page: Number(this.notices['current_page']),
       length: Number(this.notices['last_page']),
+   
+
 
       showDialog: false,
       form: this.$inertia.form({

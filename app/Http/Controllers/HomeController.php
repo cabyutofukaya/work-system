@@ -7,6 +7,7 @@ use App\Models\OfficeTodo;
 use App\Models\Report;
 use App\Models\SalesTodo;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
@@ -14,7 +15,7 @@ class HomeController extends Controller
 {
     public function index(): Response|ResponseFactory
     {
-        return inertia('Home', [
+        return Inertia::render('Home', [
             // 新着お知らせ
             'notices' => fn() => Notice::with(['user:id,name'])->take(3)->get(),
 

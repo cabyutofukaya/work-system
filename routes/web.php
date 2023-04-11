@@ -21,6 +21,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\ImageCacheController;
+use App\Http\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,6 +118,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 書類
     Route::inertia('/documents', "Documents")->name("documents");
+
+    // スケジュール
+    Route::resource('schedule', ScheduleController::class);
+
+    // メンバー
+    Route::get('schedule/getData/{scheduleId}', [ScheduleController::class, "getData"])->where('scheduleId', '[0-9]+');;
 });
 
 // ファイルダウンロード

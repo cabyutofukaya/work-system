@@ -26,6 +26,10 @@
         "vuetifyjs-mix-extension": "^0.0.20"
     },
     "dependencies": {
+        "@fullcalendar/core": "^6.1.5",
+        "@fullcalendar/daygrid": "^6.1.5",
+        "@fullcalendar/interaction": "^6.1.5",
+        "@fullcalendar/vue": "^6.1.5",
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-vue": "^0.8.0",
         "@inertiajs/progress": "^0.2.7",
@@ -34,10 +38,12 @@
         "chart.js": "^2.9.4",
         "chartjs-plugin-datalabels": "^1.0.0",
         "gmap-vue": "^1.5.0",
+        "tippy.js": "^6.3.7",
         "vue": "^2.7.8",
         "vue-chartjs": "^3.5.1",
         "vue-currency-filter": "^5.2.0",
         "vue-toasted": "^1.1.28",
+        "vue2-event-calendar": "^1.1.81",
         "vuetify": "^2.6.9",
         "vuetify-confirm": "^2.0.6"
     }

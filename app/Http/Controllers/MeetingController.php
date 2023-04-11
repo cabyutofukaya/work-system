@@ -69,6 +69,7 @@ class MeetingController extends Controller
         // 自分の議事録に絞る
         $meetings->where('user_id', Auth::id());
 
+
         return inertia('MeetingsMine', [
             'meetings' => $meetings->paginate()->withQueryString(),
 
@@ -108,6 +109,7 @@ class MeetingController extends Controller
                     $query->where('user_id', auth()->id());
                 }
             ]);
+
 
         // ワード検索
         if ($request->filled('word')) {
