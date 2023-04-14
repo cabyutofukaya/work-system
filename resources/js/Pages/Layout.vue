@@ -129,6 +129,7 @@ export default {
       {title: 'お知らせ', to: 'notices.index', icon: 'mdi-information', dusk: "NoticeIndex"},
       {title: '書類', to: 'documents', icon: 'mdi-file-download', dusk: "documents"},
       {title: 'メンバー', to: 'users.index', icon: 'mdi-account', dusk: "userIndex"},
+      {title: 'スケジュール', to: 'schedule.index', icon: 'mdi-account', dusk: "userIndex"},
     ],
     scrollTopBtn: false
   }),

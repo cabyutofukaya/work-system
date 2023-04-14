@@ -289,7 +289,7 @@
             <v-row v-if="this.loginUser.id == this.loginUser.id">
 
               <form @submit.prevent="deleteData">
-                <input type="hidden" name="id" v-model="this.delete_form.id"/>
+                <input type="hidden" name="id" v-model="this.delete_form.id" />
                 <v-col class="text-left">
                   <Button :small="$vuetify.breakpoint.xs" color="danger" type="submit" :loading="loading['delete']">
                     <v-icon left>
@@ -413,7 +413,7 @@ export default {
   },
 
   methods: {
-   
+
     handleDateClick: function (info) {
       console.log(this.loginUser.id);
       console.log(this.user.id);
@@ -428,6 +428,13 @@ export default {
 
     },
     handleEventClick: function (eventObj, el) {
+
+      console.log(eventObj.event.classNames);
+      if (eventObj.event.classNames == 'sales_part_todo_list' || eventObj.event.classNames == 'office_part_todo_list') {
+       
+        return;
+      }
+
       axios.get(`/schedule/getData/${eventObj.event.id}`)
         .then((res) => {
           this.displaySchedule = true;
