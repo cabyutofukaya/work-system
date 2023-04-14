@@ -148,11 +148,11 @@ class UserController extends Controller
                 $tmp_user = DB::table('users')->where('id',$office_part_todo->user_id)->first();
 
                 $tmp = [];
-                $tmp['id'] = $sales_part_todo->id;
+                $tmp['id'] = $office_part_todo->id;
                 $tmp['title'] = '社内TODO' . ' (担当者:' . $tmp_user->name . 'さん)';
                 $tmp['color'] = '#2e8583';
-                $tmp['start'] = $sales_part_todo->scheduled_at;
-                $tmp['content'] = $sales_part_todo->description;
+                $tmp['start'] = $office_part_todo->scheduled_at;
+                $tmp['content'] = $office_part_todo->description;
 
                 $tmp['classNames'] = 'office_part_todo_list';
 
