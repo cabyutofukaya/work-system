@@ -178,6 +178,10 @@ return [
         'content' => '内容',
         'comment' => 'コメント',
 
+        'start_time' => '開始時間',
+        'end_time' => '開始時間',
+        'enabled' => '終日',
+
         // プロジェクト固有
         'sample' => 'サンプル',
         'participants' => '参加者',

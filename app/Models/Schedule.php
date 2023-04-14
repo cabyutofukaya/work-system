@@ -20,6 +20,7 @@ class Schedule extends BaseSchedule implements Auditable
     protected $fillable = [
         'user_id',
         'title',
+        'title_type',
         'content',
         'date',
         'start_time',
@@ -104,6 +105,7 @@ class Schedule extends BaseSchedule implements Auditable
             'date' => $param['date'],
             'title' => $param['title'],
             'content' => $param['content'],
+            'title_type' => $param['title_type'],
         ]);
 
         return $query;
@@ -113,11 +115,23 @@ class Schedule extends BaseSchedule implements Auditable
     public function store_data(array $param)
     {
         $query = DB::table('schedules')->insert([
-            'start_time' => $param['start_time'],
-            'end_time' => $param['end_time'],
+            'start_time' => $param['start_time'] ?? null,
+            'end_time' => $param['end_time'] ?? null,
             'date' => $param['date'],
             'title' => $param['title'],
             'content' => $param['content'],
+            'user_id' => $param['user_id'],
+            'title_type' => $param['title_type'] ?? null,
+        ]);
+
+        return $query;
+
+    }
+
+    public function delete_data(int $schedule_id)
+    {
+        $query = DB::table('schedules')->where('id', '=', $schedule_id)->update([
+            'deleted_at' => date('Y-m-d H:i'),
         ]);
 
         return $query;

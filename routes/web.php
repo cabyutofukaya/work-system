@@ -122,6 +122,9 @@ Route::group(['middleware' => 'auth'], function () {
     // スケジュール
     Route::resource('schedule', ScheduleController::class);
 
+    // スケジュール
+    Route::post('/schedule/delete', [ScheduleController::class,'delete'])->name("schedule.delete");
+
     // メンバー
     Route::get('schedule/getData/{scheduleId}', [ScheduleController::class, "getData"])->where('scheduleId', '[0-9]+');;
 });

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Lang;
 
-class StoreSchedule extends FormRequest
+class UpdateSchedule extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -41,10 +41,6 @@ class StoreSchedule extends FormRequest
             'date' => ['required'],
             'start_time' => ['required_if:enabled,false'],
             'end_time' => ['required_if:enabled,false'],
-            'start_time' => ['required_if:enabled,false'],
-            'end_time' => ['required_if:enabled,false'],
-            'start_date' => ['required_if:rangeEnabled,true'],
-            'end_date' => ['required_if:rangeEnabled,true'],
         ];
     }
 }

@@ -52,6 +52,39 @@
                                 </v-col>
                             </v-row>
 
+                            <v-row v-if="form.rangeEnabled">
+                                <v-col cols="12" sm="2"></v-col>
+                                <v-col>
+                                    <v-checkbox label="月曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="火曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="水曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="木曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="金曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="土曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="日曜日"
+                                        pt="0"></v-checkbox>
+                                </v-col>
+                               
+                            </v-row>
+
 
                             <v-row>
                                 <v-col cols="12" sm="2">時間<br><v-checkbox v-model="form.enabled" label="終日"
@@ -64,8 +97,8 @@
                                 </v-col>
 
                                 <v-col>
-                                    <v-text-field type="time" name="end_time" v-model="form.end_time" :disabled="form.enabled"
-                                        label="終了時間" :error="Boolean(form.errors.end_time)"
+                                    <v-text-field type="time" name="end_time" v-model="form.end_time"
+                                        :disabled="form.enabled" label="終了時間" :error="Boolean(form.errors.end_time)"
                                         :error-messages="form.errors.end_time"></v-text-field>
                                 </v-col>
                             </v-row>
@@ -122,23 +155,24 @@
                             <v-row>
                                 <v-col cols="12" sm="2">登録者</v-col>
                                 <v-col>
-                                    <v-text-field type="name" name="user_name" v-model="edit_form.user_name" :disabled="true"></v-text-field>
+                                    <v-text-field type="name" name="user_name" v-model="edit_form.user_name"
+                                        :disabled="true"></v-text-field>
                                 </v-col>
                             </v-row>
 
                             <v-row>
                                 <v-col cols="12" sm="2">日付</v-col>
                                 <v-col>
-                                    <v-text-field prepend-icon="mdi-calendar" type="date" name="date" v-model="edit_form.date"
-                                        :error="Boolean(edit_form.errors.date)"
+                                    <v-text-field prepend-icon="mdi-calendar" type="date" name="date"
+                                        v-model="edit_form.date" :error="Boolean(edit_form.errors.date)"
                                         :error-messages="edit_form.errors.date"></v-text-field>
                                 </v-col>
                             </v-row>
 
 
                             <v-row>
-                                <v-col cols="12" sm="2">時間<br><v-checkbox name="enabled" v-model="edit_form.enabled" label="終日"
-                                        pt="0"></v-checkbox></v-col>
+                                <v-col cols="12" sm="2">時間<br><v-checkbox name="enabled" v-model="edit_form.enabled"
+                                        label="終日" pt="0"></v-checkbox></v-col>
 
                                 <v-col>
                                     <v-text-field type="time" name="start_time" v-model="edit_form.start_time"
@@ -199,6 +233,7 @@ import { Link } from "@inertiajs/inertia-vue";
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import timeGridPlugin from '@fullcalendar/timegrid'
 import jaLocale from '@fullcalendar/core/locales/ja'
 import axios from "axios";
 
@@ -209,7 +244,7 @@ const dateString = '';
 export default {
     components: { Layout, Link, FullCalendar },
 
-    props: ['schedule', 'user'],
+    props: ['schedule', 'user', 'loginUser'],
 
     data() {
         return {
@@ -223,9 +258,9 @@ export default {
                 end_time: null,
                 title: null,
                 content: null,
-                start_date:null,
-                end_date:null,
-                rangeEnabled:false,
+                start_date: null,
+                end_date: null,
+                rangeEnabled: false,
                 enabled: true,
             }),
 
@@ -241,9 +276,9 @@ export default {
                 enabled: false,
             }),
 
-          
+
             calendarOptions: {
-                plugins: [dayGridPlugin, interactionPlugin],
+                plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
                 initialView: 'dayGridMonth',
                 locales: [jaLocale],
                 locale: "ja",
@@ -254,6 +289,12 @@ export default {
                 dateClick: this.handleDateClick,
                 events: this.schedule,
                 eventClick: this.handleEventClick,
+                header: {
+                    // title, prev, next, prevYear, nextYear, today
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month agendaWeek agendaDay'
+                },
             },
             loading: {},
         }
@@ -261,12 +302,18 @@ export default {
 
     methods: {
         handleDateClick: function (info) {
-            console.log(info.dateStr);
-            this.showDialog = true;
-            this.dateString = info.dateStr;
-            this.form.date = info.dateStr;
-            this.form.start_date = info.dateStr;
-            this.form.end_date = info.dateStr;
+            console.log(this.loginUser.id);
+            console.log(this.user.id);
+            
+            if (this.loginUser.id == this.user.id) {
+                console.log(info.dateStr);
+                this.showDialog = true;
+                this.dateString = info.dateStr;
+                this.form.date = info.dateStr;
+                this.form.start_date = info.dateStr;
+                this.form.end_date = info.dateStr;
+            }
+
         },
         handleEventClick: function (eventObj, el) {
             axios.get(`/schedule/getData/${eventObj.event.id}`)
@@ -304,7 +351,7 @@ export default {
             )
         },
         update: function () {
-            this.edit_form.put(this.$route('schedule.update', this.edit_form.id ), {
+            this.edit_form.put(this.$route('schedule.update', this.edit_form.id), {
                 preserveState: (page) => Object.keys(page.props.errors).length,
                 onStart: () => this.$set(this.loading, "update", true),
                 onSuccess: () => this.$toasted.show('スケジュールの作成を更新しました'),
