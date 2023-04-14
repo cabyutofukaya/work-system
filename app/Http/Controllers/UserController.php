@@ -83,12 +83,11 @@ class UserController extends Controller
             }
         }
 
-        $userNum = 1;
 
         $sales_part_todo_list = DB::table('sales_todos')
         ->leftJoin('sales_todo_participants', 'sales_todos.id', '=', 'sales_todo_participants.sales_todo_id')
         ->where('sales_todos.scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))
-        ->where('sales_todo_participants.user_id', $userNum)->whereNull('sales_todos.deleted_at')
+        ->where('sales_todo_participants.user_id', $user->id)->whereNull('sales_todos.deleted_at')
         ->select('sales_todos.*')
         ->get();
 
@@ -137,7 +136,7 @@ class UserController extends Controller
         $office_part_todo_list = DB::table('office_todos')
         ->leftJoin('office_todo_participants', 'office_todos.id', '=', 'office_todo_participants.office_todo_id')
         ->where('office_todos.scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))
-        ->where('office_todo_participants.user_id', $userNum)->whereNull('office_todos.deleted_at')
+        ->where('office_todo_participants.user_id', $user->id)->whereNull('office_todos.deleted_at')
         ->select('office_todos.*')
         ->get();
 
