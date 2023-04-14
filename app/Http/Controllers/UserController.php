@@ -66,12 +66,15 @@ class UserController extends Controller
 
         $sales_todo_list = DB::table('sales_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
+
         if ($sales_todo_list) {
             foreach ($sales_todo_list as $sales_todo) {
 
+                $tmp_clients = DB::table('clients')->where('id',$sales_todo->client_id)->first();
+
                 $tmp = [];
                 $tmp['id'] = $sales_todo->id;
-                $tmp['title'] = '営業TODO';
+                $tmp['title'] =  '[営業]' . $tmp_clients->name;
                 $tmp['color'] = '#2e8583';
                 $tmp['start'] = $sales_todo->scheduled_at;
                 $tmp['content'] = $sales_todo->description;
@@ -96,10 +99,11 @@ class UserController extends Controller
             foreach ($sales_part_todo_list as $sales_part_todo) {
 
                 $tmp_user = DB::table('users')->where('id',$sales_part_todo->user_id)->first();
+                $tmp_clients = DB::table('clients')->where('id',$sales_part_todo->client_id)->first();
 
                 $tmp = [];
                 $tmp['id'] = $sales_part_todo->id;
-                $tmp['title'] = '営業TODO' . ' (担当者:' . $tmp_user->name . 'さん)';
+                $tmp['title'] =  '[営業]' . $tmp_clients->name . ' /担当者:' . $tmp_user->name . 'さん';
                 $tmp['color'] = '#2e8583';
                 $tmp['start'] = $sales_part_todo->scheduled_at;
                 $tmp['content'] = $sales_part_todo->description;
@@ -120,7 +124,7 @@ class UserController extends Controller
 
                 $tmp = [];
                 $tmp['id'] = $office_todo->id;
-                $tmp['title'] = '社内TODO' . '(' . $office_todo->title . ')';
+                $tmp['title'] = $office_todo->title . '(' .  '社内' . ')';
                 $tmp['color'] = '#2a5791';
                 $tmp['start'] = $office_todo->scheduled_at;
                 $tmp['content'] = $office_todo->description;
@@ -148,7 +152,7 @@ class UserController extends Controller
 
                 $tmp = [];
                 $tmp['id'] = $office_part_todo->id;
-                $tmp['title'] = '社内TODO' . ' (担当者:' . $tmp_user->name . 'さん)';
+                $tmp['title'] =  $office_part_todo->title . '(社内) / '  . $tmp_user->name;
                 $tmp['color'] = '#2e8583';
                 $tmp['start'] = $office_part_todo->scheduled_at;
                 $tmp['content'] = $office_part_todo->description;
