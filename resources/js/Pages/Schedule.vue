@@ -15,6 +15,12 @@
 
             <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
 
+                <template v-slot:eventContent='arg'>
+                    <b>{{ arg.timeText }}</b>
+                    <i>{{ arg.event.title }}</i>
+                </template>
+
+
             </FullCalendar>
 
             <v-divider class="mx-4"></v-divider>
@@ -26,6 +32,7 @@
         <v-dialog v-model="showDialog" :max-width="$vuetify.breakpoint.smAndUp ? '1000px' : 'unset'">
             <v-card flat tile>
                 <form @submit.prevent="create">
+                    <input type="hidden" name="route">
                     <v-card-text>
                         <div class="description-form">
 
@@ -53,36 +60,29 @@
                             </v-row>
 
                             <v-row v-if="form.rangeEnabled">
-                                <v-col cols="12" sm="2"></v-col>
+                                <v-col cols="12" sm="2">曜日設定</v-col>
                                 <v-col>
-                                    <v-checkbox label="月曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="月曜日" pt="0" v-model="form.monday"></v-checkbox>
                                 </v-col>
                                 <v-col>
-                                    <v-checkbox label="火曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="火曜日" pt="0" v-model="form.tuesday"></v-checkbox>
                                 </v-col>
                                 <v-col>
-                                    <v-checkbox label="水曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="水曜日" pt="0" v-model="form.wednesday"></v-checkbox>
                                 </v-col>
                                 <v-col>
-                                    <v-checkbox label="木曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="木曜日" pt="0" v-model="form.thursday"></v-checkbox>
                                 </v-col>
                                 <v-col>
-                                    <v-checkbox label="金曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="金曜日" pt="0" v-model="form.friday"></v-checkbox>
                                 </v-col>
                                 <v-col>
-                                    <v-checkbox label="土曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="土曜日" pt="0" v-model="form.saturday"></v-checkbox>
                                 </v-col>
                                 <v-col>
-                                    <v-checkbox label="日曜日"
-                                        pt="0"></v-checkbox>
+                                    <v-checkbox label="日曜日" pt="0" v-model="form.sunday"></v-checkbox>
                                 </v-col>
-                               
+
                             </v-row>
 
 
@@ -106,6 +106,11 @@
 
                             <v-row>
                                 <v-col cols="12" sm="2">タイトル</v-col>
+                                <v-col>
+                                    <v-select label="スケージュール種別" name="title_type" v-model="form.title_type"
+                                        :items="['社内行事/来客', '会議/接客', '営業/外出', '社内業務', 'その他', '観光イベント情報']"
+                                        variant="underlined"></v-select>
+                                </v-col>
                                 <v-col>
                                     <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="title"
                                         v-model="form.title" maxlength="200" :error="Boolean(form.errors.title)"
@@ -144,10 +149,11 @@
         </v-dialog>
 
         <v-dialog v-model="displaySchedule" :max-width="$vuetify.breakpoint.smAndUp ? '1000px' : 'unset'">
-            <form @submit.prevent="update">
 
-                <v-card flat tile>
-                    <v-card-text mt="10">
+
+            <v-card flat tile>
+                <v-card-text mt="10">
+                    <form @submit.prevent="update">
 
 
                         <div class="description-form">
@@ -176,18 +182,27 @@
 
                                 <v-col>
                                     <v-text-field type="time" name="start_time" v-model="edit_form.start_time"
-                                        :disabled="edit_form.enabled" label="開始時間"></v-text-field>
+                                        :disabled="edit_form.enabled" label="開始時間"
+                                        :error="Boolean(edit_form.errors.start_time)"
+                                        :error-messages="edit_form.errors.start_time"></v-text-field>
                                 </v-col>
 
                                 <v-col>
                                     <v-text-field type="time" name="end_time" v-model="edit_form.end_time"
-                                        :disabled="edit_form.enabled" label="終了時間"></v-text-field>
+                                        :disabled="edit_form.enabled" label="終了時間"
+                                        :error="Boolean(edit_form.errors.end_time)"
+                                        :error-messages="edit_form.errors.end_time"></v-text-field>
                                 </v-col>
                             </v-row>
 
 
                             <v-row>
                                 <v-col cols="12" sm="2">タイトル</v-col>
+                                <v-col>
+                                    <v-select label="スケージュール種別" name="title_type" v-model="edit_form.title_type"
+                                        :items="['社内行事/来客', '会議/接客', '営業/外出', '社内業務', 'その他', '観光イベント情報']"
+                                        variant="underlined"></v-select>
+                                </v-col>
                                 <v-col>
                                     <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="title"
                                         v-model="edit_form.title" maxlength="200" :error="Boolean(edit_form.errors.title)"
@@ -208,7 +223,21 @@
                         </div>
 
 
-                        <v-row>
+                        <v-row v-if="this.loginUser.id == this.loginUser.id">
+
+                            <form @submit.prevent="deleteData">
+                                <input type="hidden" name="id" v-model="this.delete_form.id" />
+                                <v-col class="text-left">
+                                    <Button :small="$vuetify.breakpoint.xs" color="danger" type="submit"
+                                        :loading="loading['delete']">
+                                        <v-icon left>
+                                            mdi-content-save-outline
+                                        </v-icon>
+                                        削除する
+                                    </Button>
+                                </v-col>
+                            </form>
+
                             <v-col class="text-right">
                                 <Button :small="$vuetify.breakpoint.xs" color="primary" type="submit"
                                     :loading="loading['update']">
@@ -219,10 +248,19 @@
                                 </Button>
                             </v-col>
                         </v-row>
-                    </v-card-text>
-                </v-card>
-            </form>
+                    </form>
+
+
+                </v-card-text>
+            </v-card>
+
+
+
         </v-dialog>
+
+
+        <!-- <button v-tooltip="'TOPにメッセージが表示されます'">TOP</button> -->
+
 
     </Layout>
 </template>
@@ -236,6 +274,9 @@ import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import jaLocale from '@fullcalendar/core/locales/ja'
 import axios from "axios";
+import { INITIAL_EVENTS, createEventId } from './event-utils'
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; // optional for styling
 
 // console.log(this.schedule);
 
@@ -257,11 +298,20 @@ export default {
                 start_time: null,
                 end_time: null,
                 title: null,
+                title_type: null,
                 content: null,
                 start_date: null,
                 end_date: null,
                 rangeEnabled: false,
                 enabled: true,
+                monday: true,
+                tuesday: true,
+                wednesday: true,
+                thursday: true,
+                friday: true,
+                saturday: false,
+                sunday: false,
+                route: 1,
             }),
 
             edit_form: this.$inertia.form({
@@ -271,10 +321,15 @@ export default {
                 start_time: null,
                 end_time: null,
                 title: null,
+                title_type: null,
                 content: null,
                 user_name: null,
                 enabled: false,
             }),
+            delete_form: this.$inertia.form({
+                id: 0,
+            }),
+
 
 
             calendarOptions: {
@@ -295,7 +350,10 @@ export default {
                     center: 'title',
                     right: 'month agendaWeek agendaDay'
                 },
+                eventDidMount: this.handleEventDidMount,
+                // eventMouseEnter: this.handleEventMouseEnter,
             },
+            currentEvents: [],
             loading: {},
         }
     },
@@ -304,7 +362,6 @@ export default {
         handleDateClick: function (info) {
             console.log(this.loginUser.id);
             console.log(this.user.id);
-            
             if (this.loginUser.id == this.user.id) {
                 console.log(info.dateStr);
                 this.showDialog = true;
@@ -339,6 +396,29 @@ export default {
         },
         handleEventLeave: function (eventObj, el) {
             this.displaySchedule = false;
+        },
+
+        // handleEventMouseEnter(info) {
+        //     alert(info.event.title);
+        //     const tooltip = new Tooltip(info.el, {
+        //         title: info.event.title,
+        //         content: info.event.extendedProps.description,
+        //         trigger: 'hover',
+        //         placement: 'top',
+        //         container: 'body',
+        //         html: true
+        //     });
+        // },
+
+        handleEventDidMount(e) {
+                tippy(e.el, {
+                    content: `<strong>
+                 ${e.event.title}<br/>
+                 <p>${e.event.extendedProps.content}<p><br/>
+                </strong>`,
+                    allowHTML: true,
+                    theme: 'light',
+                });
         },
 
         create: function () {

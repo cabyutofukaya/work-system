@@ -152,7 +152,7 @@ class UserController extends Controller
 
                 $tmp = [];
                 $tmp['id'] = $office_part_todo->id;
-                $tmp['title'] =  $office_part_todo->title . '(社内) / '  . $tmp_user->name;
+                $tmp['title'] =  $office_part_todo->title . '(社内) /'  . $tmp_user->name;
                 $tmp['color'] = '#2e8583';
                 $tmp['start'] = $office_part_todo->scheduled_at;
                 $tmp['content'] = $office_part_todo->description;

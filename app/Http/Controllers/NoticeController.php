@@ -32,7 +32,7 @@ class NoticeController extends Controller
             ::with(['user:id,name,deleted_at'])
             ->paginate();
 
-            dd($notices);
+            // dd($notices);
 
         return inertia('Notices', [
             'notices' => $notices,
