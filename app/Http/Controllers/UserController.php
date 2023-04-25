@@ -51,7 +51,7 @@ class UserController extends Controller
 
                 $tmp['id'] = $data->id;
                 if (!($data->start_time)) {
-                    $tmp['title'] = '(終日)';
+                    $tmp['title'] = '(終日) ';
                     $tmp['pops_time'] = '(終日)';
                 }else{
                     $tmp['pops_time'] = $data->start_time . ' ~ ' . $data->end_time . "\n"; 
@@ -59,9 +59,11 @@ class UserController extends Controller
                 $tmp['title'] .= $data->title;
                 $tmp['pops_tile'] .= $data->title;
                 $tmp['color'] = '#2e8583';
+                $tmp['borderColor'] = '#2e8583';
                 if ($data->title_type != '') {
                     $tmp['title'] .= '[' . $data->title_type . ']';
                     $tmp['color'] = $backgroudcolor[$data->title_type];
+                    $tmp['borderColor'] = $backgroudcolor[$data->title_type];
                     $tmp['pops_tile'] .= '[' . $data->title_type . ']';
                 }
                 $tmp['start'] = $data->date;
@@ -93,7 +95,7 @@ class UserController extends Controller
                 $tmp['title'] =  '[営業]' . $tmp_clients->name;
                 $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
                 $tmp['color'] = '#fa3c3c'; 
-                $tmp['start'] = $sales_todo->scheduled_at;
+                $tmp['start'] = date('G:i',strtotime($sales_todo->scheduled_at));
                 $tmp['content'] = $sales_todo->description;
 
                 $tmp['pops_tile'] = '[営業]' . $tmp_clients->name;
@@ -111,13 +113,12 @@ class UserController extends Controller
         if ($office_todo_list) {
             foreach ($office_todo_list as $office_todo) {
 
-              
-
+            
                 $tmp = [];
                 $tmp['id'] = $office_todo->id;
                 $tmp['title'] = $office_todo->title;
                 $tmp['color'] = '#0c44fa';
-                $tmp['start'] = $office_todo->scheduled_at;
+                $tmp['start'] = date('G:i',strtotime($office_todo->scheduled_at));
                 $tmp['content'] = $office_todo->description;
 
                 $tmp['pops_tile'] = '(' .  '社内' . ')' . $office_todo->title;
