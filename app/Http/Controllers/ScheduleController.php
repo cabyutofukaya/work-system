@@ -70,7 +70,6 @@ class ScheduleController extends Controller
 
         $sales_todo_list = DB::table('sales_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
-
         if ($sales_todo_list) {
             foreach ($sales_todo_list as $sales_todo) {
 
@@ -83,7 +82,7 @@ class ScheduleController extends Controller
                 $tmp['title'] =  '[営業]' . $tmp_clients->name;
                 $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
                 $tmp['color'] = '#fa3c3c'; 
-                $tmp['start'] = date('G:i',strtotime($sales_todo->scheduled_at));
+                $tmp['start'] = date('Y-m-d G:i',strtotime($sales_todo->scheduled_at));
                 $tmp['content'] = $sales_todo->description;
 
                 $tmp['pops_tile'] = '[営業]' . $tmp_clients->name;
@@ -107,7 +106,7 @@ class ScheduleController extends Controller
                 $tmp['id'] = $office_todo->id;
                 $tmp['title'] = $office_todo->title;
                 $tmp['color'] = '#0c44fa';
-                $tmp['start'] = date('G:i',strtotime($office_todo->scheduled_at));
+                $tmp['start'] = date('Y-m-d G:i',strtotime($office_todo->scheduled_at));
                 $tmp['content'] = $office_todo->description;
 
                 $tmp['pops_tile'] = '(' .  '社内' . ')' . $office_todo->title;
