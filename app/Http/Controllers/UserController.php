@@ -45,18 +45,32 @@ class UserController extends Controller
             foreach ($schedule_list as $data) {
 
                 $tmp = [];
+                $tmp['title'] = '';
+                $tmp['pops_tile'] = '';
+                $tmp['pops_time'] = '';
+
                 $tmp['id'] = $data->id;
-                $tmp['title'] = $data->title;
+                if (!($data->start_time)) {
+                    $tmp['title'] = '(終日)';
+                    $tmp['pops_time'] = '(終日)';
+                }else{
+                    $tmp['pops_time'] = $data->start_time . ' ~ ' . $data->end_time . "\n"; 
+                }
+                $tmp['title'] .= $data->title;
+                $tmp['pops_tile'] .= $data->title;
                 $tmp['color'] = '#2e8583';
-                if($data->title_type != ''){
+                if ($data->title_type != '') {
                     $tmp['title'] .= '[' . $data->title_type . ']';
                     $tmp['color'] = $backgroudcolor[$data->title_type];
+                    $tmp['pops_tile'] .= '[' . $data->title_type . ']';
                 }
                 $tmp['start'] = $data->date;
                 if ($data->start_time) {
                     $tmp['start'] .= ' ' . $data->start_time;
                     $tmp['end'] = $data->date . ' ' . $data->end_time;
+                    $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
                 }
+               
                 $tmp['content'] = $data->content;
 
                 $schedule[$k] = $tmp;
@@ -70,14 +84,20 @@ class UserController extends Controller
         if ($sales_todo_list) {
             foreach ($sales_todo_list as $sales_todo) {
 
-                $tmp_clients = DB::table('clients')->where('id',$sales_todo->client_id)->first();
+                $tmp_clients = DB::table('clients')->where('id', $sales_todo->client_id)->first();
+
 
                 $tmp = [];
                 $tmp['id'] = $sales_todo->id;
+                // $tmp['title'] =  '[営業]';
                 $tmp['title'] =  '[営業]' . $tmp_clients->name;
-                $tmp['color'] = '#2e8583';
+                $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
+                $tmp['color'] = '#fa3c3c'; 
                 $tmp['start'] = $sales_todo->scheduled_at;
                 $tmp['content'] = $sales_todo->description;
+
+                $tmp['pops_tile'] = '[営業]' . $tmp_clients->name;
+                $tmp['pops_time'] = date('G:i',strtotime($sales_todo->scheduled_at));
 
                 $tmp['url'] = '/sales-todos/' . $sales_todo->id  . '/edit';
 
@@ -86,18 +106,22 @@ class UserController extends Controller
             }
         }
 
-
         $office_todo_list = DB::table('office_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
         if ($office_todo_list) {
             foreach ($office_todo_list as $office_todo) {
 
+              
+
                 $tmp = [];
                 $tmp['id'] = $office_todo->id;
-                $tmp['title'] = $office_todo->title . '(' .  '社内' . ')';
-                $tmp['color'] = '#2a5791';
+                $tmp['title'] = $office_todo->title;
+                $tmp['color'] = '#0c44fa';
                 $tmp['start'] = $office_todo->scheduled_at;
                 $tmp['content'] = $office_todo->description;
+
+                $tmp['pops_tile'] = '(' .  '社内' . ')' . $office_todo->title;
+                $tmp['pops_time'] = date('G:i',strtotime($office_todo->scheduled_at));
 
                 $tmp['url'] = '/office-todos/' . $office_todo->id  . '/edit';
 

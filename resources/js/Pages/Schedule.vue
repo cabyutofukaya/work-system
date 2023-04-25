@@ -6,7 +6,8 @@
 .fc-day-sun {
     background-color: #ffeaea;
 }
-.calandar_event{
+
+.calandar_event {
     background-color: white;
 }
 </style>
@@ -331,6 +332,7 @@ export default {
                 content: null,
                 user_name: null,
                 enabled: false,
+                route: 1,
             }),
             delete_form: this.$inertia.form({
                 id: 0,
@@ -350,11 +352,11 @@ export default {
                 dateClick: this.handleDateClick,
                 events: this.schedule,
                 eventClick: this.handleEventClick,
-                header: {
+                headerToolbar: {
                     // title, prev, next, prevYear, nextYear, today
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month agendaWeek agendaDay'
+                    right: 'dayGridMonth timeGridWeek'
                 },
                 eventDidMount: this.handleEventDidMount,
                 eventMouseEnter: this.handleEventMouseEnter,
@@ -389,6 +391,7 @@ export default {
                     this.edit_form.user_name = res.data.userName;
                     this.edit_form.start_time = res.data.start_time;
                     this.edit_form.end_time = res.data.end_time;
+                    this.edit_form.title_type = res.data.title_type ?? null;
                     this.edit_form.enabled = res.data.start_time ? false : true;
 
                 })
@@ -405,14 +408,16 @@ export default {
         },
 
         handleEventMouseEnter(e) {
-            tippy(e.el, {
-                content: `<div style="">
-                 ${e.event.title}<br/>
-                 <p>${e.event.extendedProps.content}<p><br/>
+            console.log(e.event),
+                tippy(e.el, {
+                    content: `<div">
+                    <p>${e.event.extendedProps.pops_time}<p>
+                 <p>${e.event.extendedProps.pops_tile}<p>
+                 <p>${e.event.extendedProps.content}<p>
                 </div>`,
-                allowHTML: true,
-                theme: 'light-border'
-            });
+                    allowHTML: true,
+                    theme: 'light-border'
+                });
         },
 
         handleEventDidMount(e) {
