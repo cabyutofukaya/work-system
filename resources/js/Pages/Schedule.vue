@@ -19,16 +19,7 @@
 
             <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
 
-                <template v-slot:eventContent='arg'>
-                    <span>
-                        <b>{{ arg.timeText }}</b>
-                        <i>{{ arg.event.title }}</i>
-                    </span>
-
-                </template>
-
-
-            </FullCalendar>
+</FullCalendar>
 
             <v-divider class="mx-4"></v-divider>
 
