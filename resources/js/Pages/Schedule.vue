@@ -19,7 +19,7 @@
 
             <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
 
-</FullCalendar>
+            </FullCalendar>
 
             <v-divider class="mx-4"></v-divider>
 
@@ -327,6 +327,7 @@ export default {
             }),
             delete_form: this.$inertia.form({
                 id: 0,
+                route: 1,
             }),
 
 
@@ -383,6 +384,7 @@ export default {
                     this.edit_form.end_time = res.data.end_time;
                     this.edit_form.title_type = res.data.title_type ?? null;
                     this.edit_form.enabled = res.data.start_time ? false : true;
+                    this.delete_form.id = res.data.id;
 
                 })
                 .catch((e) => {
@@ -436,6 +438,15 @@ export default {
                 onStart: () => this.$set(this.loading, "update", true),
                 onSuccess: () => this.$toasted.show('スケジュールの作成を更新しました'),
                 onFinish: () => this.$set(this.loading, "update", false),
+            }
+            )
+        },
+        deleteData: function () {
+            this.delete_form.post(this.$route('schedule.delete'), {
+                preserveState: (page) => Object.keys(page.props.errors).length,
+                onStart: () => this.$set(this.loading, "delete", true),
+                onSuccess: () => this.$toasted.show('スケジュールの作成を更新しました'),
+                onFinish: () => this.$set(this.loading, "delete", false),
             }
             )
         },

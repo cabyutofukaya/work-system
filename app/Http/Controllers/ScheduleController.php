@@ -268,6 +268,10 @@ class ScheduleController extends Controller
         $schedule = new Schedule;
         $schedule->delete_data($request->id);
 
+        if($request->route == 1){
+            return redirect()->route('schedule.index');
+        }
+
         return redirect()->route('users.show', ['user' => Auth::user()->id]);
     }
 }
