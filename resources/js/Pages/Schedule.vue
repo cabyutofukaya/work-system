@@ -361,7 +361,6 @@ export default {
                 eventDidMount: this.handleEventDidMount,
                 eventMouseEnter: this.handleEventMouseEnter,
             },
-            currentEvents: [],
             loading: {},
         }
     },
