@@ -467,9 +467,9 @@ export default {
             console.log(e.event),
             tippy(e.el, {
                 content: `<div style="">
-                  <p>${e.event.extendedProps.pops_time}<p><br/>
-                 <p>${e.event.extendedProps.pops_tile}<p><br/>
-                 <p>${e.event.extendedProps.content}<p><br/>
+                  <p>${e.event.extendedProps.pops_time}<p>
+                 <p>${e.event.extendedProps.pops_tile}<p>
+                 <p>${e.event.extendedProps.content}<p>
                 </div>`,
                 allowHTML: true,
                 theme: 'light-border'

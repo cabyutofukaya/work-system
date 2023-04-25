@@ -118,8 +118,8 @@ class Schedule extends BaseSchedule implements Auditable
             'start_time' => $param['start_time'] ?? null,
             'end_time' => $param['end_time'] ?? null,
             'date' => $param['date'],
-            'title' => $param['title'],
-            'content' => $param['content'],
+            'title' => $param['title'] ?? null,
+            'content' => $param['content'] ?? null,
             'user_id' => $param['user_id'],
             'title_type' => $param['title_type'] ?? null,
         ]);

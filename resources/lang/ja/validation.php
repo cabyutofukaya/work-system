@@ -203,6 +203,7 @@ return [
         'position' => '役職',
         'date_start' => '開始日',
         'date_end' => '終了日',
+        'title_type' => 'スケジュール種別',
 
         // テーブル名
         'tables' => [

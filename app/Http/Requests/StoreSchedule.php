@@ -45,6 +45,9 @@ class StoreSchedule extends FormRequest
             'end_time' => ['required_if:enabled,false'],
             'start_date' => ['required_if:rangeEnabled,true'],
             'end_date' => ['required_if:rangeEnabled,true'],
+            'title' => ['required_without:title_type'],
+            'title_type' => ['required_without:title'],
+            'content' => ['nullable'],
         ];
     }
 }

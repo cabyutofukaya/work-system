@@ -119,6 +119,7 @@ export default {
       {title: 'ホーム', to: 'home', icon: 'mdi-view-dashboard', dusk: "home"},
       {title: '営業ToDoリスト ', to: 'sales-todos.index', icon: 'mdi-calendar', dusk: "salesTodosIndex"},
       {title: '社内ToDoリスト ', to: 'office-todos.index', icon: 'mdi-calendar', dusk: "officeTodosIndex"},
+      {title: 'スケジュール', to: 'schedule.index', icon: 'mdi-calendar', dusk: "userIndex"},
       {title: 'タクシー・バス会社', to: 'client-types.clients.index', params: {client_type: 'taxibus', _query: {initSearch: true}}, icon: 'mdi-car', dusk: "clientTypeTaxibusIndex"},
       {title: 'トラック会社', to: 'client-types.clients.index', params: {client_type: 'truck', _query: {initSearch: true}}, icon: 'mdi-truck', dusk: "clientTypeTruckIndex"},
       {title: '旅行業者など', to: 'client-types.clients.index', params: {client_type: 'travel', _query: {initSearch: true}}, icon: 'mdi-office-building', dusk: "clientTypeTravelIndex"},
@@ -129,7 +130,7 @@ export default {
       {title: 'お知らせ', to: 'notices.index', icon: 'mdi-information', dusk: "NoticeIndex"},
       {title: '書類', to: 'documents', icon: 'mdi-file-download', dusk: "documents"},
       {title: 'メンバー', to: 'users.index', icon: 'mdi-account', dusk: "userIndex"},
-      {title: 'スケジュール', to: 'schedule.index', icon: 'mdi-calendar', dusk: "userIndex"},
+    
     ],
     scrollTopBtn: false
   }),

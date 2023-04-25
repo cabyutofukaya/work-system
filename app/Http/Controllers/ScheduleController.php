@@ -61,7 +61,7 @@ class ScheduleController extends Controller
                     $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
                 }
                
-                $tmp['content'] = $data->content;
+                $tmp['content'] = $data->content ?? '';
 
                 $schedule[$k] = $tmp;
                 $k++;
