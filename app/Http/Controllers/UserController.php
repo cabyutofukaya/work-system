@@ -87,36 +87,6 @@ class UserController extends Controller
         }
 
 
-        $sales_part_todo_list = DB::table('sales_todos')
-        ->leftJoin('sales_todo_participants', 'sales_todos.id', '=', 'sales_todo_participants.sales_todo_id')
-        ->where('sales_todos.scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))
-        ->where('sales_todo_participants.user_id', $user->id)->whereNull('sales_todos.deleted_at')
-        ->select('sales_todos.*')
-        ->get();
-
-        
-        if ($sales_part_todo_list) {
-            foreach ($sales_part_todo_list as $sales_part_todo) {
-
-                $tmp_user = DB::table('users')->where('id',$sales_part_todo->user_id)->first();
-                $tmp_clients = DB::table('clients')->where('id',$sales_part_todo->client_id)->first();
-
-                $tmp = [];
-                $tmp['id'] = $sales_part_todo->id;
-                $tmp['title'] =  '[営業]' . $tmp_clients->name . ' /担当者:' . $tmp_user->name . 'さん';
-                $tmp['color'] = '#2e8583';
-                $tmp['start'] = $sales_part_todo->scheduled_at;
-                $tmp['content'] = $sales_part_todo->description;
-
-                $tmp['classNames'] = 'sales_part_todo_list';
-
-                // $tmp['url'] = '/sales-todos/' . $sales_part_todo->id  . '/edit';
-
-                $schedule[$k] = $tmp;
-                $k++;
-            }
-        }
-
         $office_todo_list = DB::table('office_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
         if ($office_todo_list) {
@@ -136,36 +106,6 @@ class UserController extends Controller
             }
         }
        
-
-        $office_part_todo_list = DB::table('office_todos')
-        ->leftJoin('office_todo_participants', 'office_todos.id', '=', 'office_todo_participants.office_todo_id')
-        ->where('office_todos.scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))
-        ->where('office_todo_participants.user_id', $user->id)->whereNull('office_todos.deleted_at')
-        ->select('office_todos.*')
-        ->get();
-
-        
-        if ($office_part_todo_list) {
-            foreach ($office_part_todo_list as $office_part_todo) {
-
-                $tmp_user = DB::table('users')->where('id',$office_part_todo->user_id)->first();
-
-                $tmp = [];
-                $tmp['id'] = $office_part_todo->id;
-                $tmp['title'] =  $office_part_todo->title . '(社内) /'  . $tmp_user->name;
-                $tmp['color'] = '#2e8583';
-                $tmp['start'] = $office_part_todo->scheduled_at;
-                $tmp['content'] = $office_part_todo->description;
-
-                $tmp['classNames'] = 'office_part_todo_list';
-
-                // $tmp['url'] = '/sales-todos/' . $sales_part_todo->id  . '/edit';
-
-                $schedule[$k] = $tmp;
-                $k++;
-            }
-        }
-
         return inertia('UsersShow', [
             'user' => $user,
             'schedule' => $schedule,

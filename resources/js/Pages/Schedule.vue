@@ -6,6 +6,9 @@
 .fc-day-sun {
     background-color: #ffeaea;
 }
+.calandar_event{
+    background-color: white;
+}
 </style>
 
 <template>
@@ -16,8 +19,11 @@
             <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
 
                 <template v-slot:eventContent='arg'>
-                    <b>{{ arg.timeText }}</b>
-                    <i>{{ arg.event.title }}</i>
+                    <span>
+                        <b>{{ arg.timeText }}</b>
+                        <i>{{ arg.event.title }}</i>
+                    </span>
+
                 </template>
 
 
@@ -108,7 +114,7 @@
                                 <v-col cols="12" sm="2">タイトル</v-col>
                                 <v-col>
                                     <v-select label="スケージュール種別" name="title_type" v-model="form.title_type"
-                                        :items="['社内行事/来客', '会議/接客', '営業/外出', '社内業務', 'その他', '観光イベント情報']"
+                                        :items="['営業/外出', '出張', '社内業務', '会議', '来客対応', 'テレワーク', 'その他']"
                                         variant="underlined"></v-select>
                                 </v-col>
                                 <v-col>
@@ -200,7 +206,7 @@
                                 <v-col cols="12" sm="2">タイトル</v-col>
                                 <v-col>
                                     <v-select label="スケージュール種別" name="title_type" v-model="edit_form.title_type"
-                                        :items="['社内行事/来客', '会議/接客', '営業/外出', '社内業務', 'その他', '観光イベント情報']"
+                                        :items="['営業/外出', '出張', '社内業務', '会議', '来客対応', 'テレワーク', 'その他']"
                                         variant="underlined"></v-select>
                                 </v-col>
                                 <v-col>
@@ -351,7 +357,7 @@ export default {
                     right: 'month agendaWeek agendaDay'
                 },
                 eventDidMount: this.handleEventDidMount,
-                // eventMouseEnter: this.handleEventMouseEnter,
+                eventMouseEnter: this.handleEventMouseEnter,
             },
             currentEvents: [],
             loading: {},
@@ -398,27 +404,26 @@ export default {
             this.displaySchedule = false;
         },
 
-        // handleEventMouseEnter(info) {
-        //     alert(info.event.title);
-        //     const tooltip = new Tooltip(info.el, {
-        //         title: info.event.title,
-        //         content: info.event.extendedProps.description,
-        //         trigger: 'hover',
-        //         placement: 'top',
-        //         container: 'body',
-        //         html: true
-        //     });
-        // },
-
-        handleEventDidMount(e) {
-                tippy(e.el, {
-                    content: `<strong>
+        handleEventMouseEnter(e) {
+            tippy(e.el, {
+                content: `<div style="">
                  ${e.event.title}<br/>
                  <p>${e.event.extendedProps.content}<p><br/>
-                </strong>`,
-                    allowHTML: true,
-                    theme: 'light',
-                });
+                </div>`,
+                allowHTML: true,
+                theme: 'light-border'
+            });
+        },
+
+        handleEventDidMount(e) {
+            // tippy(e.el, {
+            //     content: `<div style="">
+            //      ${e.event.title}<br/>
+            //      <p>${e.event.extendedProps.content}<p><br/>
+            //     </div>`,
+            //     allowHTML: true,
+            //     theme: 'light-border'
+            // });
         },
 
         create: function () {
