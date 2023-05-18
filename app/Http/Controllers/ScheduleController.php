@@ -49,10 +49,10 @@ class ScheduleController extends Controller
                 $tmp['color'] = '#747876';
                 $tmp['borderColor'] = '#747876';
                 if ($data->title_type != '') {
-                    $tmp['title'] .= '[' . $data->title_type . ']';
+                    $tmp['title'] .= '[' . $data->title_type . '] ';
                     $tmp['color'] = $backgroudcolor[$data->title_type];
                     $tmp['borderColor'] = $backgroudcolor[$data->title_type];
-                    $tmp['pops_tile'] .= '[' . $data->title_type . ']';
+                    $tmp['pops_tile'] .= '[' . $data->title_type . '] ';
                 }
                 $tmp['start'] = $data->date;
                 if ($data->start_time) {
