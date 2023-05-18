@@ -41,12 +41,11 @@ class ScheduleController extends Controller
                 if (!($data->start_time)) {
                     // $tmp['title'] = '(終日) ';
                     $tmp['title'] = '';
-                    $tmp['pops_time'] = '(終日)';
+                    $tmp['pops_time'] = '(終日) ';
                 }else{
                     $tmp['pops_time'] = $data->start_time . ' ~ ' . $data->end_time . "\n"; 
                 }
-                $tmp['title'] .= $data->title;
-                $tmp['pops_tile'] .= $data->title;
+                
                 $tmp['color'] = '#747876';
                 $tmp['borderColor'] = '#747876';
                 if ($data->title_type != '') {
@@ -61,6 +60,8 @@ class ScheduleController extends Controller
                     $tmp['end'] = $data->date . ' ' . $data->end_time;
                     $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
                 }
+                $tmp['title'] .= $data->title;
+                $tmp['pops_tile'] .= $data->title;
                
                 $tmp['content'] = $data->content ?? '';
 
@@ -80,13 +81,13 @@ class ScheduleController extends Controller
                 $tmp = [];
                 $tmp['id'] = $sales_todo->id;
                 // $tmp['title'] =  '[営業]';
-                $tmp['title'] =  '[営業]' . $tmp_clients->name;
+                $tmp['title'] =  '[営業] ' . $tmp_clients->name;
                 $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
                 $tmp['color'] = '#fa3c3c'; 
                 $tmp['start'] = date('Y-m-d G:i',strtotime($sales_todo->scheduled_at));
                 $tmp['content'] = $sales_todo->description;
 
-                $tmp['pops_tile'] = '[営業]' . $tmp_clients->name;
+                $tmp['pops_tile'] = '[営業 ]' . $tmp_clients->name;
                 $tmp['pops_time'] = date('G:i',strtotime($sales_todo->scheduled_at));
 
                 $tmp['url'] = '/sales-todos/' . $sales_todo->id  . '/edit';
@@ -110,7 +111,7 @@ class ScheduleController extends Controller
                 $tmp['start'] = date('Y-m-d G:i',strtotime($office_todo->scheduled_at));
                 $tmp['content'] = $office_todo->description;
 
-                $tmp['pops_tile'] = '(' .  '社内' . ')' . $office_todo->title;
+                $tmp['pops_tile'] = ' (' .  '社内' . ') ' . $office_todo->title;
                 $tmp['pops_time'] = date('G:i',strtotime($office_todo->scheduled_at));
 
                 $tmp['url'] = '/office-todos/' . $office_todo->id  . '/edit';
@@ -160,12 +161,22 @@ class ScheduleController extends Controller
             for ($i = date('Y-m-d', strtotime($request->start_date)); $i <= date('Y-m-d', strtotime($request->end_date)); $i = date('Y-m-d', strtotime($i . '+1 day'))) {
 
                 $week = date('w', strtotime($i));
-                if (($week == 0 && $request->sunday) || ($week == 1 && $request->monday) || ($week == 2 && $request->tuesday) || ($week == 3 && $request->wednesday) || ($week == 4 && $request->thursday) || ($week == 5 && $request->friday) || ($week == 6 && $request->saturday)) {
-                    $param['date'] = $i;
+                if(!($request->sunday) && !($request->monday) && !($request->tuesday) && !($request->wednesday) && !($request->thursday) && !($request->friday) && !($request->saturday) ){
 
+                    $param['date'] = $i;
+    
                     $schedule = new Schedule();
                     $schedule->store_data($param);
+
+                }else{
+                    if (($week == 0 && $request->sunday) || ($week == 1 && $request->monday) || ($week == 2 && $request->tuesday) || ($week == 3 && $request->wednesday) || ($week == 4 && $request->thursday) || ($week == 5 && $request->friday) || ($week == 6 && $request->saturday)) {
+                        $param['date'] = $i;
+    
+                        $schedule = new Schedule();
+                        $schedule->store_data($param);
+                    }
                 }
+               
             }
         }
 

@@ -361,11 +361,11 @@ export default {
         end_date: null,
         rangeEnabled: false,
         enabled: true,
-        monday: true,
-        tuesday: true,
-        wednesday: true,
-        thursday: true,
-        friday: true,
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
         saturday: false,
         sunday: false,
       }),
@@ -461,20 +461,20 @@ export default {
     handleEventLeave: function (eventObj, el) {
       this.displaySchedule = false;
     },
-    
+
 
     handleEventMouseEnter(e) {
-            console.log(e.event),
-            tippy(e.el, {
-                content: `<div style="">
+      console.log(e.event),
+        tippy(e.el, {
+          content: `<div style="">
                   <p>${e.event.extendedProps.pops_time}<p>
                  <p>${e.event.extendedProps.pops_tile}<p>
                  <p>${e.event.extendedProps.content}<p>
                 </div>`,
-                allowHTML: true,
-                theme: 'light-border'
-            });
-        },
+          allowHTML: true,
+          theme: 'light-border'
+        });
+    },
 
 
     create: function () {
