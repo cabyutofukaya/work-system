@@ -123,7 +123,7 @@ export default {
       {title: 'タクシー・バス会社', to: 'client-types.clients.index', params: {client_type: 'taxibus', _query: {initSearch: true}}, icon: 'mdi-car', dusk: "clientTypeTaxibusIndex"},
       {title: 'トラック会社', to: 'client-types.clients.index', params: {client_type: 'truck', _query: {initSearch: true}}, icon: 'mdi-truck', dusk: "clientTypeTruckIndex"},
       {title: '旅行業者など', to: 'client-types.clients.index', params: {client_type: 'travel', _query: {initSearch: true}}, icon: 'mdi-office-building', dusk: "clientTypeTravelIndex"},
-      {title: '飲食店', to: 'client-types.clients.index', params: {client_type: 'restaurant', _query: {initSearch: true}}, icon: 'mdi-silverware', dusk: "clientTypeRestaurantIndex"},
+      // {title: '飲食店', to: 'client-types.clients.index', params: {client_type: 'restaurant', _query: {initSearch: true}}, icon: 'mdi-silverware', dusk: "clientTypeRestaurantIndex"},
       {title: '商材の評価', to: 'product-evaluations', icon: 'mdi-alphabetical-variant', dusk: "productEvaluation"},
       {title: '日報', to: 'reports.index', icon: 'mdi-notebook', dusk: "reportIndex"},
       {title: '議事録', to: 'meetings.index', icon: 'mdi-file-document-edit', dusk: "meetingIndex"},
