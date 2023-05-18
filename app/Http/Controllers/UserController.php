@@ -51,7 +51,8 @@ class UserController extends Controller
 
                 $tmp['id'] = $data->id;
                 if (!($data->start_time)) {
-                    $tmp['title'] = '(終日) ';
+                    // $tmp['title'] = '(終日) ';
+                    $tmp['title'] = '';
                     $tmp['pops_time'] = '(終日)';
                 }else{
                     $tmp['pops_time'] = $data->start_time . ' ~ ' . $data->end_time . "\n"; 
