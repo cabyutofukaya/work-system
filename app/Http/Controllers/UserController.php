@@ -58,8 +58,8 @@ class UserController extends Controller
                 }
                 $tmp['title'] .= $data->title;
                 $tmp['pops_tile'] .= $data->title;
-                $tmp['color'] = '#2e8583';
-                $tmp['borderColor'] = '#2e8583';
+                $tmp['color'] = '#b3bab7';
+                $tmp['borderColor'] = '#b3bab7';
                 if ($data->title_type != '') {
                     $tmp['title'] .= '[' . $data->title_type . ']';
                     $tmp['color'] = $backgroudcolor[$data->title_type];
