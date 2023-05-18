@@ -46,8 +46,8 @@ class ScheduleController extends Controller
                 }
                 $tmp['title'] .= $data->title;
                 $tmp['pops_tile'] .= $data->title;
-                $tmp['color'] = '#b3bab7';
-                $tmp['borderColor'] = '#b3bab7';
+                $tmp['color'] = '#747876';
+                $tmp['borderColor'] = '#747876';
                 if ($data->title_type != '') {
                     $tmp['title'] .= '[' . $data->title_type . ']';
                     $tmp['color'] = $backgroudcolor[$data->title_type];
