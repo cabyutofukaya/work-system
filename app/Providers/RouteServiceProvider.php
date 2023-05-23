@@ -67,13 +67,18 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapUserRoutes()
     {
 
-        Route::domain('test.demo.grouptube.biz')
+        // Route::domain('test.')
+        //     ->middleware('web')
+        //     ->namespace($this->namespace)
+        //     ->group(base_path('routes/user.php'));
+
+        // Route::domain('{user}.' . 'grouptube.local')
+        //     ->namespace($this->namespace)
+        //     ->group(base_path('routes/user.php'));
+
+        Route::domain('{user}.' . 'grouptube.local')
             ->middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/user.php'));
-
-        // Route::domain('{user}.' . config('const.app_domain'))
-        //     ->namespace($this->namespace)
-        //     ->group(base_path('routes/user.php'));
     }
 }
