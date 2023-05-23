@@ -144,3 +144,14 @@ Route::group(['middleware' => 'auth:web,admin'], function () {
 
 // Sentryのエラーを発生させるテストページ
 Route::inertia('/sentry-test-send', "SentryTestSend")->name("sentry-test-send");
+
+
+Route::domain('{account}.grouptube.local')->group(function(){
+
+    Route::get('user/top', function($account){
+
+        echo $account;
+
+    });
+
+});

@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "ext-mbstring": "*",
         "ajcastro/eager-load-pivot-relations": "^0.2.2",
+        "barryvdh/laravel-cors": "^3.0",
         "deployer/deployer": "^7.0",
         "encore/laravel-admin": "^1.8",
         "erjanmx/laravel-migrate-check": "^2.3",
