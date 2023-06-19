@@ -16,5 +16,6 @@ use App\Http\Controllers\Users\HomeController;
 */
 
 // ホーム
-Route::get('/test', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
+
 
