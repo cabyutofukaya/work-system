@@ -91,7 +91,7 @@
                                 <v-col>
                                     <v-text-field type="time" name="start_time" v-model="form.start_time"
                                         :disabled="form.enabled" label="開始時間" :error="Boolean(form.errors.start_time)"
-                                        :error-messages="form.errors.start_time"></v-text-field>
+                                        :error-messages="form.errors.start_time" step="1800"></v-text-field>
                                 </v-col>
 
                                 <v-col>
@@ -182,7 +182,7 @@
                                     <v-text-field type="time" name="start_time" v-model="edit_form.start_time"
                                         :disabled="edit_form.enabled" label="開始時間"
                                         :error="Boolean(edit_form.errors.start_time)"
-                                        :error-messages="edit_form.errors.start_time"></v-text-field>
+                                        :error-messages="edit_form.errors.start_time" step="1800"></v-text-field>
                                 </v-col>
 
                                 <v-col>
@@ -372,6 +372,13 @@ export default {
 
         },
         handleEventClick: function (eventObj, el) {
+
+            if (eventObj.event.extendedProps.class == 'office-todos' || eventObj.event.extendedProps.class == 'sales-todos') {
+
+            return;
+            }
+
+
             axios.get(`/schedule/getData/${eventObj.event.id}`)
                 .then((res) => {
                     this.displaySchedule = true;

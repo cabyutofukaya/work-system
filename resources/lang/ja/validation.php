@@ -200,6 +200,7 @@ return [
         'is_private' => '非公開',
         'client_id' => '会社',
         'department' => '所属部署',
+        'img_file' => 'アイコン',
         'position' => '役職',
         'date_start' => '開始日',
         'date_end' => '終了日',

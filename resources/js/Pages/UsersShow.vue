@@ -81,6 +81,15 @@
               </div>
             </v-col>
           </v-row>
+
+          <v-row>
+            <v-col cols="12" sm="4">アイコン</v-col>
+            <v-col>
+              <img :src="`/storage/user/${user.img_file}`" alt="" class="c-img" width="200px">
+            </v-col>
+          </v-row>
+
+
         </div>
       </v-card-text>
 
@@ -429,8 +438,13 @@ export default {
     },
     handleEventClick: function (eventObj, el) {
 
-      console.log(eventObj.event.classNames);
-      if (eventObj.event.classNames == 'sales_part_todo_list' || eventObj.event.classNames == 'office_part_todo_list') {
+      console.log(eventObj.event.extendedProps.class);
+   
+      if (this.loginUser.id != this.user.id) {
+        return;
+      }
+
+      if (eventObj.event.extendedProps.class == 'office-todos' || eventObj.event.extendedProps.class == 'sales-todos') {
 
         return;
       }

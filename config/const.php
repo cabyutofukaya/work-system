@@ -41,7 +41,7 @@ return [
             'id' => 'travel',
             'name' => '旅行業者など',
             'icon' => 'mdi-airplane',
-            'payment_methods' => ["請(発行)","ノークーポン","発券清算","月一請求","添付","前振り込み","現地払い","直入金"],
+            'payment_methods' => ["請(発行)", "ノークーポン", "発券清算", "月一請求", "添付", "前振り込み", "現地払い", "直入金"],
             'groups' => ['JATA', 'ANTA', 'その他']
         ],
     ],
@@ -72,5 +72,7 @@ return [
     'front' => [
         'sentry_dsn' => env('SENTRY_DSN'),
         'google_map_api_key' => env('GOOGLE_MAP_API_KEY'),
-    ]
+    ],
+    // ドメイン
+    'app_domain' => 'localhost:8888',
 ];

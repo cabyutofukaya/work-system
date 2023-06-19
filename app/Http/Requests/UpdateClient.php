@@ -52,6 +52,9 @@ class UpdateClient extends FormRequest
             'fax' => ['nullable', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
             'business_hours' => ['nullable'],
             'description' => ['nullable'],
+            'manager_department' => ['nullable'],
+            'manager_position' => ['nullable'],
+            'manager_name' => ['nullable'],
 
             'genre_ids' => ['nullable', 'array'],
             'genre_ids.*' => ['nullable', Rule::exists('genres', "id")],

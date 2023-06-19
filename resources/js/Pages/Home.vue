@@ -59,6 +59,122 @@
       </v-card-text>
     </v-card>
 
+
+     <!-- 新着の議事録 -->
+     <v-card
+        flat tile
+        class="mt-6"
+        dusk="meeting"
+        v-if="meetings.length"
+    >
+      <v-card-title>
+        <v-icon dark left>mdi-file-document-edit</v-icon>
+        新着の議事録
+      </v-card-title>
+
+    
+      <v-list v-if="meetings.length">
+        <template v-if="$vuetify.breakpoint.smAndUp">
+          <v-list-item>
+            <v-list-item-content>
+              <v-row>
+                <v-col cols="12" sm="2">
+                  開催日時
+                </v-col>
+                <v-col cols="12" sm="6">
+                  会議名
+                </v-col>
+                <v-col cols="12" sm="2">
+                  名前
+                </v-col>
+                <v-col cols="12" sm="1" class="text-center">
+                  いいね
+                </v-col>
+                <v-col cols="12" sm="1" class="text-center">
+                  コメント
+                </v-col>
+              </v-row>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-divider class="mx-4"></v-divider>
+        </template>
+
+        <div v-for="meeting in meetings" :key="meeting.id">
+          <Link as="v-list-item" :href="$route('meetings.show', {id: meeting.id})">
+            <v-list-item-content>
+              <v-row>
+                <!-- PCビュー -->
+                <template v-if="$vuetify.breakpoint.smAndUp">
+                  <v-col sm="2">
+                    {{ meeting.started_at }}
+                  </v-col>
+                  <v-col sm="6">
+                    {{ meeting.title }}
+                  </v-col>
+                  <v-col sm="2">
+                    {{ meeting.user.name }}            
+                  </v-col>
+                </template>
+
+                <!-- スマートフォンビュー -->
+                <template v-else>
+                  <v-col cols="12">
+                    <div class="mb-1">{{ meeting.started_at }}</div>
+                    <div class="mb-1">{{ meeting.title }}</div>
+                    <div class="mb-6">{{ meeting.user.name }}</div>
+                  </v-col>
+                </template>
+
+                <!-- PCビュー -->
+                <template v-if="$vuetify.breakpoint.smAndUp">
+                  <v-col sm="1" class="text-center">
+                    {{ meeting["meeting_likes_count"] }}
+                  </v-col>
+                  <v-col sm="1" class="text-center">
+                    {{ meeting["meeting_comments_count"] }}
+                  </v-col>
+                </template>
+
+                <!-- スマートフォンビュー -->
+                <template v-else>
+                  <v-col cols="12" class="text-right">
+                    <v-chip small class="mr-2">
+                      いいね
+                      {{ meeting["meeting_likes_count"] }}
+                    </v-chip>
+                    <v-chip small class="mr-2">
+                      コメント
+                      {{ meeting["meeting_comments_count"] }}
+                    </v-chip>
+                  </v-col>
+                </template>
+              </v-row>
+            </v-list-item-content>
+          </Link>
+
+          <v-divider class="mx-4"></v-divider>
+        </div>
+      </v-list>
+
+      <div class="mt-4 text-right" v-if="meetings.length">
+        <Button
+            class="mb-2 mr-2"
+            :small="$vuetify.breakpoint.xs"
+            :to="$route('meetings.index')"
+            dusk="salesTodoIndex"
+        >
+          <v-icon>
+            mdi-format-list-bulleted
+          </v-icon>
+          すべての議事録を見る
+        </Button>
+      </div>
+
+      
+    </v-card>
+    
+
     <!-- 直近の営業ToDoリスト  -->
     <v-card
         flat tile
@@ -657,7 +773,7 @@ import {Link} from "@inertiajs/inertia-vue";
 export default {
   components: {Layout, Link},
 
-  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment'],
+  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment','meetings'],
 
   data: () => ({
     loading: {},

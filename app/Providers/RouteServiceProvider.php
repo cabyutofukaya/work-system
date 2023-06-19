@@ -47,6 +47,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
+        
+        $this->mapUserRoutes();
     }
 
     /**
@@ -59,5 +61,18 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
+    }
+
+    // 追加
+    protected function mapUserRoutes()
+    {
+
+        Route::domain('123.localhost:8888')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/user.php'));
+
+        // Route::domain('{user}.' . config('const.app_domain'))
+        //     ->namespace($this->namespace)
+        //     ->group(base_path('routes/user.php'));
     }
 }

@@ -90,8 +90,8 @@ class ScheduleController extends Controller
                 $tmp['pops_tile'] = '[営業 ]' . $tmp_clients->name;
                 $tmp['pops_time'] = date('G:i',strtotime($sales_todo->scheduled_at));
 
-                $tmp['url'] = '/sales-todos/' . $sales_todo->id  . '/edit';
-
+                // $tmp['url'] = '/sales-todos/' . $sales_todo->id  . '/edit';
+                $tmp['class'] = 'office-todos';
                 $schedule[$k] = $tmp;
                 $k++;
             }
@@ -113,8 +113,8 @@ class ScheduleController extends Controller
 
                 $tmp['pops_tile'] = ' (' .  '社内' . ') ' . $office_todo->title;
                 $tmp['pops_time'] = date('G:i',strtotime($office_todo->scheduled_at));
-
-                $tmp['url'] = '/office-todos/' . $office_todo->id  . '/edit';
+                $tmp['class'] = 'sales-todos';
+                // $tmp['url'] = '/office-todos/' . $office_todo->id  . '/edit';
 
                 $schedule[$k] = $tmp;
                 $k++;

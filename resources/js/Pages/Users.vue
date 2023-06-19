@@ -35,7 +35,7 @@
               </v-list-item-title>
 
               <v-list-item-subtitle>
-                ID: {{ user["username"] }}
+                 {{ user["email"] }}  <span v-if="user.tel">/{{ user["tel"]}}</span>  / 所属:{{ user["department"] }}  
               </v-list-item-subtitle>
             </v-list-item-content>
           </Link>

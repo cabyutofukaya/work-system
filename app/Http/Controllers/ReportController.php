@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use Log;
 
 class ReportController extends Controller
 {
@@ -53,15 +54,20 @@ class ReportController extends Controller
 
         // 非公開の日報を除外
         $reports->exceptPrivate();
-
+   
         return inertia('Reports', [
+
+
             'reports' => $reports->paginate()->withQueryString(),
+
+            // 'reports' => $report,
 
             // 検索フォームの初期値
             'form_params' => [
                 'client_id' => $request->input('client_id'),
                 'word' => $request->input('word'),
                 'only_complaint' => $request->input('only_complaint'),
+                'is_visited' => $request->input('is_visited'),
             ],
 
             // 会社ID検索時の対象
@@ -178,6 +184,16 @@ class ReportController extends Controller
             });
         }
 
+
+        // 未読のみ
+        if ($request->is_visited) {
+            $reports->WhereDoesntHave('report_visitors', function ($query) use ($request) {
+                $query->where('user_id', auth()->id());
+            });
+        }
+
+
+
         return $reports;
     }
 
@@ -248,17 +264,17 @@ class ReportController extends Controller
 
         // レスポンス
         return inertia('ReportsCreate', [
-            'client_types' => fn() => collect(config("const.client_types"))->values(),
-            'client_type_taxibus_categories' => fn() => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
+            'client_types' => fn () => collect(config("const.client_types"))->values(),
+            'client_type_taxibus_categories' => fn () => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
                 return ['id' => $id, 'name' => $name];
             })->values(),
-            'genres' => fn() => Genre::get(),
-            'clients_total_count' => fn() => Client::count(),
-            'clients_count' => Inertia::lazy(fn() => $clients->count()),
-            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
-            'products' => fn() => Product::get(),
-            'evaluations' => fn() => Evaluation::get(),
-            'sales_methods' => fn() => SalesMethod::get(),
+            'genres' => fn () => Genre::get(),
+            'clients_total_count' => fn () => Client::count(),
+            'clients_count' => Inertia::lazy(fn () => $clients->count()),
+            'clients' => Inertia::lazy(fn () => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
+            'products' => fn () => Product::get(),
+            'evaluations' => fn () => Evaluation::get(),
+            'sales_methods' => fn () => SalesMethod::get(),
         ]);
     }
 
@@ -450,18 +466,18 @@ class ReportController extends Controller
         }
 
         return inertia('ReportsEdit', [
-            'report' => fn() => $report,
-            'client_types' => fn() => collect(config("const.client_types"))->values(),
-            'client_type_taxibus_categories' => fn() => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
+            'report' => fn () => $report,
+            'client_types' => fn () => collect(config("const.client_types"))->values(),
+            'client_type_taxibus_categories' => fn () => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
                 return ['id' => $id, 'name' => $name];
             })->values(),
-            'genres' => fn() => Genre::get(),
-            'clients_total_count' => fn() => Client::count(),
-            'clients_count' => Inertia::lazy(fn() => $clients->count()),
-            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
-            'products' => fn() => Product::get(),
-            'evaluations' => fn() => Evaluation::get(),
-            'sales_methods' => fn() => SalesMethod::get(),
+            'genres' => fn () => Genre::get(),
+            'clients_total_count' => fn () => Client::count(),
+            'clients_count' => Inertia::lazy(fn () => $clients->count()),
+            'clients' => Inertia::lazy(fn () => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
+            'products' => fn () => Product::get(),
+            'evaluations' => fn () => Evaluation::get(),
+            'sales_methods' => fn () => SalesMethod::get(),
         ]);
     }
 

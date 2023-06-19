@@ -390,6 +390,7 @@ class ClientController extends Controller
             ->where("client_id", $client->id)
             ->get();
 
+
         return inertia('ClientsShow', [
             // 都道府県
             'prefectures' => config("const.prefectures"),

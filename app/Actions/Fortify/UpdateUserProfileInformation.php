@@ -16,8 +16,9 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update($user, array $input): void
+    public function update($user, array $input,string $file_name = ''): void
     {
+
         Validator::make($input, [
             'email' => [
                 'required',
@@ -29,12 +30,18 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
             'tel' => ["nullable", 'regex:/^[0-9][-0-9]+[0-9]$/'],
             'department' => ["nullable", "string"],
+            'img_file' => [
+                'mimes:jpeg,jpg,webp,gif,png',
+            ],
         ])->validateWithBag('updateProfileInformation');
+
+     
 
         $user->forceFill([
             'email' => $input['email'],
             'tel' => $input['tel'],
             'department' => $input['department'],
+            'img_file' => $file_name,
         ])->save();
     }
 }
