@@ -28,9 +28,9 @@ class Product extends BaseProduct implements Auditable
     {
         parent::boot();
 
-        // 日付順に並べる
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('id');
-        });
+        // // 日付順に並べる
+        // static::addGlobalScope('order', function (Builder $builder) {
+        //     $builder->orderBy('id');
+        // });
     }
 }

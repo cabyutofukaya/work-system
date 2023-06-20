@@ -51,14 +51,14 @@
                 </v-list-item>
 
 
-                <v-list-item class="mt-10">
+                <!-- <v-list-item class="mt-10">
                   <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="担当商材"
                  
                   :items="productList"  return-object
                     hint="担当商材の項目を絞り込みます。" persistent-hint
                     name="product" v-model="form.product" :error="Boolean(form.errors.product)" :error-messages="form.errors.product"
                     :autofocus="!$vuetify.breakpoint.xs"></v-select>
-                </v-list-item>
+                </v-list-item> -->
 
               </v-list>
             </v-card-text>
@@ -87,31 +87,39 @@
         </v-card>
       </v-dialog>
 
-      
-        <v-row>
+      <v-list>
+        <div v-for="user in users" :key="user.id">
+          <v-divider class="mx-4"></v-divider>
 
-          <v-col v-for="user in users" :key="user.id" cols="3" min-height="100%">
-            <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow">
-            <v-card class="ma-2 pa-2">
-              <v-img :src="`/storage/user/${user.img_file}`" height="200px" cover v-if="user.img_file"></v-img>
-              <v-img :src="`/storage/user/noimg.jpeg`" height="200px" cover v-if="!user.img_file"></v-img>
-              <v-card-title style="font-weight: bold;">{{ user['name'] }}</v-card-title>
-              <v-card-subtitle>
-                <v-icon>mdi-email-outline</v-icon> {{ user['email'] }} <br>
-                <v-icon>mdi-phone</v-icon> {{ user['tel'] }} <br>
-                <v-icon>mdi-account-group</v-icon> {{ user['department'] }}
-              </v-card-subtitle>
+          <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow">
 
-            </v-card>
+
+          <v-list-item-content>
+            <v-col cols="2">
+              <img :src="`/storage/user/${user.img_file}`" alt="" class="c-img" height="100px" width="150px" style="border-radius: 15%;margin: 0px 10px;" v-if="user.img_file">
+              <img :src="`/storage/user/noimg.jpeg`" alt="" class="c-img" height="100px" width="150px" style="border-radius: 15%;margin: 0px 10px;" v-if="!user.img_file">
+            </v-col>
+            <v-col>
+              <v-list-item-title style="font-weight: bold;font-size: 20px;">
+                {{ user["name"] }}
+              </v-list-item-title>
+
+              <v-list-item-subtitle>
+                <v-icon>mdi-email-outline</v-icon>{{ user["email"] }} <span v-if="user.tel">/<v-icon>mdi-phone</v-icon>{{ user["tel"] }}</span> / <v-icon>mdi-account-group </v-icon>所属:{{ user["department"] }}
+              </v-list-item-subtitle>
+            </v-col>
+          </v-list-item-content>
+
           </Link>
-          </v-col>
-       
-        </v-row>
-
+        </div>
+      </v-list>
 
       <v-divider></v-divider>
-    </v-card>
 
+      <v-card-text class="text-right">
+        <BackButton></BackButton>
+      </v-card-text>
+    </v-card>
   </Layout>
 </template>
 
@@ -122,7 +130,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ["users", "form_params","productList"],
+  props: ["users", "form_params"],
 
   data() {
     return {

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ShowMeeting;
+use App\Models\Product;
 
 class UserController extends Controller
 {
@@ -25,11 +26,21 @@ class UserController extends Controller
 
         $users = $this->search($request);
 
+        $products = Product::get(['name']);
+        $productList = [];
+        foreach ($products as $k => $product) {
+            $productList[$k] = $product->name;
+        }
+
         return inertia('Users', [
             'users' => $users->get(),
+
+            'productList' => $productList,
+
             // 検索フォームの初期値
             'form_params' => [
                 'word' => $request->input('word'),
+                'product' => $request->input('product'),
             ],
         ]);
     }
@@ -62,16 +73,17 @@ class UserController extends Controller
                     $query->orWhereLike('name', $word);
                     $query->orWhereLike('email', $word);
                     $query->orWhereLike('department', $word);
-
-                //   // ユーザID・ユーザ名を検索
-                //   $query->orWhereHas('products', function ($query) use ($word) {
-                //     $query->where('name', $word);
-                // });
-           
                 });
             }
         }
-     
+
+        // ワード検索
+        if ($request->filled('product')) {
+            $users->whereHas('products', function ($query) use ($request) {
+                $query->where('name', $request['product']);
+            });
+        }
+
 
         return $users;
     }
