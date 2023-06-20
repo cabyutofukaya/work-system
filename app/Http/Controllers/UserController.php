@@ -52,7 +52,7 @@ class UserController extends Controller
             exit;
         }
 
-        $users = User::with(['products:id,name']);
+        $users = User::orderBy('name_kana', 'ASC')->with(['products:id,name']);
 
         // ワード検索
         if ($request->filled('word')) {
