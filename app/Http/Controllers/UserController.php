@@ -63,17 +63,15 @@ class UserController extends Controller
                     $query->orWhereLike('email', $word);
                     $query->orWhereLike('department', $word);
 
-                  // ユーザID・ユーザ名を検索
-                  $query->orWhereHas('products', function ($query) use ($word) {
-                    $query->where('name', $word);
-                });
+                //   // ユーザID・ユーザ名を検索
+                //   $query->orWhereHas('products', function ($query) use ($word) {
+                //     $query->where('name', $word);
+                // });
            
                 });
             }
         }
-        // dd($users->toSql(), $users->getBindings());
-
-        // dd($users);
+     
 
         return $users;
     }
