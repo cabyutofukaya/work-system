@@ -26,7 +26,7 @@ class UserController extends Controller
         $users = $this->search($request);
 
         return inertia('Users', [
-            'users' => $users->paginate()->withQueryString(),
+            'users' => $users->get(),
             // 検索フォームの初期値
             'form_params' => [
                 'word' => $request->input('word'),
