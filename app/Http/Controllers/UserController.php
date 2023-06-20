@@ -26,7 +26,7 @@ class UserController extends Controller
 
         $users = $this->search($request);
 
-        $products = Product::get(['name'])->orderBy('id','ASC');
+        $products = Product::orderBy('id','ASC')->get(['name']);
         $productList = [];
         foreach ($products as $k => $product) {
             $productList[$k] = $product->name;
