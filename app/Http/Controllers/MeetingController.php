@@ -140,7 +140,7 @@ class MeetingController extends Controller
             }
         }
 
-        dd($meetings->toSql(), $meetings->getBindings());
+        // dd($meetings->toSql(), $meetings->getBindings());
   
 
         return $meetings;
