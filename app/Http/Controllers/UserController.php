@@ -71,7 +71,7 @@ class UserController extends Controller
                 });
             }
         }
-        dd($users->toSql(), $users->getBindings());
+        // dd($users->toSql(), $users->getBindings());
 
         // dd($users);
 
@@ -90,7 +90,7 @@ class UserController extends Controller
 
         $user->load("products:id,name");
 
-        dd($user->toSql(), $user->getBindings());
+        // dd($user->toSql(), $user->getBindings());
 
         $schedule_list = DB::table('schedules')->where('date', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
