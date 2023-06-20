@@ -89,15 +89,23 @@
                                         pt="0"></v-checkbox></v-col>
 
                                 <v-col>
-                                    <v-text-field type="time" name="start_time" v-model="form.start_time"
-                                        :disabled="form.enabled" label="開始時間" :error="Boolean(form.errors.start_time)"
-                                        :error-messages="form.errors.start_time" step="1800"></v-text-field>
+                                    <v-select label="開始時間"
+                                        :items="[
+                                           '06:00', '06:30', '07:00', '07:30',  '08:00', '08:30',  '09:00', '09:30',  '10:00', '10:30',  '11:00', '11:30',  '12:00', '12:30',  '13:00', '13:30',  '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30','18:00', '18:30','19:00', '19:30','20:00', '20:30','21:00', '21:30','22:00',
+                                        ]" name="start_time" v-model="form.start_time" :disabled="form.enabled" :error="Boolean(form.errors.start_time)"
+                                        :error-messages="form.errors.start_time"></v-select>
+                                    
+                                       
                                 </v-col>
 
                                 <v-col>
-                                    <v-text-field type="time" name="end_time" v-model="form.end_time"
-                                        :disabled="form.enabled" label="終了時間" :error="Boolean(form.errors.end_time)"
-                                        :error-messages="form.errors.end_time"></v-text-field>
+                                    <v-select label="終了時間"
+                                        :items="[
+                                           '06:00', '06:30', '07:00', '07:30',  '08:00', '08:30',  '09:00', '09:30',  '10:00', '10:30',  '11:00', '11:30',  '12:00', '12:30',  '13:00', '13:30',  '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30','18:00', '18:30','19:00', '19:30','20:00', '20:30','21:00', '21:30','22:00',
+                                        ]" name="end_time" v-model="form.end_time"
+                                        :disabled="form.enabled" :error="Boolean(form.errors.end_time)"
+                                        :error-messages="form.errors.end_time"></v-select>
+
                                 </v-col>
                             </v-row>
 
@@ -179,17 +187,24 @@
                                         label="終日" pt="0"></v-checkbox></v-col>
 
                                 <v-col>
-                                    <v-text-field type="time" name="start_time" v-model="edit_form.start_time"
-                                        :disabled="edit_form.enabled" label="開始時間"
-                                        :error="Boolean(edit_form.errors.start_time)"
-                                        :error-messages="edit_form.errors.start_time" step="1800"></v-text-field>
+
+                                    <v-select label="開始時間"
+                                        :items="[
+                                           '06:00', '06:30', '07:00', '07:30',  '08:00', '08:30',  '09:00', '09:30',  '10:00', '10:30',  '11:00', '11:30',  '12:00', '12:30',  '13:00', '13:30',  '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30','18:00', '18:30','19:00', '19:30','20:00', '20:30','21:00', '21:30','22:00',
+                                        ]" name="start_time" v-model="edit_form.start_time" :disabled="edit_form.enabled" :error="Boolean(edit_form.errors.start_time)"
+                                        :error-messages="edit_form.errors.start_time"></v-select>
+
+                                    
                                 </v-col>
 
                                 <v-col>
-                                    <v-text-field type="time" name="end_time" v-model="edit_form.end_time"
-                                        :disabled="edit_form.enabled" label="終了時間"
-                                        :error="Boolean(edit_form.errors.end_time)"
-                                        :error-messages="edit_form.errors.end_time"></v-text-field>
+                                    <v-select label="開始時間"
+                                        :items="[
+                                           '06:00', '06:30', '07:00', '07:30',  '08:00', '08:30',  '09:00', '09:30',  '10:00', '10:30',  '11:00', '11:30',  '12:00', '12:30',  '13:00', '13:30',  '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30','18:00', '18:30','19:00', '19:30','20:00', '20:30','21:00', '21:30','22:00',
+                                        ]" name="end_time" v-model="edit_form.end_time" :disabled="edit_form.enabled" :error="Boolean(edit_form.errors.end_time)"
+                                        :error-messages="edit_form.errors.end_time"></v-select>
+
+                                 
                                 </v-col>
                             </v-row>
 
@@ -375,7 +390,7 @@ export default {
 
             if (eventObj.event.extendedProps.class == 'office-todos' || eventObj.event.extendedProps.class == 'sales-todos') {
 
-            return;
+                return;
             }
 
 

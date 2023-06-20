@@ -85,14 +85,67 @@
               </v-col>
             </v-row>
 
+
             <v-row>
               <v-col cols="12" sm="4">アイコン</v-col>
               <v-col>
-                <v-file-input dense filled prepend-icon="" prepend-inner-icon="mdi-paperclip" id="img_file"
-                  v-model="formProfile.img_file" :error="Boolean(formProfile.errors.img_file)"
+                <v-file-input dense filled prepend-icon="" prepend-inner-icon="mdi-paperclip" id="img_file"  v-model="formProfile.img_file"
+                  :error="Boolean(formProfile.errors.img_file)"
                   :error-messages="formProfile.errors.img_file"></v-file-input>
               </v-col>
             </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="4">趣味</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="hobby"
+                  v-model="formProfile.hobby" maxlength="200" :error="Boolean(formProfile.errors.hobby)"
+                  :error-messages="formProfile.errors.hobby"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="4">特技</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="skill"
+                  v-model="formProfile.skill" maxlength="200" :error="Boolean(formProfile.errors.skill)"
+                  :error-messages="formProfile.errors.skill"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="4">好きな食べ物</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="food"
+                  v-model="formProfile.food" maxlength="200" :error="Boolean(formProfile.errors.food)"
+                  :error-messages="formProfile.errors.food"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="4">好きな旅行先</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="trip"
+                  v-model="formProfile.trip" maxlength="200" :error="Boolean(formProfile.errors.trip)"
+                  :error-messages="formProfile.errors.trip"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="4">自己紹介を一言でどうぞ</v-col>
+              <v-col>
+                <v-textarea
+                    dense filled
+                    prepend-inner-icon="mdi-pencil"
+                    name="free"
+                    v-model="formProfile.free"
+                    :error="Boolean(formProfile.errors.free)"
+                    :error-messages="formProfile.errors.free"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+
+          
 
           </div>
 
@@ -171,6 +224,7 @@ export default {
         onFinish: () => this.$set(this.loading, "user-profile-information-update", false),
       });
     },
+   
   }
 }
 </script>

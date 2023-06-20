@@ -30,9 +30,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
             'tel' => ["nullable", 'regex:/^[0-9][-0-9]+[0-9]$/'],
             'department' => ["nullable", "string"],
-            'img_file' => [
-                'mimes:jpeg,jpg,webp,gif,png',
-            ],
+          
+            'hobby' => ["nullable"],
+            'skill' => ["nullable"],
+            'food' => ["nullable"],
+            'trip' => ["nullable"],
+            'free' => ["nullable"],
         ])->validateWithBag('updateProfileInformation');
 
      
@@ -42,6 +45,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'tel' => $input['tel'],
             'department' => $input['department'],
             'img_file' => $file_name,
+            'hobby' => $input['hobby'],
+            'skill' => $input['skill'],
+            'food' => $input['food'],
+            'trip' => $input['trip'],
+            'free' => $input['free'],
         ])->save();
     }
 }

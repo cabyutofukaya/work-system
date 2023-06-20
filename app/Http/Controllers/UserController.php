@@ -7,6 +7,10 @@ use Inertia\Response;
 use Inertia\ResponseFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ShowMeeting;
 
 class UserController extends Controller
 {
@@ -15,13 +19,63 @@ class UserController extends Controller
      *
      * @return \Inertia\Response|\Inertia\ResponseFactory
      */
-    public function index(): Response|ResponseFactory
+    public function index(Request $request): Response|ResponseFactory
     {
-        $users = User::orderBy('name_kana','ASC')->get();
+        // $users = User::orderBy('name_kana', 'ASC')->get();
+
+        $users = $this->search($request);
 
         return inertia('Users', [
-            'users' => $users,
+            'users' => $users->paginate()->withQueryString(),
+            // 検索フォームの初期値
+            'form_params' => [
+                'word' => $request->input('word'),
+            ],
         ]);
+    }
+
+
+    /**
+     * 
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function search(Request $request): Builder
+    {
+        // GETメソッドではInertiaによるバリデーションエラー処理が行われないため
+        // リダイレクトを行わずエラーをhttpボディとして出力
+        $validator = Validator::make($request->all(), (new ShowMeeting())->rules());
+        if ($validator->fails()) {
+            response(implode("\n", $validator->errors()->all()), 422)->send();
+            exit;
+        }
+
+        $users = User::with(['products:id,name']);
+
+        // ワード検索
+        if ($request->filled('word')) {
+            foreach (preg_split('/[\p{Z}\p{Cc}]++/u', $validator->validated()["word"], -1, PREG_SPLIT_NO_EMPTY) as $word) {
+                $users->where(function ($query) use ($word) {
+
+                    $query->orWhereLike('name', $word);
+                    $query->orWhereLike('email', $word);
+                    $query->orWhereLike('department', $word);
+
+                  // ユーザID・ユーザ名を検索
+                  $query->orWhereHas('products', function ($query) use ($word) {
+                    $query->where('name', $word);
+                });
+           
+                });
+            }
+        }
+        dd($users->toSql(), $users->getBindings());
+
+        // dd($users);
+
+        return $users;
     }
 
     /**
@@ -35,6 +89,8 @@ class UserController extends Controller
         // dd($user);
 
         $user->load("products:id,name");
+
+        dd($user->toSql(), $user->getBindings());
 
         $schedule_list = DB::table('schedules')->where('date', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
@@ -54,10 +110,10 @@ class UserController extends Controller
                     // $tmp['title'] = '(終日) ';
                     $tmp['title'] = '';
                     $tmp['pops_time'] = '(終日) ';
-                }else{
-                    $tmp['pops_time'] = $data->start_time . ' ~ ' . $data->end_time . "\n"; 
+                } else {
+                    $tmp['pops_time'] = $data->start_time . ' ~ ' . $data->end_time . "\n";
                 }
-              
+
                 $tmp['color'] = '#747876';
                 $tmp['borderColor'] = '#747876';
                 if ($data->title_type != '') {
@@ -70,12 +126,12 @@ class UserController extends Controller
                 if ($data->start_time) {
                     $tmp['start'] .= ' ' . $data->start_time;
                     $tmp['end'] = $data->date . ' ' . $data->end_time;
-                    $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
+                    $tmp['title'] = mb_substr($tmp['title'], 0, 14);
                 }
 
                 $tmp['title'] .= $data->title;
                 $tmp['pops_tile'] .= $data->title;
-               
+
                 $tmp['content'] = $data->content ?? '';
 
                 $schedule[$k] = $tmp;
@@ -96,13 +152,13 @@ class UserController extends Controller
                 $tmp['id'] = $sales_todo->id;
                 // $tmp['title'] =  '[営業]';
                 $tmp['title'] = '[営業] ' . $tmp_clients->name;
-                $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
-                $tmp['color'] = '#fa3c3c'; 
-                $tmp['start'] = date('Y-m-d G:i',strtotime($sales_todo->scheduled_at));
+                $tmp['title'] = mb_substr($tmp['title'], 0, 14);
+                $tmp['color'] = '#fa3c3c';
+                $tmp['start'] = date('Y-m-d G:i', strtotime($sales_todo->scheduled_at));
                 $tmp['content'] = $sales_todo->description;
 
                 $tmp['pops_tile'] = '[営業] ' . $tmp_clients->name;
-                $tmp['pops_time'] = date('G:i',strtotime($sales_todo->scheduled_at));
+                $tmp['pops_time'] = date('G:i', strtotime($sales_todo->scheduled_at));
 
                 // $tmp['url'] = '/sales-todos/' . $sales_todo->id  . '/edit';
                 $tmp['class'] = 'sales-todos';
@@ -117,16 +173,16 @@ class UserController extends Controller
         if ($office_todo_list) {
             foreach ($office_todo_list as $office_todo) {
 
-            
+
                 $tmp = [];
                 $tmp['id'] = $office_todo->id;
                 $tmp['title'] = $office_todo->title;
                 $tmp['color'] = '#0c44fa';
-                $tmp['start'] = date('Y-m-d G:i',strtotime($office_todo->scheduled_at));
+                $tmp['start'] = date('Y-m-d G:i', strtotime($office_todo->scheduled_at));
                 $tmp['content'] = $office_todo->description;
 
                 $tmp['pops_tile'] = ' (' .  '社内' . ') ' . $office_todo->title;
-                $tmp['pops_time'] = date('G:i',strtotime($office_todo->scheduled_at));
+                $tmp['pops_time'] = date('G:i', strtotime($office_todo->scheduled_at));
 
                 // $tmp['url'] = '/office-todos/' . $office_todo->id  . '/edit';
 
@@ -136,7 +192,7 @@ class UserController extends Controller
                 $k++;
             }
         }
-       
+
         return inertia('UsersShow', [
             'user' => $user,
             'schedule' => $schedule,

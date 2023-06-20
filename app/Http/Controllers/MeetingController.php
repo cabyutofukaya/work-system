@@ -43,6 +43,9 @@ class MeetingController extends Controller
         // 以降の $request->input はバリデーション済み
         $meetings = $this->search($request);
 
+        // dd($meetings->toSql(), $meetings->getBindings());
+
+
         return inertia('Meetings', [
             'meetings' => $meetings->paginate()->withQueryString(),
 
@@ -65,6 +68,7 @@ class MeetingController extends Controller
         // index/mine共通処理
         // 以降の $request->input はバリデーション済み
         $meetings = $this->search($request);
+
 
         // 自分の議事録に絞る
         $meetings->where('user_id', Auth::id());
@@ -111,6 +115,7 @@ class MeetingController extends Controller
             ]);
 
 
+
         // ワード検索
         if ($request->filled('word')) {
             foreach (preg_split('/[\p{Z}\p{Cc}]++/u', $validator->validated()["word"], -1, PREG_SPLIT_NO_EMPTY) as $word) {
@@ -134,6 +139,9 @@ class MeetingController extends Controller
                 });
             }
         }
+
+        dd($meetings->toSql(), $meetings->getBindings());
+  
 
         return $meetings;
     }
