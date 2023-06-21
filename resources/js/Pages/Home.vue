@@ -4,7 +4,7 @@
         flat tile
     >
       <v-card-text class="pb-0 text-right text-body-2">
-        お疲れ様です、{{ $page.props.auth.user.name }}さん
+        お疲れ様です、{{ $page.props.auth.user.name }}さん!
       </v-card-text>
     </v-card>
 

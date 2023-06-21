@@ -16,7 +16,7 @@ class UserProfileController extends Controller
     public function edit(): Response|ResponseFactory
     {
         return inertia('UserProfileEdit', [
-            'user' => User::find(auth()->id())->only(["email", "tel", "department","img_file","hobby","skill","food","trip","free"]),
+            'user' => User::find(auth()->id())->only(["email", "tel", "department","img_file","hobby","skill","food","trip","free","name_kana"]),
         ]);
     }
 }

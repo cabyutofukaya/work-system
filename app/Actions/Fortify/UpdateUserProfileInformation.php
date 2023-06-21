@@ -30,7 +30,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
             'tel' => ["nullable", 'regex:/^[0-9][-0-9]+[0-9]$/'],
             'department' => ["nullable", "string"],
-          
+            'name_kana' => [
+                "required",
+                'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u',
+            ],
             'hobby' => ["nullable"],
             'skill' => ["nullable"],
             'food' => ["nullable"],
@@ -41,6 +44,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      
 
         $user->forceFill([
+            'name_kana' => $input['name_kana'],
             'email' => $input['email'],
             'tel' => $input['tel'],
             'department' => $input['department'],

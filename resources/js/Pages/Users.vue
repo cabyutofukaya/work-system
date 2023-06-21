@@ -7,7 +7,8 @@
       </v-card-title>
 
       <v-card-text>
-        <v-row>
+
+        <v-row v-if="windowSize >= 800">
 
           <v-col>
             <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="searchDialog = true"
@@ -29,6 +30,29 @@
             </Button>
           </v-col>
         </v-row>
+
+        <v-row v-if="windowSize < 800">
+
+          <v-col class="text-right">
+
+            <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="searchDialog = true"
+              :color="formParamsCount ? 'warning' : undefined">
+            <v-icon left>
+              mdi-filter-outline
+            </v-icon>
+            絞り込み
+            <!-- <span v-if="formParamsCount">({{ formParamsCount }})</span> -->
+            </Link>
+            
+            <Button :small="$vuetify.breakpoint.xs" :to="$route('user-profile-information.edit')">
+              <v-icon left>
+                mdi-pencil
+              </v-icon>
+              自分のメンバー情報を編集する
+            </Button>
+          </v-col>
+        </v-row>
+
       </v-card-text>
 
 
@@ -52,11 +76,9 @@
 
 
                 <v-list-item class="mt-10">
-                  <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="担当商材"
-                 
-                  :items="productList"  return-object
-                    hint="担当商材の項目を絞り込みます。" persistent-hint
-                    name="product" v-model="form.product" :error="Boolean(form.errors.product)" :error-messages="form.errors.product"
+                  <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="担当商材" :items="productList"
+                    return-object hint="担当商材の項目を絞り込みます。" persistent-hint name="product" v-model="form.product"
+                    :error="Boolean(form.errors.product)" :error-messages="form.errors.product"
                     :autofocus="!$vuetify.breakpoint.xs"></v-select>
                 </v-list-item>
 
@@ -87,26 +109,56 @@
         </v-card>
       </v-dialog>
 
-      
-        <v-row>
+      <div class="d-flex align-center flex-column" v-if="windowSize >= 800">
 
-          <v-col v-for="user in users" :key="user.id" cols="3" min-height="100%">
+        <v-row v-if="windowSize >= 800">
+
+          <v-col v-for="user in users" :key="user.id" cols="4" class="mx-auto my-12" max-width="374" min-width="300">
             <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow">
             <v-card class="ma-2 pa-2">
-              <v-img :src="`/storage/user/${user.img_file}`" height="200px" cover v-if="user.img_file"></v-img>
-              <v-img :src="`/storage/user/noimg.jpeg`" height="200px" cover v-if="!user.img_file"></v-img>
-              <v-card-title style="font-weight: bold;">{{ user['name'] }}</v-card-title>
-              <v-card-subtitle>
+
+              <v-img :src="`/storage/user/${user.img_file}`" cover width="375" height="250" v-if="user.img_file"
+                class="align-center"></v-img>
+              <v-img :src="`/storage/user/noimg.jpeg`" cover v-if="!user.img_file" width="375" height="250"
+                class="align-center"></v-img>
+              <v-card-title style="font-weight: bold;">{{ user['name'] }} ({{ user['name_kana'] }})</v-card-title>
+              <v-card-subtitle class="mt-5">
                 <v-icon>mdi-email-outline</v-icon> {{ user['email'] }} <br>
                 <v-icon>mdi-phone</v-icon> {{ user['tel'] }} <br>
                 <v-icon>mdi-account-group</v-icon> {{ user['department'] }}
               </v-card-subtitle>
 
             </v-card>
-          </Link>
+            </Link>
           </v-col>
-       
+
         </v-row>
+
+      </div>
+
+      <v-container>
+        <v-row v-if="windowSize < 800" dense>
+
+          <v-col v-for="user in users" :key="user.id" cols="12" class="mx-auto my-3" max-width="120">
+            <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow" class="mx-auto">
+            <v-card class="ma-2 pa-2">
+              <v-img :src="`/storage/user/${user.img_file}`" cover width="375" height="250" v-if="user.img_file"
+                class="align-center"></v-img>
+              <v-img :src="`/storage/user/noimg.jpeg`" cover v-if="!user.img_file" width="375" height="250"></v-img>
+              <v-card-title style="font-weight: bold;">{{ user['name'] }}</v-card-title>
+              <v-card-subtitle class="mt-5">
+                <v-icon>mdi-email-outline</v-icon> {{ user['email'] }} <br>
+                <v-icon>mdi-phone</v-icon> {{ user['tel'] }} <br>
+                <v-icon>mdi-account-group</v-icon> {{ user['department'] }}
+              </v-card-subtitle>
+
+            </v-card>
+            </Link>
+          </v-col>
+
+        </v-row>
+      </v-container>
+
 
 
       <v-divider></v-divider>
@@ -122,7 +174,9 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ["users", "form_params","productList"],
+  props: ["users", "form_params", "productList"],
+
+
 
   data() {
     return {
@@ -130,6 +184,7 @@ export default {
       // 検索ダイアログ
       searchDialog: false,
       form: this.$inertia.form(this.form_params),
+      windowSize: window.innerWidth,
 
 
       // 設定されている検索条件の件数
@@ -168,7 +223,17 @@ export default {
     closeSearchDialog() {
       //  ダイアログを閉じる
       this.searchDialog = false;
+    },
+    handleResize: function () {
+      // resizeのたびにこいつが発火するので、ここでやりたいことをやる
+      this.windowSize = window.innerWidth;
     }
+  },
+  mounted: function () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>

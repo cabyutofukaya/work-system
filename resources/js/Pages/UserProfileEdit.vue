@@ -58,6 +58,16 @@
       <v-card-text>
         <form @submit.prevent="updateProfile">
           <div class="description-form">
+
+            <v-row>
+              <v-col cols="12" sm="4">メンバー名(カナ)</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="name_kana" v-model="formProfile.name_kana"
+                  maxlength="200" :error="Boolean(formProfile.errors.name_kana)"
+                  :error-messages="formProfile.errors.name_kana"></v-text-field>
+              </v-col>
+            </v-row>
+
             <v-row>
               <v-col cols="12" sm="4">メールアドレス</v-col>
               <v-col>
