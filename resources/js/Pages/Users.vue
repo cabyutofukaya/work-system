@@ -43,7 +43,7 @@
             絞り込み
             <!-- <span v-if="formParamsCount">({{ formParamsCount }})</span> -->
             </Link>
-            
+
             <Button :small="$vuetify.breakpoint.xs" :to="$route('user-profile-information.edit')">
               <v-icon left>
                 mdi-pencil
@@ -136,29 +136,33 @@
 
       </div>
 
-      <v-container>
-        <v-row v-if="windowSize < 800" dense>
+      <v-list v-if="windowSize < 800">
+        <div v-for="user in users" :key="user.id">
+          <v-divider class="mx-4"></v-divider>
 
-          <v-col v-for="user in users" :key="user.id" cols="12" class="mx-auto my-3" max-width="120">
-            <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow" class="mx-auto">
-            <v-card class="ma-2 pa-2">
-              <v-img :src="`/storage/user/${user.img_file}`" cover width="375" height="250" v-if="user.img_file"
-                class="align-center"></v-img>
-              <v-img :src="`/storage/user/noimg.jpeg`" cover v-if="!user.img_file" width="375" height="250"></v-img>
-              <v-card-title style="font-weight: bold;">{{ user['name'] }}</v-card-title>
-              <v-card-subtitle class="mt-5">
-                <v-icon>mdi-email-outline</v-icon> {{ user['email'] }} <br>
-                <v-icon>mdi-phone</v-icon> {{ user['tel'] }} <br>
-                <v-icon>mdi-account-group</v-icon> {{ user['department'] }}
-              </v-card-subtitle>
+          <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow">
 
-            </v-card>
-            </Link>
-          </v-col>
 
-        </v-row>
-      </v-container>
+          <v-list-item-content class="px-auto">
+            <!-- <img :src="`/storage/user/${user.img_file}`" alt="" class="c-img" height="80px"
+              style="border-radius: 15%;margin: 0px 10px;" v-if="user.img_file">
+            <img :src="`/storage/user/noimg.jpeg`" alt="" class="c-img" height="80px"
+              style="border-radius: 15%;margin: 0px 10px;" v-if="!user.img_file"> -->
 
+            <v-list-item-title style="font-weight: bold;">
+              {{ user["name"] }} ({{ user["name_kana"] }})
+            </v-list-item-title>
+
+            <v-list-item-subtitle>
+              <v-icon>mdi-email-outline</v-icon>{{ user["email"] }}<br><v-icon>mdi-phone</v-icon>{{ user["tel"] }}<br>
+              <v-icon>mdi-account-group </v-icon>所属:{{ user["department"] }}
+            </v-list-item-subtitle>
+
+          </v-list-item-content>
+
+          </Link>
+        </div>
+      </v-list>
 
 
       <v-divider></v-divider>

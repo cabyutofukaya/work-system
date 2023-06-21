@@ -43,7 +43,7 @@ class StoreSchedule extends FormRequest
             'start_time' => ['required_if:enabled,false'],
             'end_time' => ['required_if:enabled,false'],
             'start_time' => ['required_if:enabled,false'],
-            'end_time' => ['required_if:enabled,false'],
+            // 'end_time' => ['required_if:enabled,false'],
             // 'end_time' => ['after:start_time'],
             // 'end_time' => ['exclude_unless:enabled,false|after:start_time'],
             'start_date' => ['required_if:rangeEnabled,true'],

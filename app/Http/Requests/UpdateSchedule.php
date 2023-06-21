@@ -40,7 +40,7 @@ class UpdateSchedule extends FormRequest
             'content' => ['required'],
             'date' => ['required'],
             'start_time' => ['required_if:enabled,false'],
-            'end_time' => ['required_if:enabled,false'],
+            // 'end_time' => ['required_if:enabled,false'],
             // 'end_time' => ['required_if:enabled|after:start_time'],
             'title' => ['required_without:title_type'],
             'title_type' => ['required_without:title'],
