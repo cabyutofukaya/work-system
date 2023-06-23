@@ -86,7 +86,8 @@
         </template>
 
         <div v-for="meeting in meetings['data']" :key="meeting.id">
-          <Link as="v-list-item" :href="$route('meetings.show', {id: meeting.id})" dusk="meetingShow">
+       
+          <Link as="v-list-item" :href="$route('meetings.show', {id: meeting.id})" target="_blank" dusk="meetingShow">
             <v-list-item-content>
               <v-row :class="{'grey': meeting['is_visited'], 'lighten-4': meeting['is_visited']}">
                 <!-- PCビュー -->
@@ -137,6 +138,7 @@
               </v-row>
             </v-list-item-content>
           </Link>
+        
 
           <v-divider class="mx-4"></v-divider>
         </div>
@@ -196,6 +198,13 @@
                     :autofocus="!$vuetify.breakpoint.xs"
                 ></v-text-field>
               </v-list-item>
+
+              <v-list-item class="mt-4">
+                <v-switch dense filled class="mt-0 ml-2" color="warning" label="未読分表示" hint="未読分を絞り込みます"
+                  persistent-hint name="is_visited" v-model="form.is_visited" true-value="1" false-value=""
+                  :error="Boolean(form.errors.is_visited)" :error-messages="form.errors.is_visited"></v-switch>
+              </v-list-item>
+
             </v-list>
           </v-card-text>
 

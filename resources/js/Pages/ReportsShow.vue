@@ -141,6 +141,11 @@
                         {{ product.name }}
                       </div>
                     </template>
+
+                    <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
+                      {{ report_content["product_description"]}}
+                    
+                    
                   </v-col>
 
                   <v-col cols="12" sm="">

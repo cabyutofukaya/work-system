@@ -1,8 +1,6 @@
 <template>
   <Layout>
-    <v-card
-        flat tile
-    >
+    <v-card flat tile>
       <v-card-title>
         <v-icon dark left>mdi-notebook</v-icon>
         日報の編集
@@ -17,16 +15,8 @@
             </v-col>
 
             <v-col>
-              <v-text-field
-                  prepend-icon="mdi-calendar"
-                  type="date"
-                  name="date"
-                  v-model="form.date"
-                  required
-                  maxlength="200"
-                  :error="Boolean(form.errors.date)"
-                  :error-messages="form.errors.date"
-              ></v-text-field>
+              <v-text-field prepend-icon="mdi-calendar" type="date" name="date" v-model="form.date" required
+                maxlength="200" :error="Boolean(form.errors.date)" :error-messages="form.errors.date"></v-text-field>
             </v-col>
           </v-row>
 
@@ -36,18 +26,9 @@
             </v-col>
 
             <v-col>
-              <v-switch
-                  dense filled
-                  class="ma-0 pa-0"
-                  color="warning"
-                  :label="(form.is_private) ? '非公開' : '公開'"
-                  :prepend-icon="(form.is_private) ? 'mdi-eye-off' : 'mdi-eye'"
-                  name="is_private"
-                  v-model="form.is_private"
-                  required
-                  :error="Boolean(form.errors.is_private)"
-                  :error-messages="form.errors.is_private"
-              ></v-switch>
+              <v-switch dense filled class="ma-0 pa-0" color="warning" :label="(form.is_private) ? '非公開' : '公開'"
+                :prepend-icon="(form.is_private) ? 'mdi-eye-off' : 'mdi-eye'" name="is_private" v-model="form.is_private"
+                required :error="Boolean(form.errors.is_private)" :error-messages="form.errors.is_private"></v-switch>
             </v-col>
           </v-row>
         </div>
@@ -56,10 +37,7 @@
       <v-divider class="mx-4 my-4" v-if="form['report_contents'].length"></v-divider>
 
       <!-- 報告リスト -->
-      <v-card-text
-          v-for="(report_content, index) in form['report_contents']"
-          :key="index"
-      >
+      <v-card-text v-for="(report_content, index) in form['report_contents']" :key="index">
         <div class=report-description-list>
           <v-row class="grey lighten-3 px-6">
             <v-col>
@@ -82,19 +60,17 @@
                 <h4 class="mb-1">会社</h4>
                 <div class="d-flex align-center">
                   <div>
-                    <Link :href="$route('clients.show', { client: report_content.client.id})">
-                      <v-list-item-avatar tile>
-                        <v-img
-                            :src="report_content.client['icon_image_url']" alt=""
-                        ></v-img>
-                      </v-list-item-avatar>
+                    <Link :href="$route('clients.show', { client: report_content.client.id })">
+                    <v-list-item-avatar tile>
+                      <v-img :src="report_content.client['icon_image_url']" alt=""></v-img>
+                    </v-list-item-avatar>
                     </Link>
                   </div>
 
                   <div>
                     <div>
-                      <Link :href="$route('clients.show', { client: report_content.client.id})">
-                        {{ report_content['client']['name'] }}
+                      <Link :href="$route('clients.show', { client: report_content.client.id })">
+                      {{ report_content['client']['name'] }}
                       </Link>
                     </div>
                     <div class="mt-1" v-if="report_content['branch']">
@@ -116,11 +92,17 @@
                   <h4 class="mt-2 mb-1">商材の評価</h4>
                   <div v-for="(evaluation_id, product_id) in report_content['product_evaluation']" :key="product_id">
                     <template v-if="evaluation_id">
-                      <EvaluationIcon :evaluation="evaluations.find(evaluation => evaluation.id === Number(evaluation_id))['grade']"></EvaluationIcon>
+                      <EvaluationIcon
+                        :evaluation="evaluations.find(evaluation => evaluation.id === Number(evaluation_id))['grade']">
+                      </EvaluationIcon>
                       {{ products.find(product => product.id === Number(product_id))["name"] }}
                     </template>
                   </div>
                 </template>
+
+                <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材の評価備考</h4>
+                      {{ report_content["product_description"]}}
+
               </template>
             </v-col>
 
@@ -153,24 +135,16 @@
 
         <v-row>
           <v-col cols="12" class="text-right">
-            <Button
-                :small="$vuetify.breakpoint.xs"
-                @click.native="editReportContent(index)"
-                :dusk="report_content.type === 'sales' ? 'reportContentSalesDialog' : 'reportContentWorkDialog'"
-            >
+            <Button :small="$vuetify.breakpoint.xs" @click.native="editReportContent(index)"
+              :dusk="report_content.type === 'sales' ? 'reportContentSalesDialog' : 'reportContentWorkDialog'">
               <v-icon left>
                 mdi-pencil
               </v-icon>
               この報告を編集
             </Button>
 
-            <Button
-                class="ml-2"
-                color="error"
-                :disabled="form['report_contents'].length <= 1"
-                :small="$vuetify.breakpoint.xs"
-                @click.native.prevent="reportContentDelete(index)"
-            >
+            <Button class="ml-2" color="error" :disabled="form['report_contents'].length <= 1"
+              :small="$vuetify.breakpoint.xs" @click.native.prevent="reportContentDelete(index)">
               <v-icon left>
                 mdi-delete-outline
               </v-icon>
@@ -185,11 +159,7 @@
       <!-- 追加ボタン -->
       <v-card-text class="text-center">
         <div>
-          <Button
-              center
-              :small="$vuetify.breakpoint.xs"
-              @click.native="openReportContentForm('sales')"
-          >
+          <Button center :small="$vuetify.breakpoint.xs" @click.native="openReportContentForm('sales')">
             <v-icon left>
               mdi-plus
             </v-icon>
@@ -198,11 +168,7 @@
         </div>
 
         <div class="mt-2">
-          <Button
-              center
-              :small="$vuetify.breakpoint.xs"
-              @click.native="openReportContentForm('work')"
-          >
+          <Button center :small="$vuetify.breakpoint.xs" @click.native="openReportContentForm('work')">
             <v-icon left>
               mdi-plus
             </v-icon>
@@ -213,13 +179,8 @@
 
       <!-- 日報作成ボタン -->
       <v-card-text class="text-center" v-if="form.report_contents.length">
-        <Button
-            center
-            color="primary"
-            :small="$vuetify.breakpoint.xs"
-            @click.native="update"
-            :loading="loading['update']"
-        >
+        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="update"
+          :loading="loading['update']">
           <v-icon left>
             mdi-content-save-edit-outline
           </v-icon>
@@ -235,14 +196,12 @@
     </v-card>
 
     <!-- 報告追加・編集ダイアログ -->
-    <v-dialog
-        :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-        v-model="dialog"
-    >
+    <v-dialog :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'" v-model="dialog">
       <v-card flat tile>
         <form @submit.prevent="reportContentMode === 'create' ? addReportContent() : updateReportContent()">
           <v-card-title>
-            <span v-html="reportContentForm.type === 'work' ? '業務' : '営業'"></span>日報の<span v-html="reportContentMode === 'create' ? '追加' : '編集'"></span>
+            <span v-html="reportContentForm.type === 'work' ? '業務' : '営業'"></span>日報の<span
+              v-html="reportContentMode === 'create' ? '追加' : '編集'"></span>
           </v-card-title>
 
           <v-card-text>
@@ -251,71 +210,42 @@
               <template v-if="reportContentForm.type === 'sales'">
                 <div class="mx-8">
                   <v-list-item>
-                    <v-text-field
-                        dense outlined clearable
-                        prepend-inner-icon="mdi-pencil"
-                        label="会社名(ふりがな)から検索"
-                        hint="文字を含む会社だけをリストに表示します" persistent-hint
-                        name="clientsFilterForm.name"
-                        v-model="clientsFilterForm.name"
-                        maxlength="200"
-                        @input="getClients()"
-                    ></v-text-field>
+                    <v-text-field dense outlined clearable prepend-inner-icon="mdi-pencil" label="会社名(ふりがな)から検索"
+                      hint="文字を含む会社だけをリストに表示します" persistent-hint name="clientsFilterForm.name"
+                      v-model="clientsFilterForm.name" maxlength="200" @input="getClients()"></v-text-field>
                   </v-list-item>
 
                   <v-list-item>
-                    <v-select
-                        dense outlined clearable
-                        label="会社種別"
-                        hint="該当する会社だけをリストに表示します" persistent-hint
-                        :items="client_types"
-                        item-value="id"
-                        item-text="name"
-                        name="clientsFilterForm.client_type_id"
-                        v-model="clientsFilterForm.client_type_id"
-                        @change="clientsFilterForm.client_type_taxibus_category = ''; clientsFilterForm.genre_id = ''; getClients()"
-                    >
+                    <v-select dense outlined clearable label="会社種別" hint="該当する会社だけをリストに表示します" persistent-hint
+                      :items="client_types" item-value="id" item-text="name" name="clientsFilterForm.client_type_id"
+                      v-model="clientsFilterForm.client_type_id"
+                      @change="clientsFilterForm.client_type_taxibus_category = ''; clientsFilterForm.genre_id = ''; getClients()">
                     </v-select>
                   </v-list-item>
 
                   <v-list-item>
-                    <v-select
-                        dense outlined clearable
-                        label="カテゴリー(タクシー・バス会社のみ)"
-                        hint="該当する会社だけをリストに表示します" persistent-hint
-                        :items="client_type_taxibus_categories"
-                        item-value="id"
-                        item-text="name"
-                        name="clientsFilterForm.client_type_taxibus_category"
-                        v-model="clientsFilterForm.client_type_taxibus_category"
-                        :disabled="clientsFilterForm.client_type_id !== 'taxibus'"
-                        @change="getClients()"
-                    >
+                    <v-select dense outlined clearable label="カテゴリー(タクシー・バス会社のみ)" hint="該当する会社だけをリストに表示します"
+                      persistent-hint :items=" client_type_taxibus_categories " item-value="id" item-text="name"
+                      name="clientsFilterForm.client_type_taxibus_category"
+                      v-model=" clientsFilterForm.client_type_taxibus_category "
+                      :disabled=" clientsFilterForm.client_type_id !== 'taxibus' " @change=" getClients() ">
                     </v-select>
                   </v-list-item>
 
                   <v-list-item>
-                    <v-select
-                        dense outlined clearable
-                        label="ジャンル"
-                        hint="該当する会社だけをリストに表示します" persistent-hint
-                        :items="genresFiltered"
-                        item-value="id"
-                        item-text="name"
-                        name="clientsFilterForm.genre_id"
-                        v-model="clientsFilterForm.genre_id"
-                        :disabled="!Boolean(clientsFilterForm.client_type_id)"
-                        @change="getClients()"
-                    >
+                    <v-select dense outlined clearable label="ジャンル" hint="該当する会社だけをリストに表示します" persistent-hint
+                      :items=" genresFiltered " item-value="id" item-text="name" name="clientsFilterForm.genre_id"
+                      v-model=" clientsFilterForm.genre_id " :disabled=" !Boolean(clientsFilterForm.client_type_id) "
+                      @change=" getClients() ">
                     </v-select>
                   </v-list-item>
                 </div>
 
                 <v-list-item class="font-weight-bold">
                   <div>
-                    <template v-if="clients_count">
+                    <template v-if=" clients_count ">
                       {{ clients_total_count }}件中<span class="red--text">{{ clients_count }}</span>件中該当
-                      <template v-if="this.$page.props.errors.event">
+                      <template v-if=" this.$page.props.errors.event ">
                         <br>{{ this.$page.props.errors.event }}
                       </template>
                     </template>
@@ -327,49 +257,22 @@
 
                 <!-- 会社リスト -->
                 <v-list-item>
-                  <v-select
-                      v-if="!clientsListEnable"
-                      dense filled clearable
-                      label="会社"
-                      disabled
-                  >
+                  <v-select v-if=" !clientsListEnable " dense filled clearable label="会社" disabled>
                   </v-select>
-                  <v-select
-                      v-if="clientsListEnable"
-                      dense filled clearable
-                      label="会社"
-                      :items="clients"
-                      item-value="id"
-                      name="client_id"
-                      v-model="reportContentForm.client_id"
-                      :error="Boolean(reportContentFormError.client_id)"
-                      :error-messages="reportContentFormError.client_id"
-                      @change="reportContentFormError.client_id = undefined"
-                  >
+                  <v-select v-if=" clientsListEnable " dense filled clearable label="会社" :items=" clients " item-value="id"
+                    name="client_id" v-model=" reportContentForm.client_id "
+                    :error=" Boolean(reportContentFormError.client_id) " :error-messages=" reportContentFormError.client_id "
+                    @change=" reportContentFormError.client_id = undefined ">
                     <!-- カスタム選択済み表示 -->
-                    <template v-slot:selection="{ item }">
-                      <v-img
-                          contain
-                          height="2em"
-                          width="2em"
-                          max-height="2em"
-                          max-width="2em"
-                          class="my-2 mr-2"
-                          :src="item['icon_image_url']" alt=""
-                      ></v-img>
+                    <template v-slot:selection=" { item } ">
+                      <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
+                        :src=" item['icon_image_url'] " alt=""></v-img>
                       {{ item.name }}
                     </template>
                     <!-- カスタム選択肢表示 -->
-                    <template v-slot:item="{ item }">
-                      <v-img
-                          contain
-                          height="2em"
-                          width="2em"
-                          max-height="2em"
-                          max-width="2em"
-                          class="my-2 mr-2"
-                          :src="item['icon_image_url']" alt=""
-                      ></v-img>
+                    <template v-slot:item=" { item } ">
+                      <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
+                        :src=" item['icon_image_url'] " alt=""></v-img>
                       {{ item.name }}
                     </template>
                   </v-select>
@@ -377,31 +280,18 @@
 
                 <!-- 営業所リスト -->
                 <v-list-item>
-                  <v-select
-                      v-if="!reportContentForm.client_id"
-                      dense filled clearable
-                      label="営業所"
-                      disabled
-                  >
+                  <v-select v-if=" !reportContentForm.client_id " dense filled clearable label="営業所" disabled>
                   </v-select>
-                  <v-select
-                      v-if="reportContentForm.client_id"
-                      dense filled clearable
-                      label="営業所"
-                      :items="branches"
-                      item-value="id"
-                      name="branch_id"
-                      v-model="reportContentForm.branch_id"
-                      :error="Boolean(reportContentFormError.branch_id)"
-                      :error-messages="reportContentFormError.branch_id"
-                      @change="reportContentFormError.branch_id = undefined"
-                  >
+                  <v-select v-if=" reportContentForm.client_id " dense filled clearable label="営業所" :items=" branches "
+                    item-value="id" name="branch_id" v-model=" reportContentForm.branch_id "
+                    :error=" Boolean(reportContentFormError.branch_id) " :error-messages=" reportContentFormError.branch_id "
+                    @change=" reportContentFormError.branch_id = undefined ">
                     <!-- カスタム選択済み表示 -->
-                    <template v-slot:selection="{ item }">
+                    <template v-slot:selection=" { item } ">
                       {{ item.name }}
                     </template>
                     <!-- カスタム選択肢表示 -->
-                    <template v-slot:item="{ item }">
+                    <template v-slot:item=" { item } ">
                       {{ item.name }}
                     </template>
                   </v-select>
@@ -411,63 +301,36 @@
               </template>
 
               <!-- 仕事内容 -->
-              <v-list-item v-if="reportContentForm.type === 'work'">
-                <v-text-field
-                    dense filled
-                    prepend-inner-icon="mdi-pencil"
-                    label="仕事内容"
-                    required
-                    maxlength="200"
-                    name="title"
-                    v-model="reportContentForm.title"
-                ></v-text-field>
+              <v-list-item v-if=" reportContentForm.type === 'work' ">
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" required maxlength="200"
+                  name="title" v-model=" reportContentForm.title "></v-text-field>
               </v-list-item>
 
               <!-- 面談者 -->
-              <v-list-item v-if="reportContentForm.type === 'sales'">
-                <v-text-field
-                    dense filled
-                    prepend-inner-icon="mdi-pencil"
-                    label="面談者"
-                    required
-                    maxlength="200"
-                    name="participants"
-                    v-model="reportContentForm.participants"
-                ></v-text-field>
+              <v-list-item v-if=" reportContentForm.type === 'sales' ">
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="面談者" required maxlength="200"
+                  name="participants" v-model=" reportContentForm.participants "></v-text-field>
               </v-list-item>
 
               <!-- 仕事本文内容/面談内容 -->
               <v-list-item>
-                <v-textarea
-                    dense filled
-                    counter="200" maxlength="200"
-                    prepend-inner-icon="mdi-pencil"
-                    :label="(reportContentForm.type === 'work') ? '本文' : '面談内容'"
-                    required
-                    name="description"
-                    v-model="reportContentForm.description"
-                ></v-textarea>
+                <v-textarea dense filled counter="200" maxlength="200" prepend-inner-icon="mdi-pencil"
+                  :label=" (reportContentForm.type === 'work') ? '本文' : '面談内容' " required name="description"
+                  v-model=" reportContentForm.description "></v-textarea>
               </v-list-item>
 
               <!-- 営業手段 -->
-              <v-list-item v-if="reportContentForm.type === 'sales'">
-                <v-select
-                    dense filled clearable
-                    label="営業手段"
-                    :items="sales_methods"
-                    required
-                    item-value="id"
-                    v-model="reportContentForm.sales_method_id"
-                    :error="Boolean(reportContentFormError.sales_method_id)"
-                    :error-messages="reportContentFormError.sales_method_id"
-                    @change="reportContentFormError.sales_method_id = undefined"
-                >
+              <v-list-item v-if=" reportContentForm.type === 'sales' ">
+                <v-select dense filled clearable label="営業手段" :items=" sales_methods " required item-value="id"
+                  v-model=" reportContentForm.sales_method_id " :error=" Boolean(reportContentFormError.sales_method_id) "
+                  :error-messages=" reportContentFormError.sales_method_id "
+                  @change=" reportContentFormError.sales_method_id = undefined ">
                   <!-- カスタム選択済み表示 -->
-                  <template v-slot:selection="{item}">
+                  <template v-slot:selection=" { item } ">
                     {{ item.name }}
                   </template>
                   <!-- カスタム選択肢表示 -->
-                  <template v-slot:item="{item}">
+                  <template v-slot:item=" { item } ">
                     {{ item.name }}
                   </template>
                 </v-select>
@@ -475,45 +338,41 @@
 
               <!-- クレーム・トラブル -->
               <v-list-item>
-                <v-switch
-                    dense filled
-                    class="ma-0 pa-0"
-                    color="error"
-                    label="クレーム・トラブル"
-                    name="is_complaint"
-                    v-model="reportContentForm.is_complaint"
-                ></v-switch>
+                <v-switch dense filled class="ma-0 pa-0" color="error" label="クレーム・トラブル" name="is_complaint"
+                  v-model=" reportContentForm.is_complaint "></v-switch>
               </v-list-item>
 
               <v-divider class="my-4"></v-divider>
 
               <!--商材の評価-->
-              <template v-if="reportContentForm.type === 'sales'">
+              <template v-if=" reportContentForm.type === 'sales' ">
                 <v-list-item>
                   <v-list-item-subtitle>
                     商材の評価
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item v-for="(product, index) in products" :key="index">
-                  <v-select
-                      dense filled clearable
-                      :label="product.name"
-                      :items="evaluations"
-                      item-value="id"
-                      v-model="reportContentForm.product_evaluation[product.id]"
-                  >
+                <v-list-item v-for="( product, index ) in  products " :key=" index ">
+                  <v-select dense filled clearable :label=" product.name " :items=" evaluations " item-value="id"
+                    v-model=" reportContentForm.product_evaluation[product.id] ">
                     <!-- カスタム選択済み表示 -->
-                    <template v-slot:selection="{item}">
-                      <EvaluationIcon :evaluation="item.grade"></EvaluationIcon>
+                    <template v-slot:selection=" { item } ">
+                      <EvaluationIcon :evaluation=" item.grade "></EvaluationIcon>
                       {{ item.label }}
                     </template>
                     <!-- カスタム選択肢表示 -->
-                    <template v-slot:item="{item}">
-                      <EvaluationIcon :evaluation="item.grade"></EvaluationIcon>
+                    <template v-slot:item=" { item } ">
+                      <EvaluationIcon :evaluation=" item.grade "></EvaluationIcon>
                       {{ item.label }}
                     </template>
                   </v-select>
+                </v-list-item>
+
+
+                <!-- 仕事本文内容/面談内容 -->
+                <v-list-item>
+                  <v-textarea dense filled counter="200" maxlength="200" prepend-inner-icon="mdi-pencil" label="商材評価の備考欄"
+                    required name="product_description" v-model=" reportContentForm.product_description "></v-textarea>
                 </v-list-item>
 
                 <v-list-item>
@@ -530,28 +389,21 @@
           </v-card-text>
 
           <v-card-text class="pt-0 text-center">
-            <Button
-                :small="$vuetify.breakpoint.xs"
-                type="submit"
-            >
-              <v-icon left v-if="reportContentMode === 'create'">
+            <Button :small=" $vuetify.breakpoint.xs " type="submit">
+              <v-icon left v-if=" reportContentMode === 'create' ">
                 mdi-plus
               </v-icon>
               <v-icon left v-else>
                 mdi-pencil
               </v-icon>
-              <span v-html="reportContentMode === 'create' ? 'この内容を追加する' : 'この内容を反映する'"></span>
+              <span v-html=" reportContentMode === 'create' ? 'この内容を追加する' : 'この内容を反映する' "></span>
             </Button>
           </v-card-text>
 
           <v-divider></v-divider>
 
           <v-card-text class="text-right">
-            <Button
-                class="mt-4"
-                :small="$vuetify.breakpoint.xs"
-                @click.native="dialog = false"
-            >
+            <Button class="mt-4" :small=" $vuetify.breakpoint.xs " @click.native=" dialog = false ">
               <v-icon>
                 mdi-close
               </v-icon>
@@ -566,11 +418,11 @@
 
 <script>
 import Layout from "./Layout";
-import {Link} from "@inertiajs/inertia-vue";
+import { Link } from "@inertiajs/inertia-vue";
 import _ from "lodash";
 
 export default {
-  components: {Layout, Link},
+  components: { Layout, Link },
 
   props: ['report', 'client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods'],
 
@@ -602,6 +454,7 @@ export default {
         sales_methods: undefined,
         description: "",
         is_complaint: false,
+        product_description: "",
         product_evaluation: {},
       },
 
@@ -660,13 +513,13 @@ export default {
       let param;
       if (client_id) {
         // 会社IDが指定された場合は該当の会社のみがリストを取得
-        param = {client_id: client_id};
+        param = { client_id: client_id };
       } else {
         // フォーム内容に設定された条件の会社リストを取得
         param = this.clientsFilterForm;
       }
 
-      this.$inertia.post(this.$route('reports.edit', {report: this.report.id}), param, {
+      this.$inertia.post(this.$route('reports.edit', { report: this.report.id }), param, {
         preserveState: true,
         preserveScroll: true,
         replace: true,
@@ -782,7 +635,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["description", "is_complaint", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
+      ["product_description","description", "is_complaint", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -821,45 +674,45 @@ export default {
     // 日報更新実行
     update: function () {
       this.form
-          .transform((data) => {
-                // 日報コンテンツ情報をディープコピー
-                let report_contents = _.cloneDeep(data["report_contents"]);
+        .transform((data) => {
+          // 日報コンテンツ情報をディープコピー
+          let report_contents = _.cloneDeep(data["report_contents"]);
 
-                report_contents.forEach((report_content) => {
-                  // 評価を配列に変更
-                  report_content["product_evaluation"]
-                      = Object.entries(report_content["product_evaluation"])
-                      .filter(([product_id, evaluation_id]) => {
-                        return !!(evaluation_id)
-                      })
-                      .map(([product_id, evaluation_id]) => {
-                        return {'product_id': Number(product_id), 'evaluation_id': Number(evaluation_id)};
-                      });
-
-                  // 表示にのみ使用している会社情報を送信する内容から削除
-                  delete report_content.client;
-                  delete report_content.sales_method;
+          report_contents.forEach((report_content) => {
+            // 評価を配列に変更
+            report_content["product_evaluation"]
+              = Object.entries(report_content["product_evaluation"])
+                .filter(([product_id, evaluation_id]) => {
+                  return !!(evaluation_id)
+                })
+                .map(([product_id, evaluation_id]) => {
+                  return { 'product_id': Number(product_id), 'evaluation_id': Number(evaluation_id) };
                 });
 
-                return {
-                  ...data,
-                  report_contents: report_contents,
-                }
-              }
-          )
-          .put(this.$route('reports.update', {report: this.report.id}), {
-            onStart: () => this.$set(this.loading, "update", true),
-            onSuccess: () => this.$toasted.show('日報の変更を保存しました'),
-            onError: errors => {
-              // バリデーションエラーをトースト表示する
-              // フロント側チェックを行っているため発生しない前提
-              this.$toasted.error(Object.values(errors).join("\n"), {
-                duration: 1000 * 60 * 10,
-                type: 'error'
-              });
-            },
-            onFinish: () => this.$set(this.loading, "update", false),
-          })
+            // 表示にのみ使用している会社情報を送信する内容から削除
+            delete report_content.client;
+            delete report_content.sales_method;
+          });
+
+          return {
+            ...data,
+            report_contents: report_contents,
+          }
+        }
+        )
+        .put(this.$route('reports.update', { report: this.report.id }), {
+          onStart: () => this.$set(this.loading, "update", true),
+          onSuccess: () => this.$toasted.show('日報の変更を保存しました'),
+          onError: errors => {
+            // バリデーションエラーをトースト表示する
+            // フロント側チェックを行っているため発生しない前提
+            this.$toasted.error(Object.values(errors).join("\n"), {
+              duration: 1000 * 60 * 10,
+              type: 'error'
+            });
+          },
+          onFinish: () => this.$set(this.loading, "update", false),
+        })
     }
   }
 }

@@ -121,7 +121,12 @@
                     </template>
                   </div>
                 </template>
+
+                <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
+                      {{ report_content["product_description"]}}
+
               </template>
+              
             </v-col>
 
             <!-- 右カラム -->
@@ -516,6 +521,19 @@
                   </v-select>
                 </v-list-item>
 
+
+                  <!-- 仕事本文内容/面談内容 -->
+              <v-list-item>
+                <v-textarea
+                    dense filled
+                    counter="200" maxlength="200"
+                    prepend-inner-icon="mdi-pencil"
+                    label="教材評価備考欄"
+                    name="product_description"
+                    v-model="reportContentForm.product_description"
+                ></v-textarea>
+              </v-list-item>
+
                 <v-divider class="my-4"></v-divider>
               </template>
 
@@ -603,6 +621,7 @@ export default {
         sales_method_id: undefined,
         sales_methods: undefined,
         description: "",
+        prodyuct_description: "",
         is_complaint: false,
         product_evaluation: {},
       },
@@ -799,7 +818,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["description", "is_complaint", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
+      ["product_description","description", "is_complaint", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 

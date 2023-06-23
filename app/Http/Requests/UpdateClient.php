@@ -55,6 +55,7 @@ class UpdateClient extends FormRequest
             'manager_department' => ['nullable'],
             'manager_position' => ['nullable'],
             'manager_name' => ['nullable'],
+            'contact' => ['nullable'],
 
             'genre_ids' => ['nullable', 'array'],
             'genre_ids.*' => ['nullable', Rule::exists('genres', "id")],

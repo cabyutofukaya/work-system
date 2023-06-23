@@ -1,3 +1,9 @@
+<style>
+a.Link_item{
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
+}
+</style>
 <template>
   <Layout>
     <v-card flat tile>
@@ -86,7 +92,7 @@
         </template>
 
         <div v-for="report in reports['data']" :key="report.id">
-          <Link as="v-list-item" :href="$route('reports.show', { id: report.id })" dusk="reportShow" target="_blank">
+          <Link :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item">
           <v-list-item-content>
             <v-row :class="{ 'grey': report['is_visited'], 'lighten-4': report['is_visited'] }">
               <!-- PCビュー -->
@@ -124,6 +130,8 @@
                 <v-col sm="1" class="text-center">
                   {{ report["report_comments_count"] }}
                 </v-col>
+              
+
               </template>
 
               <!-- スマートフォンビュー -->

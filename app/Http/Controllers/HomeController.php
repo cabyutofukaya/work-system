@@ -7,6 +7,7 @@ use App\Models\Meeting;
 use App\Models\OfficeTodo;
 use App\Models\Report;
 use App\Models\SalesTodo;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -96,6 +97,9 @@ class HomeController extends Controller
                 ->orderByDesc('comment_updated_at')
                 ->take(3)
                 ->get(),
+
+            'user' => User::where('id',auth()->id())->first(),
+
         ]);
     }
 }

@@ -52,6 +52,7 @@ class MeetingController extends Controller
             // 検索フォームの初期値
             'form_params' => [
                 'word' => $request->input('word'),
+                'is_visited' => $request->input('is_visited'),
             ],
         ]);
     }
@@ -80,6 +81,7 @@ class MeetingController extends Controller
             // 検索フォームの初期値
             'form_params' => [
                 'word' => $request->input('word'),
+                'is_visited' => $request->input('is_visited'),
             ],
         ]);
     }
@@ -140,8 +142,15 @@ class MeetingController extends Controller
             }
         }
 
+        // 未読のみ
+        if ($request->is_visited) {
+            $meetings->WhereDoesntHave('meeting_visitors', function ($query) use ($request) {
+                $query->where('user_id', auth()->id());
+            });
+        }
+
         // dd($meetings->toSql(), $meetings->getBindings());
-  
+
 
         return $meetings;
     }

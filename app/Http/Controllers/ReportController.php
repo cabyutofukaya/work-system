@@ -305,6 +305,7 @@ class ReportController extends Controller
                     'branch_id' => $report_content['branch_id'] ?? null,
                     'participants' => $report_content['participants'] ?? null,
                     'sales_method_id' => $report_content['sales_method_id'] ?? null,
+                    'product_description' => $report_content['product_description'] ?? null,
                 ]);
 
                 // 商材評価情報を保存
@@ -397,7 +398,7 @@ class ReportController extends Controller
 
         $report->load([
             'user:id,name,deleted_at',
-            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint',
+            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,product_description',
             'report_contents.client',
             'report_contents.branch',
             'report_contents.sales_method',
@@ -511,6 +512,7 @@ class ReportController extends Controller
                             'branch_id' => $report_content['branch_id'] ?? null,
                             'participants' => $report_content['participants'] ?? null,
                             'sales_method_id' => $report_content['sales_method_id'] ?? null,
+                            'product_description' => $report_content['product_description'] ?? null,
                         ],
                     );
                 } else {
@@ -523,15 +525,17 @@ class ReportController extends Controller
                         'branch_id' => $report_content['branch_id'] ?? null,
                         'participants' => $report_content['participants'] ?? null,
                         'sales_method_id' => $report_content['sales_method_id'] ?? null,
+                        'product_description' => $report_content['product_description'] ?? null,
                     ]);
                 }
+
 
                 // 商材評価情報を保存
                 $report_content_upsert->products()->detach();
                 foreach ($report_content['product_evaluation'] as $product_evaluation) {
                     $report_content_upsert->products()->attach(
                         $product_evaluation["product_id"],
-                        ['evaluation_id' => $product_evaluation["evaluation_id"]]
+                        ['evaluation_id' => $product_evaluation["evaluation_id"]],
                     );
                 }
             }

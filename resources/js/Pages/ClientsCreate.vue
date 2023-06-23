@@ -556,6 +556,21 @@
 
             </template>
 
+
+            <v-row v-if="client_type['id'] === 'travel'">
+              <v-col cols="12" sm="4">問い合わせ経路</v-col>
+              <v-col>
+                <v-select
+                    dense
+                    persistent-hint
+                    name="contact"
+                    v-model="form['contact']"
+                    :items="['web問い合わせ','メール問い合わせ','電話問い合わせ','fax問い合わせ','その他']"
+                ></v-select>
+              </v-col>
+            </v-row>
+
+
             <v-row>
               <v-col cols="12" sm="4">ジャンル</v-col>
               <v-col>

@@ -39,6 +39,7 @@ class Client extends BaseClient implements Auditable
         'fax',
         'business_hours',
         'description',
+        'contact',
     ];
 
     /**

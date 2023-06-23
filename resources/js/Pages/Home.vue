@@ -4,7 +4,11 @@
         flat tile
     >
       <v-card-text class="pb-0 text-right text-body-2">
-        お疲れ様です、{{ $page.props.auth.user.name }}さん!
+        
+        <!-- <v-img :src="`/storage/user/${user.img_file}`" cover width="30px" height="20px" v-if="user.img_file"
+                class="align-center ml-auto"></v-img> -->
+          
+         お疲れ様です、{{ $page.props.auth.user.name }}さん!
       </v-card-text>
     </v-card>
 
@@ -773,7 +777,7 @@ import {Link} from "@inertiajs/inertia-vue";
 export default {
   components: {Layout, Link},
 
-  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment','meetings'],
+  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment','meetings','user'],
 
   data: () => ({
     loading: {},

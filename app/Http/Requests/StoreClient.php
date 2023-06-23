@@ -52,6 +52,7 @@ class StoreClient extends FormRequest
             'fax' => ['nullable', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
             'business_hours' => ['nullable'],
             'description' => ['nullable'],
+            'contact' => ['nullable'],
 
             'genre_ids' => ['nullable', 'array'],
             'genre_ids.*' => ['nullable', Rule::exists('genres', "id")],

@@ -695,6 +695,14 @@
             </v-col>
           </v-row>
 
+          <!-- 会社訪問状態 -->
+          <v-row v-if="client['contact']">
+            <v-col cols="12" sm="4">問い合わせ経路</v-col>
+            <v-col>
+             {{ client['contact'] }}
+            </v-col>
+          </v-row>
+
           <!-- 7月始まり年度別の訪問回数(営業日報数) -->
           <v-row>
             <v-col cols="12" sm="4">訪問回数</v-col>
