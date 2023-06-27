@@ -15,6 +15,7 @@ use App\Models\LatestEvaluation;
 use App\Models\Product;
 use App\Models\ReportContent;
 use App\Models\SalesTodo;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -242,6 +243,8 @@ class ClientController extends Controller
             $form_columns["client_type_" . $client_type_id][$column] = null;
         }
 
+      
+
         return inertia('ClientsCreate', [
             // 都道府県
             'prefectures' => config("const.prefectures"),
@@ -327,6 +330,7 @@ class ClientController extends Controller
             'contact_persons',
             'genres',
             'products',
+            'users',
         ]);
 
         if ($client->client_type_id === "taxibus") {
@@ -421,7 +425,14 @@ class ClientController extends Controller
             'client_type_' . $client->client_type_id,
             'genres',
             'products',
+            'users',
         ]);
+
+
+        // dd($client->products()->get()->pluck("id"));
+        // dd($client->charges()->get()->pluck("id"));
+
+        // dd(User::ofClientType($client->client_type_id)->get(["id", "name"]));
 
         return inertia('ClientsEdit', [
             // 都道府県
@@ -442,6 +453,10 @@ class ClientController extends Controller
             'client_type_column_names' => Lang::get('validation.attributes.client_type_' . $client->client_type_id),
             // 位置情報初期値
             'location_default' => config("const.location_default"),
+            // 社内担当者リスト
+            'charges' => User::ofClientType($client->client_type_id)->get(["id", "name"]),
+             // 社内担当者リスト情報
+             'charge_ids' => $client->charges()->get()->pluck("id"),
         ]);
     }
 
@@ -454,6 +469,7 @@ class ClientController extends Controller
      */
     public function update(UpdateClient $request, Client $client): RedirectResponse
     {
+        
         // 会社情報
         $client->fill($request->validated());
 
@@ -482,6 +498,7 @@ class ClientController extends Controller
         // ファイルアップロードと同時に空の配列が送信された場合にキー自体が設定されなくなるためnull合体演算子で対応
         $client->genres()->sync($request->validated()["genre_ids"] ?? []);
         $client->products()->sync($request->validated()["product_ids"] ?? []);
+        $client->users()->sync($request->validated()["charge_ids"] ?? []);
 
         // バックボタンの戻り先ページを設定
         $request->session()->flash('backButton', [

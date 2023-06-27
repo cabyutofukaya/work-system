@@ -57,10 +57,16 @@ class UpdateClient extends FormRequest
             'manager_name' => ['nullable'],
             'contact' => ['nullable'],
 
+            'representative_kana' => ['nullable'],
+            'representative_position' => ['nullable'],
+
             'genre_ids' => ['nullable', 'array'],
             'genre_ids.*' => ['nullable', Rule::exists('genres', "id")],
             'product_ids' => ['nullable', 'array'],
             'product_ids.*' => ['nullable', Rule::exists('products', "id")],
+
+            'charge_ids' => ['nullable', 'array'],
+            'charge_ids.*' => ['nullable', Rule::exists('users', "id")],
 
             'client_type_taxibus.membership_fee' => ['nullable', 'integer', 'min:0'],
             'client_type_taxibus.fee_taxi_cab' => ['nullable', 'integer', 'min:0'],

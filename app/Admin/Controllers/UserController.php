@@ -101,6 +101,14 @@ class UserController extends BaseController
                 })->implode(", ");
             });
 
+
+        $show->field('type_id', $this->trans('type_id', 'users'));
+        // $show->column('type_id', $this->trans("type_id", "users"))
+        //     ->replace([0 => 'いいえ', 1 => 'はい'])
+        //     ->label([
+        //         "0" => 'default', "1" => 'success',
+        //     ]);
+
         $show->field('created_at', $this->trans('Created at', 'users'));
 
         return $show;
@@ -154,6 +162,9 @@ class UserController extends BaseController
             ->rules(['nullable' ,"string"]);
 
         $form->checkbox('products', $this->trans('products', 'users'))->options(Product::all()->pluck('name', 'id'));
+
+        // $form->select('type_id', $this->trans('type_id', 'users'))
+        // ->options(User::get()->pluck("name", "id"));
 
         $form->saving(function (Form $form) {
             if ($form->password && $form->model()->password != $form->password) {

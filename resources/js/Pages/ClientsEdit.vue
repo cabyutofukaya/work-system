@@ -191,6 +191,38 @@
             </v-row>
 
             <v-row>
+              <v-col cols="12" sm="4">代表者カナ</v-col>
+              <v-col>
+                <v-text-field
+                    dense filled
+                    prepend-inner-icon="mdi-pencil"
+                    name="representative_kana"
+                    v-model="form.representative_kana"
+                    maxlength="200"
+                    :error="Boolean(form.errors.representative_kana)"
+                    :error-messages="form.errors.representative_kana"
+                    @keydown.enter="update"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="4">代表者役職</v-col>
+              <v-col>
+                <v-text-field
+                    dense filled
+                    prepend-inner-icon="mdi-pencil"
+                    name="representative_position"
+                    v-model="form.representative_position"
+                    maxlength="200"
+                    :error="Boolean(form.errors.representative_position)"
+                    :error-messages="form.errors.representative_position"
+                    @keydown.enter="update"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
               <v-col cols="12" sm="4">電話番号</v-col>
               <v-col>
                 <v-text-field
@@ -603,6 +635,21 @@
               </v-col>
             </v-row>
 
+            <v-row v-if="client['client_type_truck']">
+              <v-col cols="12" sm="4">社内担当者</v-col>
+              <v-col>
+                <v-select
+                    dense multiple chips
+                    hint="複数の社内担当者を設定できます" persistent-hint
+                    name="charge_ids"
+                    v-model="form['charge_ids']"
+                    :items="charges"
+                    item-value="id"
+                    item-text="name"
+                ></v-select>
+              </v-col>
+            </v-row>
+
             <v-row>
               <v-col cols="12" sm="4">説明</v-col>
               <v-col>
@@ -651,7 +698,7 @@ import {gmapApi} from "gmap-vue";
 export default {
   components: {Layout, Link},
 
-  props: ['prefectures', 'client_type', 'client', 'genre_ids', 'product_ids', 'genres', 'products', 'client_type_column_names', 'location_default'],
+  props: ['prefectures', 'client_type', 'client', 'genre_ids', 'product_ids', 'genres', 'products', 'client_type_column_names', 'location_default','charges','charge_ids'],
 
   data() {
     return {
@@ -662,6 +709,7 @@ export default {
         ...this.client,
         genre_ids: this.genre_ids,
         product_ids: this.product_ids,
+        charge_ids: this.charge_ids,
       }),
       openGmapPicker: false,
       loading: {}

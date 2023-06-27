@@ -19,6 +19,7 @@ use App\Models\Product;
 use App\Models\ReportContent;
 use App\Models\SalesTodo;
 use App\Models\Vehicle;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -93,6 +94,13 @@ class Client extends Model
 					->withTimestamps();
 	}
 
+	public function users()
+	{
+		return $this->belongsToMany(User::class)
+					->withPivot('id')
+					->withTimestamps();
+	}
+
 	public function client_type_restaurant()
 	{
 		return $this->hasOne(ClientTypeRestaurant::class);
@@ -137,4 +145,12 @@ class Client extends Model
 	{
 		return $this->hasMany(Vehicle::class);
 	}
+
+	public function charges()
+	{
+		return $this->belongsToMany(User::class)
+					->withPivot('id')
+					->withTimestamps();
+	}
+
 }

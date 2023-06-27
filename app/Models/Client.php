@@ -40,6 +40,8 @@ class Client extends BaseClient implements Auditable
         'business_hours',
         'description',
         'contact',
+        'representative_position',
+        'representative_kana',
     ];
 
     /**

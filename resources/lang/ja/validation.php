@@ -246,6 +246,7 @@ return [
             'username' => 'ログインID',
             'name' => 'メンバー名',
             'products' => '担当商材',
+            'type_id' => '担当会社',
         ],
         'clients' => [
             'name' => '会社名',

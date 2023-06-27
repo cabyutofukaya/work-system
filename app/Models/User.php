@@ -132,4 +132,17 @@ class User extends Authenticatable implements Auditable
     {
         return $date->format("Y-m-d H:i");
     }
+
+        /**
+     * クエリスコープ 特定の会社タイプ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed $client_type_id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfClientType(\Illuminate\Database\Eloquent\Builder $query, mixed $user_id): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->where('type_id', $user_id);
+    }
+
 }

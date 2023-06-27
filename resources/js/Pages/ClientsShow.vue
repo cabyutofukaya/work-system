@@ -104,6 +104,17 @@
             <v-col>{{ client.representative }}</v-col>
           </v-row>
 
+          <v-row v-if="client.representative_kana">
+            <v-col cols="12" sm="4">代表者カナ</v-col>
+            <v-col>{{ client.representative_kana }}</v-col>
+          </v-row>
+
+          <v-row v-if="client.representative_position">
+            <v-col cols="12" sm="4">代表者役職</v-col>
+            <v-col>{{ client.representative_position }}</v-col>
+          </v-row>
+
+
           <v-row v-if="client.tel">
             <v-col cols="12" sm="4">電話番号</v-col>
             <v-col><a :href="'tel:' + client.tel">{{ client.tel }}</a></v-col>
@@ -566,6 +577,16 @@
             <v-col>
               <v-chip small class="mr-2 mb-2" v-for="product in client['products']" :key="product.id">
                 {{ product.name }}
+              </v-chip>
+            </v-col>
+          </v-row>
+
+            <!-- 社内担当者 -->
+          <v-row v-if="client['users'].length">
+            <v-col cols="12" sm="4">社内担当者</v-col>
+            <v-col>
+              <v-chip small class="mr-2 mb-2" v-for="user in client['users']" :key="user.id">
+                {{ user.name }}
               </v-chip>
             </v-col>
           </v-row>
