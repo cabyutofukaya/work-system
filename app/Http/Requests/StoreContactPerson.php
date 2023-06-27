@@ -41,8 +41,8 @@ class StoreContactPerson extends FormRequest
             'name' => ['required'],
             'email' => ['nullable', 'email:filter'],
             'tel' => ['nullable', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
-            'department' => ['nullable'],
-            'position' => ['nullable'],
+            'department' => ['required'],
+            'position' => ['required'],
         ];
     }
 }

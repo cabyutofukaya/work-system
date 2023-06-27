@@ -1,8 +1,6 @@
 <template xmlns="http://www.w3.org/1999/html">
   <Layout>
-    <v-card
-        flat tile
-    >
+    <v-card flat tile>
       <v-card-title>
         <v-icon dark left v-html="client['client_type_icon']"></v-icon>
         {{ client["client_type_name"] }}
@@ -11,28 +9,20 @@
       <v-card-text>
         <v-row>
           <v-col class="text-right">
-            <Link as="Button"
-                  :to="$route('clients.edit', {client: client.id})"
-                  :small="$vuetify.breakpoint.xs"
-                  class="ml-2"
-            >
-              <v-icon left>
-                mdi-pencil
-              </v-icon>
-              編集
+            <Link as="Button" :to="$route('clients.edit', { client: client.id })" :small="$vuetify.breakpoint.xs"
+              class="ml-2">
+            <v-icon left>
+              mdi-pencil
+            </v-icon>
+            編集
             </Link>
 
-            <Link as="Button"
-                  :small="$vuetify.breakpoint.xs"
-                  class="ml-2"
-                  color="error"
-                  @click.native="deleteClient"
-                  :loading="loading['delete']"
-            >
-              <v-icon left>
-                mdi-delete-outline
-              </v-icon>
-              削除
+            <Link as="Button" :small="$vuetify.breakpoint.xs" class="ml-2" color="error" @click.native="deleteClient"
+              :loading="loading['delete']">
+            <v-icon left>
+              mdi-delete-outline
+            </v-icon>
+            削除
             </Link>
           </v-col>
         </v-row>
@@ -44,9 +34,7 @@
               <div class="d-flex align-center">
                 <div>
                   <v-list-item-avatar tile @click.prevent="imageOverlayUrl = client['image_url']">
-                    <v-img
-                        :src="client['image_url']" alt=""
-                    ></v-img>
+                    <v-img :src="client['image_url']" alt=""></v-img>
                   </v-list-item-avatar>
                 </div>
 
@@ -135,15 +123,12 @@
                 </v-col>
 
                 <v-col cols="auto">
-                  <Link
-                      as="Button" :small="$vuetify.breakpoint.xs"
-                      @click.native="openUpdateBusinessDistrictDialog(business_district)"
-                      dusk="businessDistrictEdit"
-                  >
-                    <v-icon left>
-                      mdi-pencil
-                    </v-icon>
-                    編集
+                  <Link as="Button" :small="$vuetify.breakpoint.xs"
+                    @click.native="openUpdateBusinessDistrictDialog(business_district)" dusk="businessDistrictEdit">
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon>
+                  編集
                   </Link>
                 </v-col>
               </v-row>
@@ -154,14 +139,11 @@
                 </v-col>
 
                 <v-col cols="12" sm="" class="text-right">
-                  <Link
-                      as="Button" :small="$vuetify.breakpoint.xs"
-                      @click.native="openCreateBusinessDistrictDialog()"
-                  >
-                    <v-icon left>
-                      mdi-plus
-                    </v-icon>
-                    営業エリアを追加する
+                  <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="openCreateBusinessDistrictDialog()">
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  営業エリアを追加する
                   </Link>
                 </v-col>
               </v-row>
@@ -177,7 +159,8 @@
                   {{ branch["name"] }}<br>
                   <template v-if="branch['postcode']">{{ branch["postcode"] }}<br></template>
                   <template v-if="branch['prefecture'] || branch['address']">
-                    <a :href="'https://www.google.com/maps/search/?api=1&query=' + branch.lat + ',' + branch.lng" target="_blank">
+                    <a :href="'https://www.google.com/maps/search/?api=1&query=' + branch.lat + ',' + branch.lng"
+                      target="_blank">
                       {{ branch["prefecture"] }}{{ branch["address"] }}
 
                       <v-icon small>
@@ -190,16 +173,12 @@
                 </v-col>
 
                 <v-col cols="auto" class="text-right">
-                  <Link
-                      as="Button"
-                      class="mr-2" :small="$vuetify.breakpoint.xs"
-                      :to="$route('branches.edit',{branch : branch['id']})"
-                      dusk="branchEdit"
-                  >
-                    <v-icon left>
-                      mdi-pencil
-                    </v-icon>
-                    編集
+                  <Link as="Button" class="mr-2" :small="$vuetify.breakpoint.xs"
+                    :to="$route('branches.edit', { branch: branch['id'] })" dusk="branchEdit">
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon>
+                  編集
                   </Link>
                 </v-col>
               </v-row>
@@ -210,15 +189,12 @@
                 </v-col>
 
                 <v-col cols="12" sm="" class="text-right">
-                  <Link
-                      as="Button"
-                      :small="$vuetify.breakpoint.xs"
-                      :to="$route('clients.branches.create',{client : client.id})"
-                  >
-                    <v-icon left>
-                      mdi-plus
-                    </v-icon>
-                    営業所を追加する
+                  <Link as="Button" :small="$vuetify.breakpoint.xs"
+                    :to="$route('clients.branches.create', { client: client.id })">
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  営業所を追加する
                   </Link>
                 </v-col>
               </v-row>
@@ -237,49 +213,40 @@
               <v-col>{{ client["client_type_taxibus"]["membership_fee"] | currency }}</v-col>
             </v-row>
 
-            <v-row v-if="client['client_type_taxibus']['fee_taxi_cab'] !== null || client['client_type_taxibus']['fee_taxi_tabinoashi'] !== null || client['client_type_taxibus']['fee_bus_cab'] !== null || client['client_type_taxibus']['fee_bus_tabinoashi'] !== null">
+            <v-row
+              v-if="client['client_type_taxibus']['fee_taxi_cab'] !== null || client['client_type_taxibus']['fee_taxi_tabinoashi'] !== null || client['client_type_taxibus']['fee_bus_cab'] !== null || client['client_type_taxibus']['fee_bus_tabinoashi'] !== null">
               <v-col cols="12" sm="4">手数料</v-col>
               <v-col>
-                <template v-if="client['client_type_taxibus']['fee_taxi_cab'] !== null || client['client_type_taxibus']['fee_taxi_tabinoashi'] !== null">
+                <template
+                  v-if="client['client_type_taxibus']['fee_taxi_cab'] !== null || client['client_type_taxibus']['fee_taxi_tabinoashi'] !== null">
                   <div>
                     タクシー
                   </div>
 
-                  <v-chip
-                      small outlined class="mr-2 my-2" color="primary"
-                      v-if="client['client_type_taxibus']['fee_taxi_cab'] !== null"
-                      :value="true"
-                  >
+                  <v-chip small outlined class="mr-2 my-2" color="primary"
+                    v-if="client['client_type_taxibus']['fee_taxi_cab'] !== null" :value="true">
                     CAB {{ client["client_type_taxibus"]["fee_taxi_cab"] | currency }}
                   </v-chip>
 
-                  <v-chip
-                      small outlined class="mr-2 my-2" color="primary"
-                      v-if="client['client_type_taxibus']['fee_taxi_tabinoashi'] !== null"
-                      :value="true"
-                  >
+                  <v-chip small outlined class="mr-2 my-2" color="primary"
+                    v-if="client['client_type_taxibus']['fee_taxi_tabinoashi'] !== null" :value="true">
                     たびの足 {{ client["client_type_taxibus"]["fee_taxi_tabinoashi"] | currency }}
                   </v-chip>
                 </template>
 
-                <template v-if="client['client_type_taxibus']['fee_bus_cab'] !== null || client['client_type_taxibus']['fee_bus_tabinoashi'] !== null">
+                <template
+                  v-if="client['client_type_taxibus']['fee_bus_cab'] !== null || client['client_type_taxibus']['fee_bus_tabinoashi'] !== null">
                   <div>
                     バス
                   </div>
 
-                  <v-chip
-                      small outlined class="mr-2 my-2" color="primary"
-                      v-if="client['client_type_taxibus']['fee_bus_cab'] !== null"
-                      :value="true"
-                  >
+                  <v-chip small outlined class="mr-2 my-2" color="primary"
+                    v-if="client['client_type_taxibus']['fee_bus_cab'] !== null" :value="true">
                     CAB {{ client["client_type_taxibus"]["fee_bus_cab"] | currency }}
                   </v-chip>
 
-                  <v-chip
-                      small outlined class="mr-2 my-2" color="primary"
-                      v-if="client['client_type_taxibus']['fee_bus_tabinoashi'] !== null"
-                      :value="true"
-                  >
+                  <v-chip small outlined class="mr-2 my-2" color="primary"
+                    v-if="client['client_type_taxibus']['fee_bus_tabinoashi'] !== null" :value="true">
                     たびの足 {{ client["client_type_taxibus"]["fee_bus_tabinoashi"] | currency }}
                   </v-chip>
                 </template>
@@ -300,21 +267,23 @@
             <v-col>
               <v-row v-for="contact_person in client['contact_persons']" :key="contact_person['id']">
                 <v-col>
-                  {{ contact_person["name"] }}<br>
-                  <a :href="'mailto:' + contact_person['email']">{{ contact_person["email"] }}</a><br>
-                  <template v-if="contact_person['tel']"><a :href="'tel:' + contact_person['tel']">{{ contact_person["tel"] }}</a><br></template>
-                  {{ contact_person["department"] }} {{ contact_person["position"] }}
+                  名前:{{ contact_person["name"] }}<br>
+                  <span v-if="contact_person['email']">
+                    <a :href="'mailto:' + contact_person['email']">{{ contact_person["email"] }}</a><br>
+                  </span>
+                  <span v-if="contact_person['tel']">
+                    <template v-if="contact_person['tel']"><a :href="'tel:' + contact_person['tel']">{{
+                      contact_person["tel"] }}</a><br></template>
+                  </span>
+                  所属部署:{{ contact_person["department"] }}/ 役職:{{ contact_person["position"] }}
                 </v-col>
                 <v-col cols="auto" class="text-right">
-                  <Link
-                      as="Button" :small="$vuetify.breakpoint.xs"
-                      @click.native="openUpdateContactPersonDialog(contact_person)"
-                      dusk="contactPersonEdit"
-                  >
-                    <v-icon left>
-                      mdi-pencil
-                    </v-icon>
-                    編集
+                  <Link as="Button" :small="$vuetify.breakpoint.xs"
+                    @click.native="openUpdateContactPersonDialog(contact_person)" dusk="contactPersonEdit">
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon>
+                  編集
                   </Link>
                 </v-col>
               </v-row>
@@ -325,14 +294,11 @@
                 </v-col>
 
                 <v-col cols="12" sm="" class="text-right">
-                  <Link
-                      as="Button" :small="$vuetify.breakpoint.xs"
-                      @click.native="openCreateContactPersonDialog()"
-                  >
-                    <v-icon left>
-                      mdi-plus
-                    </v-icon>
-                    担当者を追加する
+                  <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="openCreateContactPersonDialog()">
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  担当者を追加する
                   </Link>
                 </v-col>
               </v-row>
@@ -389,7 +355,8 @@
                 <template v-if="client['client_type_taxibus']['has_child_seat']">
                   <Chip :value="true">
                     チャイルドシート&nbsp;
-                    <span v-if="client['client_type_taxibus']['fee_child_seat']">{{ client["client_type_taxibus"]["fee_child_seat"] | currency }}</span>
+                    <span v-if="client['client_type_taxibus']['fee_child_seat']">{{
+                      client["client_type_taxibus"]["fee_child_seat"] | currency }}</span>
                     <span v-else>無料</span>
                   </Chip>
                 </template>
@@ -402,7 +369,8 @@
                 <template v-if="client['client_type_taxibus']['has_junior_seat']">
                   <Chip :value="true">
                     ジュニアシート&nbsp;
-                    <span v-if="client['client_type_taxibus']['fee_junior_seat']">{{ client["client_type_taxibus"]["fee_junior_seat"] | currency }}</span>
+                    <span v-if="client['client_type_taxibus']['fee_junior_seat']">{{
+                      client["client_type_taxibus"]["fee_junior_seat"] | currency }}</span>
                     <span v-else>無料</span>
                   </Chip>
                 </template>
@@ -436,20 +404,15 @@
               <v-col cols="12" sm="4">保有車両 タクシー</v-col>
               <v-col>
                 <v-list dense v-if="client['vehicles_taxi'].length">
-                  <Link
-                      as="v-list-item"
-                      v-for="vehicle_taxi in client['vehicles_taxi']"
-                      :key="vehicle_taxi['id']"
-                      :href="$route('vehicles.show',{vehicle : vehicle_taxi['id']})" exact
-                      dusk="vehicleTaxiShow"
-                  >
-                    <v-list-item-avatar tile size="80">
-                      <v-img :src="vehicle_taxi['icon_image_url']" alt=""></v-img>
-                    </v-list-item-avatar>
+                  <Link as="v-list-item" v-for="vehicle_taxi in client['vehicles_taxi']" :key="vehicle_taxi['id']"
+                    :href="$route('vehicles.show', { vehicle: vehicle_taxi['id'] })" exact dusk="vehicleTaxiShow">
+                  <v-list-item-avatar tile size="80">
+                    <v-img :src="vehicle_taxi['icon_image_url']" alt=""></v-img>
+                  </v-list-item-avatar>
 
-                    <v-list-item-title>
-                      {{ vehicle_taxi["name"] }}
-                    </v-list-item-title>
+                  <v-list-item-title>
+                    {{ vehicle_taxi["name"] }}
+                  </v-list-item-title>
                   </Link>
                 </v-list>
 
@@ -459,10 +422,8 @@
                   </v-col>
 
                   <v-col cols="12" sm="" class="text-right">
-                    <Button
-                        :small="$vuetify.breakpoint.xs"
-                        :to="$route('clients.vehicles.create', {client: client.id, _query: {type: 'taxi'}})"
-                    >
+                    <Button :small="$vuetify.breakpoint.xs"
+                      :to="$route('clients.vehicles.create', { client: client.id, _query: { type: 'taxi' } })">
                       <v-icon left>
                         mdi-plus
                       </v-icon>
@@ -477,20 +438,15 @@
               <v-col cols="12" sm="4">保有車両 バス</v-col>
               <v-col>
                 <v-list dense v-if="client['vehicles_bus'].length">
-                  <Link
-                      as="v-list-item"
-                      v-for="vehicle_bus in client['vehicles_bus']"
-                      :key="vehicle_bus['id']"
-                      :href="$route('vehicles.show',{vehicle : vehicle_bus['id']})" exact
-                      dusk="vehicleBusShow"
-                  >
-                    <v-list-item-avatar tile size="80">
-                      <v-img :src="vehicle_bus['icon_image_url']" alt=""></v-img>
-                    </v-list-item-avatar>
+                  <Link as="v-list-item" v-for="vehicle_bus in client['vehicles_bus']" :key="vehicle_bus['id']"
+                    :href="$route('vehicles.show', { vehicle: vehicle_bus['id'] })" exact dusk="vehicleBusShow">
+                  <v-list-item-avatar tile size="80">
+                    <v-img :src="vehicle_bus['icon_image_url']" alt=""></v-img>
+                  </v-list-item-avatar>
 
-                    <v-list-item-title>
-                      {{ vehicle_bus["name"] }}
-                    </v-list-item-title>
+                  <v-list-item-title>
+                    {{ vehicle_bus["name"] }}
+                  </v-list-item-title>
                   </Link>
                 </v-list>
 
@@ -500,10 +456,8 @@
                   </v-col>
 
                   <v-col cols="12" sm="" class="text-right">
-                    <Button
-                        :small="$vuetify.breakpoint.xs"
-                        :to="$route('clients.vehicles.create', {client: client.id, _query: {type: 'bus'}})"
-                    >
+                    <Button :small="$vuetify.breakpoint.xs"
+                      :to="$route('clients.vehicles.create', { client: client.id, _query: { type: 'bus' } })">
                       <v-icon left>
                         mdi-plus
                       </v-icon>
@@ -530,7 +484,8 @@
             <v-row v-if="client['client_type_restaurant']['languages']?.length">
               <v-col cols="12" sm="4">言語</v-col>
               <v-col>
-                <v-chip small class="mr-2 mb-2" v-for="(language, index) in client['client_type_restaurant']['languages']" :key="index">
+                <v-chip small class="mr-2 mb-2" v-for="(language, index) in client['client_type_restaurant']['languages']"
+                  :key="index">
                   {{ language }}
                 </v-chip>
               </v-col>
@@ -581,7 +536,7 @@
             </v-col>
           </v-row>
 
-            <!-- 社内担当者 -->
+          <!-- 社内担当者 -->
           <v-row v-if="client['users'].length">
             <v-col cols="12" sm="4">社内担当者</v-col>
             <v-col>
@@ -623,29 +578,20 @@
                 </v-col>
 
                 <v-col cols="12" sm="" class="text-right">
-                  <Link
-                      as="Button"
-                      class="ml-2 mb-1"
-                      :small="$vuetify.breakpoint.xs"
-                      :to="$route('sales-todos.index', {_query: {client_id: client.id}})"
-                      v-if="sales_todos.length"
-                  >
-                    <v-icon>
-                      mdi-format-list-bulleted
-                    </v-icon>
-                    この会社のすべての営業ToDoを見る
+                  <Link as="Button" class="ml-2 mb-1" :small="$vuetify.breakpoint.xs"
+                    :to="$route('sales-todos.index', { _query: { client_id: client.id } })" v-if="sales_todos.length">
+                  <v-icon>
+                    mdi-format-list-bulleted
+                  </v-icon>
+                  この会社のすべての営業ToDoを見る
                   </Link>
 
-                  <Link
-                      as="Button"
-                      class="ml-2 mb-1"
-                      :small="$vuetify.breakpoint.xs"
-                      :to="$route('sales-todos.create', {_query: {client_id: client.id}})"
-                  >
-                    <v-icon left>
-                      mdi-plus
-                    </v-icon>
-                    この会社のToDoを追加する
+                  <Link as="Button" class="ml-2 mb-1" :small="$vuetify.breakpoint.xs"
+                    :to="$route('sales-todos.create', { _query: { client_id: client.id } })">
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  この会社のToDoを追加する
                   </Link>
                 </v-col>
               </v-row>
@@ -659,24 +605,21 @@
               <v-list three-line dense class="pa-0" v-if="report_contents.length">
                 <div v-for="(report_content, index) in report_contents" :key="index">
                   <v-divider v-if="index !== 0"></v-divider>
-                  <Link
-                      as="v-list-item" three-line
-                      :href="$route('reports.show', {report: report_content.report_id})"
-                      dusk="reportShow"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ report_content.report.user.name }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        {{ report_content.report.date }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle class="overflow-hidden">
-                        <div class="text-nowrap overflow-hidden">
-                          {{ report_content.description }}
-                        </div>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
+                  <Link as="v-list-item" three-line :href="$route('reports.show', { report: report_content.report_id })"
+                    dusk="reportShow">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ report_content.report.user.name }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ report_content.report.date }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle class="overflow-hidden">
+                      <div class="text-nowrap overflow-hidden">
+                        {{ report_content.description }}
+                      </div>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
                   </Link>
                 </div>
               </v-list>
@@ -687,29 +630,20 @@
                 </v-col>
 
                 <v-col cols="12" sm="" class="text-right">
-                  <Link
-                      as="Button"
-                      class="ml-2 mb-1"
-                      :small="$vuetify.breakpoint.xs"
-                      :to="$route('reports.index', {_query: {client_id: client.id}})"
-                      v-if="report_contents.length"
-                  >
-                    <v-icon>
-                      mdi-format-list-bulleted
-                    </v-icon>
-                    この会社のすべての営業日報を見る
+                  <Link as="Button" class="ml-2 mb-1" :small="$vuetify.breakpoint.xs"
+                    :to="$route('reports.index', { _query: { client_id: client.id } })" v-if="report_contents.length">
+                  <v-icon>
+                    mdi-format-list-bulleted
+                  </v-icon>
+                  この会社のすべての営業日報を見る
                   </Link>
 
-                  <Link
-                      as="Button"
-                      class="ml-2 mb-1"
-                      :small="$vuetify.breakpoint.xs"
-                      :to="$route('reports.create', {_query: {client_id: client.id}})"
-                  >
-                    <v-icon left>
-                      mdi-plus
-                    </v-icon>
-                    この会社の営業日報を作成する
+                  <Link as="Button" class="ml-2 mb-1" :small="$vuetify.breakpoint.xs"
+                    :to="$route('reports.create', { _query: { client_id: client.id } })">
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  この会社の営業日報を作成する
                   </Link>
                 </v-col>
               </v-row>
@@ -720,7 +654,7 @@
           <v-row v-if="client['contact']">
             <v-col cols="12" sm="4">問い合わせ経路</v-col>
             <v-col>
-             {{ client['contact'] }}
+              {{ client['contact'] }}
             </v-col>
           </v-row>
 
@@ -758,31 +692,31 @@
                 <div v-for="(latest_evaluation, index) in latest_evaluations" :key="index">
                   <v-divider></v-divider>
 
-                  <Link
-                      as="v-list-item" three-line
-                      :href="$route('reports.show',{report : latest_evaluation['report_content']['report_id']})"
-                  >
-                    <!-- PCビュー -->
-                    <v-row v-if="!$vuetify.breakpoint.xs">
-                      <v-col cols="3">{{ latest_evaluation['product']['name'] }}</v-col>
-                      <v-col cols="2">
-                        <EvaluationIcon :evaluation="latest_evaluation['evaluation']['grade']"></EvaluationIcon>
-                        {{ latest_evaluation['evaluation']['label'] }}
-                      </v-col>
-                      <v-col cols="2">{{ latest_evaluation['report_content']['report']['date'] }}</v-col>
-                      <v-col cols="5">{{ latest_evaluation['report_content']['report']['user']['name'] }}</v-col>
-                    </v-row>
+                  <Link as="v-list-item" three-line
+                    :href="$route('reports.show', { report: latest_evaluation['report_content']['report_id'] })">
+                  <!-- PCビュー -->
+                  <v-row v-if="!$vuetify.breakpoint.xs">
+                    <v-col cols="3">{{ latest_evaluation['product']['name'] }}</v-col>
+                    <v-col cols="2">
+                      <EvaluationIcon :evaluation="latest_evaluation['evaluation']['grade']"></EvaluationIcon>
+                      {{ latest_evaluation['evaluation']['label'] }}
+                    </v-col>
+                    <v-col cols="2">{{ latest_evaluation['report_content']['report']['date'] }}</v-col>
+                    <v-col cols="5">{{ latest_evaluation['report_content']['report']['user']['name'] }}</v-col>
+                  </v-row>
 
-                    <!-- スマートフォンビュー -->
-                    <v-row v-else justify="center">
-                      <v-col cols="10">
-                        {{ latest_evaluation['product']['name'] }}<br>
-                        {{ latest_evaluation['report_content']['report']['date'] }} {{ latest_evaluation['report_content']['report']['user']['name'] }}
-                      </v-col>
-                      <v-col cols="2">
-                        <EvaluationIcon class="mt-2" :evaluation="latest_evaluation['evaluation']['grade']"></EvaluationIcon>
-                      </v-col>
-                    </v-row>
+                  <!-- スマートフォンビュー -->
+                  <v-row v-else justify="center">
+                    <v-col cols="10">
+                      {{ latest_evaluation['product']['name'] }}<br>
+                      {{ latest_evaluation['report_content']['report']['date'] }} {{
+                        latest_evaluation['report_content']['report']['user']['name'] }}
+                    </v-col>
+                    <v-col cols="2">
+                      <EvaluationIcon class="mt-2" :evaluation="latest_evaluation['evaluation']['grade']">
+                      </EvaluationIcon>
+                    </v-col>
+                  </v-row>
                   </Link>
                 </div>
               </v-list>
@@ -814,11 +748,8 @@
     </v-card>
 
     <!-- 担当者編集ダイアログ -->
-    <v-dialog
-        v-model="contactPersonDialog"
-        :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-        @click:outside="contactPersonForm.clearErrors()"
-    >
+    <v-dialog v-model="contactPersonDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="contactPersonForm.clearErrors()">
       <v-card flat tile>
         <v-card-title>
           <template v-if="this.contactPersonDialogMode === 'update'">
@@ -832,118 +763,71 @@
         <v-card-text>
           <v-list>
             <v-list-item>
-              <v-text-field
-                  dense filled
-                  prepend-inner-icon="mdi-pencil"
-                  label="名前"
-                  name="name"
-                  maxlength="200"
-                  v-model="contactPersonForm.name"
-                  :error="Boolean(contactPersonForm.errors.name)"
-                  :error-messages="contactPersonForm.errors.name"
-              ></v-text-field>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="名前" name="name" maxlength="200"
+                v-model="contactPersonForm.name" :error="Boolean(contactPersonForm.errors.name)"
+                :error-messages="contactPersonForm.errors.name"></v-text-field>
             </v-list-item>
 
             <v-list-item>
-              <v-text-field
-                  dense filled
-                  prepend-inner-icon="mdi-pencil"
-                  label="メールアドレス"
-                  name="email"
-                  v-model="contactPersonForm.email"
-                  :error="Boolean(contactPersonForm.errors.email)"
-                  :error-messages="contactPersonForm.errors.email"
-              ></v-text-field>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="メールアドレス" name="email"
+                v-model="contactPersonForm.email" :error="Boolean(contactPersonForm.errors.email)"
+                :error-messages="contactPersonForm.errors.email"></v-text-field>
             </v-list-item>
 
             <v-list-item>
-              <v-text-field
-                  dense filled
-                  prepend-inner-icon="mdi-pencil"
-                  label="電話番号"
-                  name="tel"
-                  v-model="contactPersonForm.tel"
-                  :error="Boolean(contactPersonForm.errors.tel)"
-                  :error-messages="contactPersonForm.errors.tel"
-              ></v-text-field>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="電話番号" name="tel"
+                v-model="contactPersonForm.tel" :error="Boolean(contactPersonForm.errors.tel)"
+                :error-messages="contactPersonForm.errors.tel"></v-text-field>
             </v-list-item>
 
             <v-list-item>
-              <v-text-field
-                  dense filled
-                  prepend-inner-icon="mdi-pencil"
-                  label="所属部署"
-                  name="department"
-                  v-model="contactPersonForm.department"
-                  :error="Boolean(contactPersonForm.errors.department)"
-                  :error-messages="contactPersonForm.errors.department"
-              ></v-text-field>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="所属部署" name="department"
+                v-model="contactPersonForm.department" :error="Boolean(contactPersonForm.errors.department)"
+                :error-messages="contactPersonForm.errors.department"></v-text-field>
             </v-list-item>
 
             <v-list-item>
-              <v-text-field
-                  dense filled
-                  prepend-inner-icon="mdi-pencil"
-                  label="役職"
-                  name="position"
-                  v-model="contactPersonForm.position"
-                  :error="Boolean(contactPersonForm.errors.position)"
-                  :error-messages="contactPersonForm.errors.position"
-              ></v-text-field>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="役職" name="position"
+                v-model="contactPersonForm.position" :error="Boolean(contactPersonForm.errors.position)"
+                :error-messages="contactPersonForm.errors.position"></v-text-field>
             </v-list-item>
           </v-list>
         </v-card-text>
 
         <v-card-text class="text-center">
-          <Link
-              as="Button" :small="$vuetify.breakpoint.xs"
-              color="primary"
-              v-if="this.contactPersonDialogMode === 'update'"
-              @click.native="updateContactPerson"
-              :loading="loading['contact-person-update']"
-          >
-            <v-icon left>
-              mdi-content-save-edit-outline
-            </v-icon>
-            この内容で更新する
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="primary"
+            v-if="this.contactPersonDialogMode === 'update'" @click.native="updateContactPerson"
+            :loading="loading['contact-person-update']">
+          <v-icon left>
+            mdi-content-save-edit-outline
+          </v-icon>
+          この内容で更新する
           </Link>
-          <Link
-              as="Button" :small="$vuetify.breakpoint.xs"
-              color="primary"
-              v-if="this.contactPersonDialogMode === 'store'"
-              @click.native="createContactPerson"
-              :loading="loading['contact-person-create']"
-          >
-            <v-icon left>
-              mdi-content-save-outline
-            </v-icon>
-            この内容で作成する
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="primary"
+            v-if="this.contactPersonDialogMode === 'store'" @click.native="createContactPerson"
+            :loading="loading['contact-person-create']">
+          <v-icon left>
+            mdi-content-save-outline
+          </v-icon>
+          この内容で作成する
           </Link>
         </v-card-text>
 
         <v-card-text class="text-center">
-          <Link
-              as="Button" :small="$vuetify.breakpoint.xs"
-              color="error"
-              v-if="contactPersonDialogMode === 'update'"
-              @click.native="deleteContactPerson"
-              :loading="loading['contact-person-delete']"
-          >
-            <v-icon left>
-              mdi-delete-outline
-            </v-icon>
-            この担当者を削除する
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="error" v-if="contactPersonDialogMode === 'update'"
+            @click.native="deleteContactPerson" :loading="loading['contact-person-delete']">
+          <v-icon left>
+            mdi-delete-outline
+          </v-icon>
+          この担当者を削除する
           </Link>
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-text class="text-right">
-          <Button
-              class="mt-4"
-              :small="$vuetify.breakpoint.xs"
-              @click.native="contactPersonForm.clearErrors(); contactPersonDialog = false"
-          >
+          <Button class="mt-4" :small="$vuetify.breakpoint.xs"
+            @click.native="contactPersonForm.clearErrors(); contactPersonDialog = false">
             <v-icon>
               mdi-close
             </v-icon>
@@ -954,11 +838,8 @@
     </v-dialog>
 
     <!-- 営業エリア編集ダイアログ -->
-    <v-dialog
-        v-model="businessDistrictDialog"
-        :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-        @click:outside="businessDistrictForm.clearErrors()"
-    >
+    <v-dialog v-model="businessDistrictDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="businessDistrictForm.clearErrors()">
       <v-card flat tile>
         <v-card-title>
           <template v-if="this.businessDistrictDialogMode === 'update'">
@@ -972,82 +853,54 @@
         <v-card-text>
           <v-list>
             <v-list-item>
-              <v-select
-                  dense filled
-                  label="都道府県"
-                  :items="prefectures"
-                  name="prefecture"
-                  v-model="businessDistrictForm.prefecture"
-                  :error="Boolean(businessDistrictForm.errors.prefecture)"
-                  :error-messages="businessDistrictForm.errors.prefecture"
-              >
+              <v-select dense filled label="都道府県" :items="prefectures" name="prefecture"
+                v-model="businessDistrictForm.prefecture" :error="Boolean(businessDistrictForm.errors.prefecture)"
+                :error-messages="businessDistrictForm.errors.prefecture">
               </v-select>
             </v-list-item>
 
             <v-list-item>
-              <v-text-field
-                  dense filled
-                  prepend-inner-icon="mdi-pencil"
-                  label="市区町村"
-                  name="address"
-                  v-model="businessDistrictForm.address"
-                  :error="Boolean(businessDistrictForm.errors.address)"
-                  :error-messages="businessDistrictForm.errors.address"
-              ></v-text-field>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="市区町村" name="address"
+                v-model="businessDistrictForm.address" :error="Boolean(businessDistrictForm.errors.address)"
+                :error-messages="businessDistrictForm.errors.address"></v-text-field>
             </v-list-item>
           </v-list>
         </v-card-text>
 
         <v-card-text class="text-center">
-          <Link
-              as="Button" :small="$vuetify.breakpoint.xs"
-              color="primary"
-              v-if="this.businessDistrictDialogMode === 'update'"
-              @click.native="updateBusinessDistrict"
-              :loading="loading['business-district-update']"
-          >
-            <v-icon left>
-              mdi-content-save-edit-outline
-            </v-icon>
-            この内容で更新する
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="primary"
+            v-if="this.businessDistrictDialogMode === 'update'" @click.native="updateBusinessDistrict"
+            :loading="loading['business-district-update']">
+          <v-icon left>
+            mdi-content-save-edit-outline
+          </v-icon>
+          この内容で更新する
           </Link>
-          <Link
-              as="Button" :small="$vuetify.breakpoint.xs"
-              color="primary"
-              v-if="this.businessDistrictDialogMode === 'store'"
-              @click.native="createBusinessDistrict"
-              :loading="loading['business-district-create']"
-          >
-            <v-icon left>
-              mdi-content-save-outline
-            </v-icon>
-            この内容で作成する
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="primary"
+            v-if="this.businessDistrictDialogMode === 'store'" @click.native="createBusinessDistrict"
+            :loading="loading['business-district-create']">
+          <v-icon left>
+            mdi-content-save-outline
+          </v-icon>
+          この内容で作成する
           </Link>
         </v-card-text>
 
         <v-card-text class="text-center">
-          <Link
-              as="Button" :small="$vuetify.breakpoint.xs"
-              color="error"
-              v-if="businessDistrictDialogMode === 'update'"
-              @click.native="deleteBusinessDistrict"
-              :loading="loading['business-district-delete']"
-          >
-            <v-icon left>
-              mdi-delete-outline
-            </v-icon>
-            この営業エリアを削除する
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="error" v-if="businessDistrictDialogMode === 'update'"
+            @click.native="deleteBusinessDistrict" :loading="loading['business-district-delete']">
+          <v-icon left>
+            mdi-delete-outline
+          </v-icon>
+          この営業エリアを削除する
           </Link>
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-text class="text-right">
-          <Button
-              class="mt-4"
-              :small="$vuetify.breakpoint.xs"
-              @click.native="businessDistrictForm.clearErrors(); businessDistrictDialog = false"
-          >
+          <Button class="mt-4" :small="$vuetify.breakpoint.xs"
+            @click.native="businessDistrictForm.clearErrors(); businessDistrictDialog = false">
             <v-icon>
               mdi-close
             </v-icon>
@@ -1064,10 +917,10 @@
 
 <script>
 import Layout from "./Layout";
-import {Link} from "@inertiajs/inertia-vue";
+import { Link } from "@inertiajs/inertia-vue";
 
 export default {
-  components: {Layout, Link},
+  components: { Layout, Link },
 
   props: ['prefectures', 'sales_todos', 'report_contents', 'report_contents_count_by_fy', 'latest_evaluations', 'client', 'client_type_column_names'],
 
@@ -1122,7 +975,7 @@ export default {
     deleteClient: function () {
       this.$confirm('この会社を削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
         if (isAccept) {
-          this.$inertia.delete(this.$route('clients.destroy', {client: this.client.id}), {
+          this.$inertia.delete(this.$route('clients.destroy', { client: this.client.id }), {
             onStart: () => this.$set(this.loading, "delete", true),
             onSuccess: () => this.$toasted.show('会社情報を削除しました'),
             onFinish: () => this.$set(this.loading, "delete", false),
@@ -1146,7 +999,7 @@ export default {
 
     // 担当者更新
     updateContactPerson: function (contactPersonId) {
-      this.contactPersonForm.put(this.$route('contact-persons.update', {contact_person: this.contactPersonForm.id}), {
+      this.contactPersonForm.put(this.$route('contact-persons.update', { contact_person: this.contactPersonForm.id }), {
         preserveScroll: true,
         onStart: () => this.$set(this.loading, "contact-person-update", true),
         onSuccess: () => {
@@ -1163,7 +1016,7 @@ export default {
         if (isAccept) {
           this.contactPersonDialog = false;
 
-          this.contactPersonForm.delete(this.$route('contact-persons.destroy', {contact_person: this.contactPersonForm.id}), {
+          this.contactPersonForm.delete(this.$route('contact-persons.destroy', { contact_person: this.contactPersonForm.id }), {
             preserveScroll: true,
             onStart: () => this.$set(this.loading, "contact-person-delete", true),
             onSuccess: () => this.$toasted.show('担当者情報を削除しました'),
@@ -1211,7 +1064,7 @@ export default {
 
     // 営業エリア更新
     updateBusinessDistrict: function (businessDistrictId) {
-      this.businessDistrictForm.put(this.$route('business-districts.update', {business_district: this.businessDistrictForm.id}), {
+      this.businessDistrictForm.put(this.$route('business-districts.update', { business_district: this.businessDistrictForm.id }), {
         preserveScroll: true,
         onStart: () => this.$set(this.loading, "business-district-update", true),
         onSuccess: () => {
@@ -1228,7 +1081,7 @@ export default {
         if (isAccept) {
           this.businessDistrictDialog = false;
 
-          this.businessDistrictForm.delete(this.$route('business-districts.destroy', {business_district: this.businessDistrictForm.id}), {
+          this.businessDistrictForm.delete(this.$route('business-districts.destroy', { business_district: this.businessDistrictForm.id }), {
             preserveScroll: true,
             onStart: () => this.$set(this.loading, "business-district-delete", true),
             onSuccess: () => this.$toasted.show('営業エリア情報を削除しました'),

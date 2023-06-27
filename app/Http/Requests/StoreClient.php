@@ -65,6 +65,9 @@ class StoreClient extends FormRequest
             'charges_ids' => ['nullable', 'array'],
             'charges_ids.*' => ['nullable', Rule::exists('user', "id")],
 
+            'charge_ids' => ['nullable', 'array'],
+            'charge_ids.*' => ['nullable', Rule::exists('users', "id")],
+            
             'client_type_taxibus.membership_fee' => ['nullable', 'integer', 'min:0'],
             'client_type_taxibus.fee_taxi_cab' => ['nullable', 'integer', 'min:0'],
             'client_type_taxibus.fee_taxi_tabinoashi' => ['nullable', 'integer', 'min:0'],

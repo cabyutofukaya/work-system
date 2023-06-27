@@ -260,6 +260,9 @@ class ClientController extends Controller
             'client_type_column_names' => Lang::get('validation.attributes.client_type_' . $client_type_id),
             // 位置情報初期値
             'location_default' => config("const.location_default"),
+             // 社内担当者リスト
+             'charges' => User::ofClientType($client_type_id)->get(["id", "name"]),
+         
         ]);
     }
 
@@ -305,6 +308,7 @@ class ClientController extends Controller
         // ファイルアップロードと同時に空の配列が送信された場合にキー自体が設定されなくなるためnull合体演算子で対応
         $client->genres()->sync($request->validated()["genre_ids"] ?? []);
         $client->products()->sync($request->validated()["product_ids"] ?? []);
+        $client->users()->sync($request->validated()["charge_ids"] ?? []);
 
         // バックボタンの戻り先ページを設定
         $request->session()->flash('backButton', [
