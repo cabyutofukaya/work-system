@@ -28,7 +28,7 @@
         </v-row>
 
         <div class="description-list">
-          <v-row>
+          <!-- <v-row>
             <v-col cols="12" sm="4">会社名</v-col>
             <v-col>
               <div class="d-flex align-center">
@@ -44,6 +44,13 @@
                   </div>
                 </div>
               </div>
+            </v-col>
+          </v-row> -->
+
+          <v-row>
+            <v-col cols="12" sm="4">会社名</v-col>
+            <v-col>
+              {{ client.name }}
             </v-col>
           </v-row>
 

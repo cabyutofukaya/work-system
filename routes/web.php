@@ -126,7 +126,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/schedule/delete', [ScheduleController::class,'delete'])->name("schedule.delete");
 
     // メンバー
-    Route::get('schedule/getData/{scheduleId}', [ScheduleController::class, "getData"])->where('scheduleId', '[0-9]+');;
+    Route::get('schedule/getData/{scheduleId}', [ScheduleController::class, "getData"])->where('scheduleId', '[0-9]+');
+
+    // 社内ToDo対応済みフラグトグル
+    Route::put('reports/comment/{report_comment}/complete', [ReportCommentController::class, "complete"])->name('report-comments.complete');
 });
 
 // ファイルダウンロード

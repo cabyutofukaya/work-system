@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\Report;
 use App\Models\SalesMethod;
 use App\Models\User;
+use App\Models\ReportCommentUser;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -54,7 +55,7 @@ class ReportController extends Controller
 
         // 非公開の日報を除外
         $reports->exceptPrivate();
-   
+
         return inertia('Reports', [
 
 
@@ -68,6 +69,7 @@ class ReportController extends Controller
                 'word' => $request->input('word'),
                 'only_complaint' => $request->input('only_complaint'),
                 'is_visited' => $request->input('is_visited'),
+                'is_readed' => $request->input('is_readed'),
             ],
 
             // 会社ID検索時の対象
@@ -99,6 +101,7 @@ class ReportController extends Controller
                 'client_id' => $request->input('client_id'),
                 'word' => $request->input('word'),
                 'only_complaint' => $request->input('only_complaint'),
+                'is_readed' => $request->input('is_readed'),
             ],
         ]);
     }
@@ -121,13 +124,17 @@ class ReportController extends Controller
         }
 
         $reports = Report
-            ::with(['user:id,name,deleted_at'])
+            ::with(['user:id,name,deleted_at','report_comments.user:id,name'])
             ->withExists([
                 'report_contents_sales',
                 'report_contents_work',
                 // 自分自身が閲覧済みかどうか
                 'report_visitors as is_visited' => function ($query) {
                     $query->where('user_id', auth()->id());
+                },
+                'report_comments as is_readed' => function ($query) {
+                    $query->where('mention_id', auth()->id());
+                    $query->where('is_readed',0);
                 }
             ])
             ->withCount([
@@ -191,6 +198,16 @@ class ReportController extends Controller
                 $query->where('user_id', auth()->id());
             });
         }
+
+
+        // コメント未読あり
+        if ($request->is_readed) {
+            $reports->whereHas('report_comments', function ($query) use ($request) {
+                $query->where('mention_id', auth()->id());
+                $query->where('is_readed', 0);
+            });
+        }
+
 
 
 
@@ -356,10 +373,20 @@ class ReportController extends Controller
             'report_visitors'
         ]);
 
+
         // 閲覧者IDを保存
         $report->report_visitors()->updateOrCreate([
             'user_id' => auth()->id(),
         ]);
+
+
+        // コメントがあった場合、既読をつける
+        // ReportComment::where([
+        //     'report_id' => $report->id,
+        //     'user_id' => auth()->id(),
+        // ])->update([
+        //     'is_readed' => 1,
+        // ]);
 
         // 閲覧数の保存後に閲覧者情報を取得
         $report->loadCount(['report_visitors']);
@@ -374,9 +401,13 @@ class ReportController extends Controller
             ->get()
             ->makeHidden("email");
 
+
         return inertia('ReportsShow', [
             'report' => $report,
+            'report_comment' => $report,
             'users' => $users,
+            // 社内担当者リスト
+            'mentions' => User::whereNull('deleted_at')->get(["id", "name"]),
         ]);
     }
 

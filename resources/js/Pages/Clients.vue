@@ -55,7 +55,11 @@
               </v-list-item-title>
 
               <v-list-item-subtitle>
-                <span style="white-space: pre-line;">{{ client.description }}</span>
+                <span style="white-space: pre-line;" v-if="client.description">{{ client.description }} / </span>
+                <span style="white-space: pre-line;font-size: small;" v-if="client.prefecture"> 所在地:</span>
+                <span style="white-space: pre-line;" v-if="client.prefecture"> {{ client.prefecture }}{{ client.address }} / </span>
+                <span style="white-space: pre-line;font-size: small;" v-if="client.tel">電話番号:</span>
+                <span style="white-space: pre-line;" v-if="client.tel"><a :href="'tel:' + client.tel">{{ client.tel }}</a></span>
               </v-list-item-subtitle>
             </v-list-item-content>
           </Link>

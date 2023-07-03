@@ -42,6 +42,10 @@ class StoreReportComment extends FormRequest
                 Rule::exists('reports', "id"),
             ],
             'comment' => ['required'],
+            'mention_id' => [
+                'nullable',
+                Rule::exists('users', "id"),
+            ],
         ];
     }
 }

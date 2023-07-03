@@ -8,6 +8,7 @@ use App\Models\OfficeTodo;
 use App\Models\Report;
 use App\Models\SalesTodo;
 use App\Models\User;
+use App\Models\ReportComment;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,6 +19,7 @@ class HomeController extends Controller
     public function index(): Response|ResponseFactory
     {
 
+       
         // $meeting = Meeting::with(['user:id,name,deleted_at'])
         //     ->withCount([
         //         'meeting_likes',
@@ -71,6 +73,10 @@ class HomeController extends Controller
                 ->withExists([
                     'report_contents_sales',
                     'report_contents_work',
+                    'report_comments as is_readed' => function ($query) {
+                        $query->where('mention_id', auth()->id());
+                        $query->where('is_readed',0);
+                    }
                 ])
                 ->withCount([
                     'report_content_likes',
@@ -88,6 +94,10 @@ class HomeController extends Controller
                 ->withExists([
                     'report_contents_sales',
                     'report_contents_work',
+                    'report_comments as is_readed' => function ($query) {
+                        $query->where('mention_id', auth()->id());
+                        $query->where('is_readed',0);
+                    },
                 ])
                 ->withCount([
                     'report_content_likes',
@@ -99,6 +109,12 @@ class HomeController extends Controller
                 ->get(),
 
             'user' => User::where('id',auth()->id())->first(),
+
+            //日報コメント未読
+            'is_read'=> fn () => count(ReportComment::where([
+                'mention_id' => auth()->id(),
+                'is_readed' => 0,
+            ])->get()),
 
         ]);
     }

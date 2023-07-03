@@ -2,6 +2,7 @@
 a.Link_item{
   text-decoration: none;
   color: rgba(0, 0, 0, 0.87);
+  padding: 0px 20px;
 }
 </style>
 <template>
@@ -92,7 +93,8 @@ a.Link_item{
         </template>
 
         <div v-for="report in reports['data']" :key="report.id">
-          <Link :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item">
+          <!-- <Link as="v-list-item" :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item"> -->
+            <v-list-item class="Link_item">
           <v-list-item-content>
             <v-row :class="{ 'grey': report['is_visited'], 'lighten-4': report['is_visited'] }">
               <!-- PCビュー -->
@@ -104,9 +106,11 @@ a.Link_item{
                   {{ report.user.name }}
                 </v-col>
                 <v-col sm="6" :class="{ 'font-weight-bold': !report['is_visited'] }">
+                  <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
                   <span v-if="report['report_contents_sales_exists']">営業日報</span><span
                     v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
                     v-if="report['report_contents_work_exists']">業務日報</span>
+                  </a>
                 </v-col>
               </template>
 
@@ -115,10 +119,12 @@ a.Link_item{
                 <v-col cols="12">
                   <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.date }}</div>
                   <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}</div>
-                  <div :class="{ 'font-weight-bold': !report['is_visited'] }"><span
+                  <div :class="{ 'font-weight-bold': !report['is_visited'] }">
+                    <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
+                      <span
                       v-if="report['report_contents_sales_exists']">営業日報</span><span
                       v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                      v-if="report['report_contents_work_exists']">業務日報</span></div>
+                      v-if="report['report_contents_work_exists']">業務日報</span></a></div>
                 </v-col>
               </template>
 
@@ -127,7 +133,7 @@ a.Link_item{
                 <v-col sm="1" class="text-center">
                   {{ report["report_content_likes_count"] }}
                 </v-col>
-                <v-col sm="1" class="text-center">
+                <v-col sm="1" class="text-center" :class="{ is_readed: report.is_readed != 0 }">
                   {{ report["report_comments_count"] }}
                 </v-col>
               
@@ -141,7 +147,7 @@ a.Link_item{
                     いいね
                     {{ report["report_content_likes_count"] }}
                   </v-chip>
-                  <v-chip small class="mr-2">
+                  <v-chip small class="mr-2" :class="{ is_readed: report.is_readed != 0 }">
                     コメント
                     {{ report["report_comments_count"] }}
                   </v-chip>
@@ -149,7 +155,8 @@ a.Link_item{
               </template>
             </v-row>
           </v-list-item-content>
-          </Link>
+            </v-list-item>
+          <!-- </Link> -->
 
           <v-divider class="mx-4"></v-divider>
         </div>
@@ -216,6 +223,13 @@ a.Link_item{
                   :error="Boolean(form.errors.is_visited)" :error-messages="form.errors.is_visited"></v-switch>
               </v-list-item>
 
+
+              <v-list-item class="mt-4">
+                <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読あり"
+                  persistent-hint name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
+                  :error="Boolean(form.errors.is_readed)" :error-messages="form.errors.is_readed"></v-switch>
+              </v-list-item>
+
               
             </v-list>
           </v-card-text>
@@ -250,6 +264,9 @@ a.Link_item{
 .v-list-item .row {
   margin-top: -8px;
   margin-bottom: -8px;
+}
+.is_readed{
+  color: rgb(240, 49, 42);
 }
 </style>
 

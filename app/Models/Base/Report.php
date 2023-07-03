@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\ReportCommentUser;
 
 /**
  * Class Report
@@ -67,5 +68,10 @@ class Report extends Model
 	public function report_visitors()
 	{
 		return $this->hasMany(ReportVisitor::class);
+	}
+
+	public function report_comment_users()
+	{
+		return $this->hasMany(ReportCommentUser::class);
 	}
 }

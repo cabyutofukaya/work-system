@@ -2,29 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\Base\ReportComment as BaseReportComment;
+use App\Models\Base\ReportCommentUser as BaseReportCommentUser;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use OwenIt\Auditing\Contracts\Auditable;
 
 /**
- * 日報コメント
+ * 日報コンテンツ いいね
  */
-class ReportComment extends BaseReportComment implements Auditable
+class ReportCommentUser extends BaseReportCommentUser
 {
     use HasFactory;
-    use SoftDeletes;
-    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'report_id',
+        'report_comment_id',
         'user_id',
-        'comment',
-        'mention_id',
-        'mention_name',
+        'is_readed',
     ];
 
     /**
@@ -33,7 +26,7 @@ class ReportComment extends BaseReportComment implements Auditable
      * @var array
      */
     // メンバー
-    protected $hidden = ['updated_at', 'deleted_at'];
+    protected $hidden = ['updated_at'];
     // 管理者
     protected array $hiddenAdmin = [];
 
@@ -51,29 +44,6 @@ class ReportComment extends BaseReportComment implements Auditable
             // hiddenを変更
             $this->setHidden($this->hiddenAdmin);
         }
-    }
-
-    /**
-     * モデルの「起動」メソッド
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        // ID逆順に並べる
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderByDesc('id');
-        });
-
-        // 親テーブルのコメント更新日時カラムを更新
-        static::created(function ($report_comment) {
-            $report = Report::find($report_comment["report_id"]);
-            $report->fill(["comment_updated_at" => now()]);
-            $report->timestamps = false; // updated_atを更新しない
-            $report->save();
-        });
     }
 
     /**

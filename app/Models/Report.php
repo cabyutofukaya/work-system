@@ -210,4 +210,11 @@ class Report extends BaseReport implements Auditable
     {
         return $date->format("Y-m-d H:i");
     }
+
+
+    //既読をつける
+    protected function is_readed(int $report,int $user)
+    {
+        
+    }
 }

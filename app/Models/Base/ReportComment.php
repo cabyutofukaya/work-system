@@ -36,7 +36,9 @@ class ReportComment extends Model
 
     protected $casts = [
         'report_id' => 'int',
-        'user_id' => 'int'
+        'user_id' => 'int',
+        'mention_id' => 'int',
+        'mention_name' => 'string',
     ];
 
     public function report()

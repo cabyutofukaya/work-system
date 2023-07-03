@@ -44,11 +44,17 @@
         app
         color="#1c6181" dark flat
     >
-      <Link as="div" style="cursor: pointer" :href="$route('home')">
-        <v-app-bar-title class="pa-0">
-          {{ appName }}
+    <Link as="div" style="cursor: pointer;font-size: larger;" :href="$route('home')">
+      GROUPTUBE
+    </Link>
+
+    
+      <!-- <Link as="div" style="cursor: pointer" :href="$route('home')">
+        <v-app-bar-title class="py-0 px-4">
+      
+    
         </v-app-bar-title>
-      </Link>
+      </Link> -->
 
       <v-spacer></v-spacer>
 

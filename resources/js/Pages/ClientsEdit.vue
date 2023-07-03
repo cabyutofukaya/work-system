@@ -43,7 +43,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <!-- <v-row>
               <v-col cols="12" sm="4">画像</v-col>
               <v-col>
                 <v-file-input
@@ -56,7 +56,7 @@
                     :error-messages="form.errors._image"
                 ></v-file-input>
               </v-col>
-            </v-row>
+            </v-row> -->
 
             <v-row>
               <v-col cols="12" sm="4">郵便番号</v-col>

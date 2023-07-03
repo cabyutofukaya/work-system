@@ -70,7 +70,7 @@
         </template>
 
         <div v-for="report in reports['data']" :key="report.id">
-          <Link as="v-list-item" :href="$route('reports.show', {id: report.id})">
+            <v-list-item>
             <v-list-item-content>
               <v-row :class="{'grey': report['is_private'], 'lighten-4': report['is_private']}">
                 <!-- PCビュー -->
@@ -79,7 +79,9 @@
                     {{ report.date }}
                   </v-col>
                   <v-col sm="6">
+                    <a :href="$route('reports.show', {id: report.id})">
                     <span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span>
+                  </a>
                   </v-col>
                 </template>
 
@@ -87,7 +89,8 @@
                 <template v-else>
                   <v-col cols="12">
                     <div class="mb-1">{{ report.date }}</div>
-                    <div><span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span></div>
+                    <div>
+                      <a :href="$route('reports.show', {id: report.id})"></a><span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span> </a></div>
                   </v-col>
                 </template>
 
@@ -97,7 +100,7 @@
                     {{ report["report_content_likes_count"] }}
                   </v-col>
 
-                  <v-col sm="1" class="text-center">
+                  <v-col sm="1" class="text-center" :class="{ is_readed: report.is_readed != 0 }">
                     {{ report["report_comments_count"] }}
                   </v-col>
 
@@ -146,7 +149,7 @@
                       {{ report["report_content_likes_count"] }}
                     </v-chip>
 
-                    <v-chip small class="mr-2">
+                    <v-chip small class="mr-2" :class="{ is_readed: report.is_readed != 0 }">
                       コメント
                       {{ report["report_comments_count"] }}
                     </v-chip>
@@ -187,7 +190,8 @@
                 </template>
               </v-row>
             </v-list-item-content>
-          </Link>
+          </v-list-item>
+     
 
           <v-divider class="mx-4"></v-divider>
         </div>
@@ -263,6 +267,13 @@
                     :error-messages="form.errors.only_complaint"
                 ></v-switch>
               </v-list-item>
+
+              <v-list-item class="mt-4">
+                <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読あり"
+                  persistent-hint name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
+                  :error="Boolean(form.errors.is_readed)" :error-messages="form.errors.is_readed"></v-switch>
+              </v-list-item>
+
             </v-list>
           </v-card-text>
 
@@ -298,6 +309,12 @@
   </Layout>
 </template>
 
+<style>
+.is_readed{
+  color: rgb(240, 49, 42);
+}
+</style>
+
 <script>
 import Layout from "./Layout";
 import {Link} from "@inertiajs/inertia-vue";
@@ -309,7 +326,7 @@ export default {
 
   data() {
     // 検索パラメータリスト
-    const searchParams = ["word", "only_complaint"]
+    const searchParams = ["word", "only_complaint","is_readed"]
 
     // 検索フォーム初期値をパラメータから取得
     let formParams = {};
