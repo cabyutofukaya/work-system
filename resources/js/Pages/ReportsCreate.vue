@@ -50,6 +50,28 @@
               ></v-switch>
             </v-col>
           </v-row>
+
+          <!-- <v-row>
+            <v-col cols="12" sm="4" class="align-self-center">
+              <h4>出社/在宅</h4>
+            </v-col>
+
+            <v-col>
+              <v-switch
+                  dense filled
+                  class="ma-0 pa-0"
+                  color="warning"
+                  :label="(form.is_zaitaku) ? '在宅' : '出社'"
+                  :prepend-icon="(form.is_zaitaku) ? 'mdi-home-outline' : 'mdi-office-building'"
+                  name="is_zaitaku"
+                  v-model="form.is_zaitaku"
+                  required
+                  :error="Boolean(form.errors.is_zaitaku)"
+                  :error-messages="form.errors.is_zaitaku"
+              ></v-switch>
+            </v-col>
+          </v-row> -->
+
         </div>
       </v-card-text>
 
@@ -137,6 +159,11 @@
                   <v-chip x-small color="error" class="ml-2" v-if="Number(report_content.is_complaint)">
                     クレーム・トラブル
                   </v-chip>
+
+                  <v-chip x-small color="#a9d6fc" class="ml-2" v-if="Number(report_content.is_zaitaku)">
+                    在宅
+                  </v-chip>
+
                 </h4>
               </template>
 
@@ -490,6 +517,20 @@
                 ></v-switch>
               </v-list-item>
 
+
+                 <!-- 在宅 -->
+                 <v-list-item>
+                <v-switch
+                    dense filled
+                    class="ma-0 pa-0"
+                    color="blue"
+                    label="在宅"
+                    name="is_zaitaku"
+                    v-model="reportContentForm.is_zaitaku"
+                ></v-switch>
+                
+              </v-list-item>
+
               <v-divider class="my-4"></v-divider>
 
               <!--商材の評価-->
@@ -528,7 +569,7 @@
                     dense filled
                     counter="200" maxlength="200"
                     prepend-inner-icon="mdi-pencil"
-                    label="教材評価備考欄"
+                    label="商材評価備考欄"
                     name="product_description"
                     v-model="reportContentForm.product_description"
                 ></v-textarea>
@@ -601,6 +642,7 @@ export default {
       form: this.$inertia.form('ReportsCreate', {
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         is_private: false,
+        is_zaitaku: false,
         report_contents: [],
       }),
 
@@ -623,6 +665,7 @@ export default {
         description: "",
         prodyuct_description: "",
         is_complaint: false,
+        is_zaitaku: false,
         product_evaluation: {},
       },
 
@@ -818,7 +861,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description","description", "is_complaint", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
+      ["product_description","description", "is_complaint","is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 

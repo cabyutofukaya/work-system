@@ -161,6 +161,12 @@ class Report extends BaseReport implements Auditable
         return $this->belongsTo(User::class)->withTrashed();
     }
 
+    public function report_content(): BelongsTo
+    {
+        return $this->belongsTo(ReportContent::class)->withTrashed();
+    }
+
+
     /**
      * 営業日報のみを取得するリレーション
      *

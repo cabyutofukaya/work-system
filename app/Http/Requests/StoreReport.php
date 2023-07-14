@@ -44,6 +44,7 @@ class StoreReport extends FormRequest
             'report_contents.*.type' => ['required', 'in:' . implode(",", array_keys(config("const.report_content_type")))],
             'report_contents.*.description' => ['nullable', 'string'],
             'report_contents.*.is_complaint' => ['required', 'boolean'],
+            'report_contents.*.is_zaitaku' => ['required', 'boolean'],
             // type:workのみ
             'report_contents.*.title' => ['required_if:report_contents.*.type,work'],
             // type:salesのみ

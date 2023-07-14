@@ -65,6 +65,11 @@
                       <v-chip x-small color="error" class="ml-2" v-if="report_content['is_complaint']">
                         クレーム・トラブル
                       </v-chip>
+
+                      <v-chip x-small color="#a9d6fc" class="ml-2" v-if="report_content['is_zaitaku']">
+                        在宅
+                      </v-chip>
+
                     </h4>
                     <span style="white-space: pre-line;">{{ report_content.description }}</span>
 

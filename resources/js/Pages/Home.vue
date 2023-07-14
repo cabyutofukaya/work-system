@@ -42,9 +42,9 @@
 
       <v-card-actions>
         <v-list-item class="w-100">
-          <v-img :width="80" cover style="border-radius: 50%;" :src="`/storage/user/${user.img_file}`"
+          <v-img :width="50" :height="50" cover :src="`/storage/user/${user.img_file}`"
             v-if="user.img_file"></v-img>
-          <v-img :width="80" cover style="border-radius: 50%;" src="/storage/user/noimg.jpeg"
+          <v-img :width="50" :height="50" cover src="/storage/user/noimg.jpeg"
             v-if="!user.img_file"></v-img>
 
           <v-list-item-title style="font-size: large;margin-left: 5px;">お疲れ様です、{{ $page.props.auth.user.name }}さん!</v-list-item-title>
@@ -58,11 +58,11 @@
 
       <v-card-actions>
         <v-list-item class="w-100">
-          <v-img :width="40" cover style="border-radius: 50%;" :src="`/storage/user/${user.img_file}`"
+          <v-img :width="30" :height="30"  cover :src="`/storage/user/${user.img_file}`"
             v-if="user.img_file"></v-img>
-          <v-img :width="40" cover style="border-radius: 50%;" src="/storage/user/noimg.jpeg"
+          <v-img :width="30" :height="30" cover  src="/storage/user/noimg.jpeg"
             v-if="!user.img_file"></v-img>
-          <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name }}さん!<v-icon red left v-if="!(is_read == 0)">mdi-alert-circle</v-icon></v-list-item-title>
+          <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name }}さん!</v-list-item-title>
 
         </v-list-item>
       </v-card-actions>

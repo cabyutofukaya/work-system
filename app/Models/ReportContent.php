@@ -33,6 +33,7 @@ class ReportContent extends BaseReportContent implements Auditable
         'sales_method_id',
         'description',
         'is_complaint',
+        'is_zaitaku',
         'product_description',
     ];
 

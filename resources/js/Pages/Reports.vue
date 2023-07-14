@@ -79,6 +79,7 @@ a.Link_item{
                 <v-col cols="12" sm="6">
                   日報の種類
                 </v-col>
+               
                 <v-col cols="12" sm="1" class="text-center">
                   いいね
                 </v-col>
@@ -111,7 +112,10 @@ a.Link_item{
                     v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
                     v-if="report['report_contents_work_exists']">業務日報</span>
                   </a>
+                  <span v-if="!report['is_zaitaku']">(在宅)</span> 
                 </v-col>
+
+             
               </template>
 
               <!-- スマートフォンビュー -->
@@ -124,7 +128,9 @@ a.Link_item{
                       <span
                       v-if="report['report_contents_sales_exists']">営業日報</span><span
                       v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                      v-if="report['report_contents_work_exists']">業務日報</span></a></div>
+                      v-if="report['report_contents_work_exists']">業務日報</span></a>   <span v-if="!report['is_zaitaku']">(在宅)</span> 
+                    </div>
+                 
                 </v-col>
               </template>
 
@@ -228,6 +234,13 @@ a.Link_item{
                 <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読あり"
                   persistent-hint name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
                   :error="Boolean(form.errors.is_readed)" :error-messages="form.errors.is_readed"></v-switch>
+              </v-list-item>
+
+
+              <v-list-item class="mt-4">
+                <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅"
+                  persistent-hint name="is_zaitaku" v-model="form.is_zaitaku" true-value="1" false-value=""
+                  :error="Boolean(form.errors.is_zaitaku)" :error-messages="form.errors.is_zaitaku"></v-switch>
               </v-list-item>
 
               

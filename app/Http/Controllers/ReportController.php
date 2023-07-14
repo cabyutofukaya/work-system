@@ -53,6 +53,7 @@ class ReportController extends Controller
         // 以降の $request->input はバリデーション済み
         $reports = $this->search($request);
 
+        // dd($reports->paginate()->withQueryString());
         // 非公開の日報を除外
         $reports->exceptPrivate();
 
@@ -70,6 +71,7 @@ class ReportController extends Controller
                 'only_complaint' => $request->input('only_complaint'),
                 'is_visited' => $request->input('is_visited'),
                 'is_readed' => $request->input('is_readed'),
+                'is_zaitaku' => $request->input('is_zaitaku'),
             ],
 
             // 会社ID検索時の対象
@@ -102,6 +104,7 @@ class ReportController extends Controller
                 'word' => $request->input('word'),
                 'only_complaint' => $request->input('only_complaint'),
                 'is_readed' => $request->input('is_readed'),
+                'is_zaitaku' => $request->input('is_zaitaku'),
             ],
         ]);
     }
@@ -124,7 +127,7 @@ class ReportController extends Controller
         }
 
         $reports = Report
-            ::with(['user:id,name,deleted_at','report_comments.user:id,name'])
+            ::with(['user:id,name,deleted_at', 'report_comments.user:id,name'])
             ->withExists([
                 'report_contents_sales',
                 'report_contents_work',
@@ -134,8 +137,11 @@ class ReportController extends Controller
                 },
                 'report_comments as is_readed' => function ($query) {
                     $query->where('mention_id', auth()->id());
-                    $query->where('is_readed',0);
-                }
+                    $query->where('is_readed', 0);
+                },
+                'report_contents as is_zaitaku' => function ($query) {
+                    $query->where('is_zaitaku', 0);
+                },
             ])
             ->withCount([
                 'report_content_likes',
@@ -191,6 +197,13 @@ class ReportController extends Controller
             });
         }
 
+
+        // 在宅のみ
+        if ($request->is_zaitaku) {
+            $reports->whereHas('report_contents', function ($query) use ($request) {
+                $query->where('is_zaitaku', 1);
+            });
+        }
 
         // 未読のみ
         if ($request->is_visited) {
@@ -317,6 +330,7 @@ class ReportController extends Controller
                     'type' => $report_content['type'],
                     'description' => $report_content['description'] ?? null,
                     'is_complaint' => $report_content['is_complaint'],
+                    'is_zaitaku' => $report_content['is_zaitaku'],
                     'title' => $report_content['title'] ?? null,
                     'client_id' => $report_content['client_id'] ?? null,
                     'branch_id' => $report_content['branch_id'] ?? null,
@@ -429,7 +443,7 @@ class ReportController extends Controller
 
         $report->load([
             'user:id,name,deleted_at',
-            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,product_description',
+            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description',
             'report_contents.client',
             'report_contents.branch',
             'report_contents.sales_method',
@@ -538,6 +552,7 @@ class ReportController extends Controller
                         [
                             'description' => $report_content['description'] ?? null,
                             'is_complaint' => $report_content['is_complaint'],
+                            'is_zaitaku' => $report_content['is_zaitaku'],
                             'title' => $report_content['title'] ?? null,
                             'client_id' => $report_content['client_id'] ?? null,
                             'branch_id' => $report_content['branch_id'] ?? null,
@@ -551,6 +566,7 @@ class ReportController extends Controller
                         'type' => $report_content['type'],
                         'description' => $report_content['description'] ?? null,
                         'is_complaint' => $report_content['is_complaint'],
+                        'is_zaitaku' => $report_content['is_zaitaku'],
                         'title' => $report_content['title'] ?? null,
                         'client_id' => $report_content['client_id'] ?? null,
                         'branch_id' => $report_content['branch_id'] ?? null,
