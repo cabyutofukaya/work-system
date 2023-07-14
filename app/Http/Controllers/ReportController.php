@@ -98,6 +98,8 @@ class ReportController extends Controller
         return inertia('ReportsMine', [
             'reports' => $reports->paginate()->withQueryString(),
 
+            'user' => User::where('id',auth()->id())->first(),
+            
             // 検索フォームの初期値
             'form_params' => [
                 'client_id' => $request->input('client_id'),

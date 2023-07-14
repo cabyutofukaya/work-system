@@ -237,7 +237,7 @@ a.Link_item{
               </v-list-item>
 
 
-              <v-list-item class="mt-4">
+              <v-list-item class="mt-4" v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88">
                 <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅"
                   persistent-hint name="is_zaitaku" v-model="form.is_zaitaku" true-value="1" false-value=""
                   :error="Boolean(form.errors.is_zaitaku)" :error-messages="form.errors.is_zaitaku"></v-switch>
@@ -290,7 +290,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['reports', 'form_params', 'client'],
+  props: ['reports', 'form_params', 'client','user'],
 
   data() {
 
