@@ -72,6 +72,8 @@ class ReportController extends Controller
                 'is_visited' => $request->input('is_visited'),
                 'is_readed' => $request->input('is_readed'),
                 'is_zaitaku' => $request->input('is_zaitaku'),
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
             ],
 
             // 会社ID検索時の対象
@@ -98,8 +100,8 @@ class ReportController extends Controller
         return inertia('ReportsMine', [
             'reports' => $reports->paginate()->withQueryString(),
 
-            'user' => User::where('id',auth()->id())->first(),
-            
+            'user' => User::where('id', auth()->id())->first(),
+
             // 検索フォームの初期値
             'form_params' => [
                 'client_id' => $request->input('client_id'),
@@ -107,6 +109,8 @@ class ReportController extends Controller
                 'only_complaint' => $request->input('only_complaint'),
                 'is_readed' => $request->input('is_readed'),
                 'is_zaitaku' => $request->input('is_zaitaku'),
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
             ],
         ]);
     }
@@ -120,6 +124,7 @@ class ReportController extends Controller
      */
     public function search(Request $request): Builder
     {
+
         // GETメソッドではInertiaによるバリデーションエラー処理が行われないため
         // リダイレクトを行わずエラーをhttpボディとして出力
         $validator = Validator::make($request->all(), (new ShowReport())->rules());
@@ -221,6 +226,13 @@ class ReportController extends Controller
                 $query->where('mention_id', auth()->id());
                 $query->where('is_readed', 0);
             });
+        }
+
+
+        // 期間設定
+        if ($request->start_date && $request->end_date) {
+            $reports->where('date', '>=' ,$request->start_date);
+            $reports->where('date', '<=' ,$request->end_date);
         }
 
 

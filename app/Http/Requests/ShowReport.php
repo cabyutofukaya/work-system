@@ -40,6 +40,9 @@ class ShowReport extends FormRequest
             'client_id' => ['nullable', Rule::exists('clients', "id")],
             'word' => ['nullable', 'max:255'],
             'only_complaint' => ['nullable', 'boolean'],
+            'is_zaitaku' => ['nullable', 'boolean'],
+            'start_date' => ['nullable','required_with:end_date'],
+            'end_date' => ['nullable','required_with:start_date'],
         ];
     }
 }
