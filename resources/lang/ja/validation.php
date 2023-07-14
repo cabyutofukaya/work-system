@@ -183,6 +183,9 @@ return [
         'end_time' => '開始時間',
         'enabled' => '終日',
 
+        'start_date' => '表示期間開始日',
+        'end_date' => '表示期間終了日',
+
         // プロジェクト固有
         'sample' => 'サンプル',
         'participants' => '参加者',
