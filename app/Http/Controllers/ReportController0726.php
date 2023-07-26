@@ -12,9 +12,9 @@ use App\Models\Evaluation;
 use App\Models\Genre;
 use App\Models\Product;
 use App\Models\Report;
+use App\Models\ReportFile;
 use App\Models\SalesMethod;
 use App\Models\User;
-use App\Models\ReportFile;
 use App\Models\ReportCommentUser;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +28,7 @@ use Inertia\Response;
 use Inertia\ResponseFactory;
 use Log;
 
-class ReportController extends Controller
+class ReportController0726 extends Controller
 {
     /**
      * コントローラインスタンスの生成
@@ -58,10 +58,15 @@ class ReportController extends Controller
         // 非公開の日報を除外
         $reports->exceptPrivate();
 
+    
+
         return inertia('Reports', [
 
 
             'reports' => $reports->paginate()->withQueryString(),
+
+          
+           
 
             // 'reports' => $report,
 
@@ -135,7 +140,7 @@ class ReportController extends Controller
         }
 
         $reports = Report
-            ::with(['user:id,name,deleted_at', 'report_comments.user:id,name'])
+            ::with(['user:id,name,deleted_at', 'report_comments.user:id,name','report_comment_mentions.user:id,name'])
             ->withExists([
                 'report_contents_sales',
                 'report_contents_work',
@@ -143,10 +148,10 @@ class ReportController extends Controller
                 'report_visitors as is_visited' => function ($query) {
                     $query->where('user_id', auth()->id());
                 },
-                'report_comments as is_readed' => function ($query) {
-                    $query->where('mention_id', auth()->id());
-                    $query->where('is_readed', 0);
-                },
+                // 'report_comments as is_readed' => function ($query) {
+                //     $query->where('mention_id', auth()->id());
+                //     $query->where('is_readed', 0);
+                // },
                 'report_contents as is_zaitaku' => function ($query) {
                     $query->where('is_zaitaku', 0);
                 },
@@ -229,14 +234,12 @@ class ReportController extends Controller
             });
         }
 
-
+   
         // 期間設定
         if ($request->start_date && $request->end_date) {
             $reports->where('date', '>=', $request->start_date);
             $reports->where('date', '<=', $request->end_date);
         }
-
-
 
 
         return $reports;
@@ -372,6 +375,20 @@ class ReportController extends Controller
             // 日報コンテンツ情報を保存
             foreach ($request->validated()['report_contents'] as $report_content) {
                 /* @var \App\Models\ReportContent $report_content_upsert */
+
+                // $fileName = NULL;
+                // $originalName = NULL;
+
+                // if (isset($report_content['file_name'])) {
+
+                //     $file = $report_content['file_name'];
+                //     $originalName = $file->getClientOriginalName();
+
+                //     $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . pathinfo($originalName, PATHINFO_EXTENSION);
+                //     $file->storeAs('', '/public/report/'.$fileName);
+
+                // }
+
                 $report_content_upsert = $report->report_contents()->create([
                     'type' => $report_content['type'],
                     'description' => $report_content['description'] ?? null,
@@ -383,10 +400,13 @@ class ReportController extends Controller
                     'participants' => $report_content['participants'] ?? null,
                     'sales_method_id' => $report_content['sales_method_id'] ?? null,
                     'product_description' => $report_content['product_description'] ?? null,
+                    // 'file' => $fileName,
+                    // 'file_name' => $originalName,
                 ]);
 
-                // 商材評価情報を保存
                 if (isset($report_content['product_evaluation'])) {
+
+                    // 商材評価情報を保存
                     foreach ($report_content['product_evaluation'] as $product_evaluation) {
                         $report_content_upsert->products()->attach(
                             $product_evaluation["product_id"],
@@ -432,9 +452,40 @@ class ReportController extends Controller
             },
             'report_contents.products.pivot.evaluation',
             'report_comments.user',
-            'report_visitors',
-            'report_files',
+            'report_visitors'
         ]);
+
+        // dd($report);
+
+        // $report->load([
+        //     'user:id,name,deleted_at',
+        //     'report_contents.client',
+        //     'report_contents.branch',
+        //     'report_contents.sales_method:id,name',
+        //     'report_contents' => function ($query) {
+        //         $query
+        //             // いいね数を取得
+        //             ->withCount('report_content_likes as likes_count')
+
+        //             // 自分自身がいいねを実行しているかどうか
+        //             ->withExists([
+        //                 'report_content_likes as has_own_like' => function ($query) {
+        //                     $query->where('user_id', auth()->id());
+        //                 }
+        //             ]);
+        //     },
+        //     'report_contents.products.pivot.evaluation',
+        //     'report_comments.mention',
+        //     'report_visitors',
+        //     'report_files',
+        //     // 'report_comment_mentions'
+
+        // ]);
+
+    
+       
+
+        // dd($report);
 
 
         // 閲覧者IDを保存
@@ -492,7 +543,7 @@ class ReportController extends Controller
 
         $report->load([
             'user:id,name,deleted_at',
-            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description',
+            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description,file_name,file',
             'report_contents.client',
             'report_contents.branch',
             'report_contents.sales_method',
@@ -657,7 +708,6 @@ class ReportController extends Controller
 
                 // 商材評価情報を保存
                 $report_content_upsert->products()->detach();
-
                 if (isset($report_content['product_evaluation'])) {
                     foreach ($report_content['product_evaluation'] as $product_evaluation) {
                         $report_content_upsert->products()->attach(
@@ -670,11 +720,12 @@ class ReportController extends Controller
 
             // 日報コンテンツ情報の削除
             //  複数削除を行うとdeletedイベントが実行されないためeachで処理
-            if (isset($request->_delete_report_content_ids)) {
+            if(isset($request->_delete_report_content_ids)){
                 $report->report_contents()->whereIn('id', $request->validated()['_delete_report_content_ids'])->each(function ($report_content) {
                     $report_content->delete();
                 });
             }
+         
         });
 
         // バックボタンの戻り先ページを設定

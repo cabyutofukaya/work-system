@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReportComment;
 use App\Models\Base\Report;
+use App\Models\ReportCommentMention;
 use App\Models\ReportComment;
 use App\Models\User;
 use App\Models\ReportCommentUser;
@@ -29,26 +30,23 @@ class ReportCommentController extends Controller
      */
     public function store(StoreReportComment $request): RedirectResponse
     {
-
         $report = Report::where('id',$request->report_id)->first();
-        $mention_name = NULL;
         
-        if($request->mention_id){
-            $user = User::find($request->validated()["mention_id"]);
-            $mention_id = $user->id;
-            $mention_name = $user->name;
-        }else{
-            $user = User::find($report->user_id);
-            $mention_id = $user->id;
-        }
-        
+     
         $report_comment = ReportComment::create([
             'user_id' => auth()->id(),
             'report_id' => $request->validated()["report_id"],
             'comment' => $request->validated()["comment"],
-            'mention_id' => $mention_id,
-            'mention_name' => $mention_name,
         ]);
+
+        if(isset($request->mention_id)){
+            foreach($request->mention_id as $mention_id){
+                ReportCommentMention::create([
+                    'user_id' => $mention_id,
+                    'report_comment_id' => $report_comment->id,
+                ]);
+            }
+        }
 
         return redirect()->route('reports.show', ['report' => $report_comment->report_id]);
     }
@@ -68,11 +66,16 @@ class ReportCommentController extends Controller
         return redirect()->route('reports.show', ['report' => $report_id]);
     }
 
-    public function complete(ReportComment $report_comment): RedirectResponse
+    public function complete(int $comment_id,int $user_id): RedirectResponse
     {
-
-        $report_comment->is_readed = 1;
-        $report_comment->save();
+        ReportCommentMention::where([
+            'report_comment_id' => $comment_id,
+            'user_id' => $user_id,
+        ])
+        ->update([
+            'is_readed' => 1,
+        ]);
+       
 
         return back();
     }

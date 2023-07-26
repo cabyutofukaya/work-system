@@ -9,7 +9,9 @@ namespace App\Models\Base;
 use App\Models\ReportComment;
 use App\Models\ReportContent;
 use App\Models\ReportVisitor;
+use App\Models\ReportFile;
 use App\Models\User;
+use App\Models\ReportCommentMention;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -74,4 +76,16 @@ class Report extends Model
 	{
 		return $this->hasMany(ReportCommentUser::class);
 	}
+
+	public function report_files()
+	{
+		return $this->hasMany(ReportFile::class);
+	}
+
+	public function report_comment_mentions()
+	{
+		return $this->hasMany(ReportCommentMention::class);
+	}
+
+
 }

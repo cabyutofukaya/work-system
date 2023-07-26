@@ -3,7 +3,7 @@
     <v-card flat tile>
       <v-card-title>
         <v-icon dark left>mdi-notebook</v-icon>
-        日報の作成
+        日報の編集
       </v-card-title>
 
       <!-- 日付 -->
@@ -32,14 +32,15 @@
             </v-col>
           </v-row>
 
-
           <v-row>
             <v-col cols="12" sm="4" class="align-self-center">
               <h4>ファイル</h4>
             </v-col>
 
             <v-col>
-              <v-file-input chips prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name" label="ファイルを選択する" v-model="form.file_name" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
+              <v-file-input chips prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_name" multiple
+                id="file_name" label="ファイルを選択する" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"
+                v-model="file_form"></v-file-input>
             </v-col>
           </v-row>
 
@@ -81,7 +82,7 @@
 
                   <div>
                     <div>
-                      <Link :href="$route('clients.show', { client: report_content['client_id'] })">
+                      <Link :href="$route('clients.show', { client: report_content.client.id })">
                       {{ report_content['client']['name'] }}
                       </Link>
                     </div>
@@ -112,14 +113,10 @@
                   </div>
                 </template>
 
-                <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
-                {{ report_content["product_description"] }}   
-                
-            
+                <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材の評価備考</h4>
+                {{ report_content["product_description"] }}
+
               </template>
-
-          
-
             </v-col>
 
             <!-- 右カラム -->
@@ -150,19 +147,24 @@
               <div>
                 <span style="white-space: pre-line;">{{ report_content.description }}</span>
               </div>
+              <!-- 
+              <div v-if="report_content.file_name">
+                <a :href="`/storage/report/${report_content.file}`" download
+                  v-if="extension_list.includes(report_content.file_name.split('.').pop())">
+                  <div class="text-right mt-2" v-if="report_content.file_name">
+                    {{ report_content.file_name }}
+                  </div>
+                </a>
 
-              <!-- <div v-if="report_content.file_name">
-                <h4 class="mb-1">
-                ファイル
-              </h4>
-              <span>{{ report_content.file_name.name }}</span>
+                <v-img :width="200" :height="150" cover :src="`/storage/report/${report_content.file}`"
+                  v-if="!extension_list.includes(report_content.file_name.split('.').pop())"></v-img>
+
               </div> -->
-             
 
-           
             </v-col>
           </v-row>
         </div>
+
 
         <v-row>
           <v-col cols="12" class="text-right">
@@ -187,6 +189,46 @@
 
       <v-divider class="mx-4 my-4"></v-divider>
 
+
+
+      <v-card-text v-for="(report_file, index) in this.report_files" :key="report_file.id">
+        <div class=report-description-list>
+
+          <v-row class="grey lighten-3 px-6" v-if="index == 0">
+            <v-col>
+              <h3>
+                <template>ファイル</template>
+              </h3>
+            </v-col>
+          </v-row>
+
+          <v-row class="lighten-3 px-6">
+            <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'file'">
+              <div class="text-right my-10">
+                {{ report_file.name }}
+              </div>
+            </a>
+
+            <v-img :width="200" :height="150" cover :src="`/storage/report/${report_file.path}`"
+              v-if="report_file.type == 'image'"></v-img>
+
+
+            <v-icon class="ml-5 mb-a" size="x-large" color="error"
+              @click="deleteFile(report_file.id)">mdi-delete-outline</v-icon>
+
+          </v-row>
+        </div>
+      </v-card-text>
+
+      <!-- <v-file-input chips prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_name"
+                id="file_name" label="ファイルを選択する" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"
+                @change="changeFile"></v-file-input> -->
+
+      <v-divider class="mx-4 my-4" v-if="this.report_files.length > 0"></v-divider>
+
+
+
+
       <!-- 追加ボタン -->
       <v-card-text class="text-center">
         <div>
@@ -210,12 +252,12 @@
 
       <!-- 日報作成ボタン -->
       <v-card-text class="text-center" v-if="form.report_contents.length">
-        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="create"
-          :loading="loading['create']">
+        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="update"
+          :loading="loading['update']">
           <v-icon left>
-            mdi-content-save-outline
+            mdi-content-save-edit-outline
           </v-icon>
-          この内容で日報を作成する
+          この内容で日報を更新する
         </Button>
       </v-card-text>
 
@@ -259,7 +301,7 @@
                       persistent-hint :items="client_type_taxibus_categories" item-value="id" item-text="name"
                       name="clientsFilterForm.client_type_taxibus_category"
                       v-model="clientsFilterForm.client_type_taxibus_category"
-                      :disabled="clientsFilterForm.client_type_id !== 'taxibus'" @change="getClients()">
+                      :disabled="clientsFilterForm.client_type_id !== 'taxibus'" @change=" getClients()">
                     </v-select>
                   </v-list-item>
 
@@ -267,7 +309,7 @@
                     <v-select dense outlined clearable label="ジャンル" hint="該当する会社だけをリストに表示します" persistent-hint
                       :items="genresFiltered" item-value="id" item-text="name" name="clientsFilterForm.genre_id"
                       v-model="clientsFilterForm.genre_id" :disabled="!Boolean(clientsFilterForm.client_type_id)"
-                      @change="getClients()">
+                      @change=" getClients()">
                     </v-select>
                   </v-list-item>
                 </div>
@@ -293,7 +335,7 @@
                   <v-select v-if="clientsListEnable" dense filled clearable label="会社" :items="clients" item-value="id"
                     name="client_id" v-model="reportContentForm.client_id"
                     :error="Boolean(reportContentFormError.client_id)" :error-messages="reportContentFormError.client_id"
-                    @change="reportContentFormError.client_id = undefined">
+                    @change=" reportContentFormError.client_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
                       <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
@@ -316,7 +358,7 @@
                   <v-select v-if="reportContentForm.client_id" dense filled clearable label="営業所" :items="branches"
                     item-value="id" name="branch_id" v-model="reportContentForm.branch_id"
                     :error="Boolean(reportContentFormError.branch_id)" :error-messages="reportContentFormError.branch_id"
-                    @change="reportContentFormError.branch_id = undefined">
+                    @change=" reportContentFormError.branch_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
                       {{ item.name }}
@@ -355,7 +397,7 @@
                 <v-select dense filled clearable label="営業手段" :items="sales_methods" required item-value="id"
                   v-model="reportContentForm.sales_method_id" :error="Boolean(reportContentFormError.sales_method_id)"
                   :error-messages="reportContentFormError.sales_method_id"
-                  @change="reportContentFormError.sales_method_id = undefined">
+                  @change=" reportContentFormError.sales_method_id = undefined">
                   <!-- カスタム選択済み表示 -->
                   <template v-slot:selection="{ item }">
                     {{ item.name }}
@@ -373,16 +415,12 @@
                   v-model="reportContentForm.is_complaint"></v-switch>
               </v-list-item>
 
-
               <!-- 在宅 -->
-              <v-list-item v-if="reportContentForm.type === 'work'">
+              <v-list-item>
                 <v-switch dense filled class="ma-0 pa-0" color="blue" label="在宅" name="is_zaitaku"
                   v-model="reportContentForm.is_zaitaku"></v-switch>
 
               </v-list-item>
-
-
-             
 
               <v-divider class="my-4"></v-divider>
 
@@ -394,7 +432,7 @@
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item v-for="(product, index) in products" :key="index">
+                <v-list-item v-for="( product, index ) in  products " :key="index">
                   <v-select dense filled clearable :label="product.name" :items="evaluations" item-value="id"
                     v-model="reportContentForm.product_evaluation[product.id]">
                     <!-- カスタム選択済み表示 -->
@@ -413,27 +451,35 @@
 
                 <!-- 仕事本文内容/面談内容 -->
                 <v-list-item>
-                  <v-textarea dense filled counter="200" maxlength="200" prepend-inner-icon="mdi-pencil" label="商材評価備考欄"
+                  <v-textarea dense filled counter="200" maxlength="200" prepend-inner-icon="mdi-pencil" label="商材評価の備考欄"
                     name="product_description" v-model="reportContentForm.product_description"></v-textarea>
                 </v-list-item>
 
-               
+                <v-list-item>
+                  <ul>
+                    <li>最新の評価は会社情報ページに表示されます。また"商材の評価"メニューから集計グラフで表示されます。</li>
+                    <li>複数の日報で同じ会社に商材の評価を設定した場合、日付が最も新しい日報の評価が最新の評価となります。</li>
+                    <li>新しい日報を作成時に、ある商材Aを評価無しで設定した場合、それより古い日報に商材Aの評価があればそちらが最新の評価となります。</li>
+                  </ul>
+                </v-list-item>
+
+
+                <v-divider class="my-4"></v-divider>
               </template>
-
-              <!-- <v-list-item>
-                <v-file-input dense filled prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name" label="ファイルを選択する" v-model="reportContentForm.file_name" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
-              </v-list-item> -->
-
-              <v-divider class="my-4"></v-divider>
-
-              <!-- 注釈 -->
-              <v-list-item v-if="reportContentForm.type === 'sales'">
-                <ul>
-                  <li>営業日報は登録された会社の詳細ページにも表示されます。</li>
-                </ul>
-              </v-list-item>
             </v-list>
           </v-card-text>
+
+          <!-- <v-card-text>
+            <v-list>
+              <v-list-item>
+                <v-file-input dense filled prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_upload"
+                  id="file_upload" label="ファイルを選択する" v-model="reportContentForm.file_upload"
+                  accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
+              </v-list-item>
+              <v-divider class="my-4"></v-divider>
+            </v-list>
+
+          </v-card-text> -->
 
           <v-card-text class="pt-0 text-center">
             <Button :small="$vuetify.breakpoint.xs" type="submit">
@@ -450,7 +496,7 @@
           <v-divider></v-divider>
 
           <v-card-text class="text-right">
-            <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="dialog = false">
+            <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native=" dialog = false">
               <v-icon>
                 mdi-close
               </v-icon>
@@ -471,21 +517,22 @@ import _ from "lodash";
 export default {
   components: { Layout, Link },
 
-  props: ['client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods'],
+  props: ['report', 'client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods'],
 
   data() {
     return {
-      // 会社ページ「最近の営業日報」から遷移した場合に設定される会社ID
-      // 作成ダイアログを初期状態で開く
-      client_id: Number(this.$route().params["client_id"]) ?? null,
-
       // Inertia Formヘルパ
-      form: this.$inertia.form('ReportsCreate', {
-        date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-        is_private: false,
-        file_name:undefined,
-        report_contents: [],
+      form: this.$inertia.form(`ReportsEdit${this.report.id}`, {
+        date: this.report.date,
+        is_private: this.report.is_private,
+        report_contents: this.report.report_contents,
+        // report_files: this.report.report_files,
+        _delete_report_content_ids: [],
+        file:[],
       }),
+
+      file_form:undefined,
+      report_files: this.report.report_files,
 
       // 報告作成・編集ダイアログ
       dialog: false,
@@ -504,10 +551,10 @@ export default {
         sales_method_id: undefined,
         sales_methods: undefined,
         description: "",
-        product_description: "",
+        file_upload: {},
         is_complaint: false,
         is_zaitaku: false,
-        // file_name: {},
+        product_description: "",
         product_evaluation: {},
       },
 
@@ -534,7 +581,14 @@ export default {
       // 会社絞り込みフォーム 会社リスト表示
       clientsListEnable: false,
 
-      loading: {}
+      loading: {},
+      extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
+
+      formReportFile: this.$inertia.form(`ReportsEdit${this.report.id}`, {
+        report_file: undefined,
+        report: this.report.id,
+      }),
+
     };
   },
 
@@ -556,15 +610,8 @@ export default {
       }
 
       // 営業所リストを返す
-      return client.branches;
+      return client?.branches;
     },
-  },
-
-  mounted() {
-    // 会社ページ「この会社の営業日報を作成する」からの遷移であれば新規作成ダイアログを初期状態で開く
-    if (this.client_id) {
-      this.openReportContentForm("sales", this.client_id);
-    }
   },
 
   methods: {
@@ -579,7 +626,7 @@ export default {
         param = this.clientsFilterForm;
       }
 
-      this.$inertia.post(this.$route('reports.create'), param, {
+      this.$inertia.post(this.$route('reports.edit', { report: this.report.id }), param, {
         preserveState: true,
         preserveScroll: true,
         replace: true,
@@ -598,21 +645,13 @@ export default {
     },
 
     // 日報コンテンツ追加ダイアログを開く
-    openReportContentForm: async function (type, client_id = null) {
+    openReportContentForm: function (type) {
       // 初期値をディープコピー
       this.reportContentForm = _.cloneDeep(this.reportContentFormInit);
       this.clientsFilterForm = _.cloneDeep(this.clientsFilterFormInit);
 
-      // 会社ページ「最近の営業日報」からの遷移であれば指定されたclient_idのみが含まれる会社リストに更新
-      if (client_id) {
-        await this.getClients(client_id);
-
-        // 会社選択セレクタにclient_idを指定
-        this.reportContentForm.client_id = client_id;
-      } else {
-        // 指定がなければ会社選択セレクタを非表示
-        this.clientsListEnable = false;
-      }
+      // 会社選択セレクタを非表示
+      this.clientsListEnable = false;
 
       // タイプを設定
       this.reportContentForm["type"] = type;
@@ -703,7 +742,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id","product_evaluation"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -730,19 +769,31 @@ export default {
     reportContentDelete: function (index) {
       this.$confirm('この報告を削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
         if (isAccept) {
+          // 既存データであればAPIに送信する削除リストを保存
+          this.form._delete_report_content_ids.push(this.form.report_contents[index].id);
+
           // 削除
           delete this.form.report_contents.splice(index, 1)
         }
       })
     },
 
-    // 日報作成実行
-    create: function () {
+    // 日報更新実行
+    update: function () {
 
-      console.log(this.form.file_name);
+      this.form.file = this.file_form;
 
       this.form
         .transform((data) => {
+
+          // console.log(data);
+
+          // console.log(this.file_form);
+
+          // let file_name = this.file_form;
+
+         
+
           // 日報コンテンツ情報をディープコピー
           let report_contents = _.cloneDeep(data["report_contents"]);
 
@@ -768,12 +819,11 @@ export default {
             ...data,
             report_contents: report_contents,
           }
-        
         }
         )
-        .post(this.$route('reports.store'), {
-          onStart: () => this.$set(this.loading, "create", true),
-          onSuccess: () => this.$toasted.show('日報を作成しました'),
+        .post(this.$route('reports.update', { report: this.report.id }), {
+          onStart: () => this.$set(this.loading, "update", true),
+          onSuccess: () => this.$toasted.show('日報の変更を保存しました'),
           onError: errors => {
             // バリデーションエラーをトースト表示する
             // フロント側チェックを行っているため発生しない前提
@@ -782,9 +832,27 @@ export default {
               type: 'error'
             });
           },
-          onFinish: () => this.$set(this.loading, "create", false),
+          onFinish: () => this.$set(this.loading, "update", false),
         })
-    }
+    },
+    deleteFile: function (report_file) {
+
+      this.formReportFile.report_file = report_file;
+
+      this.$confirm('このファイルを削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
+        if (isAccept) {
+          //削除処理
+          this.formReportFile.post(this.$route('reports-file.delete', { report: this.report.id, report_file: report_file }), {
+            preserveState: (page) => Object.keys(page.props.errors).length,
+            onStart: () => this.$set(this.loading, "delete", true),
+            onSuccess: () => this.$toasted.show('ファイルを削除しました'),
+            onFinish: () => this.$set(this.loading, "delete", false),
+
+          })
+        }
+      })
+    },
+  
   }
 }
 </script>

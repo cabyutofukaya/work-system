@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\AppHelper;
-use App\Models\Base\ReportContent as BaseReportContent;
+use App\Models\Base\ReportFile as BaseReportFile;
 use App\Models\Traits\WhereLike;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +16,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 /**
  * 日報コンテンツ
  */
-class ReportContent extends BaseReportContent implements Auditable
+class ReportFile extends BaseReportFile implements Auditable
 {
     use HasFactory;
     use SoftDeletes;
@@ -26,17 +26,8 @@ class ReportContent extends BaseReportContent implements Auditable
     protected $fillable = [
         'report_id',
         'type',
-        'title',
-        'client_id',
-        'branch_id',
-        'participants',
-        'sales_method_id',
-        'description',
-        'is_complaint',
-        'is_zaitaku',
-        'product_description',
-        'file',
-        'file_name',
+        'name',
+        'path',
     ];
 
     /**
@@ -45,20 +36,11 @@ class ReportContent extends BaseReportContent implements Auditable
      * @var array
      */
     // メンバー
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at', 'product_evaluation'];
+    protected $hidden = ['created_at', 'updated_at'];
     // 管理者
     protected array $hiddenAdmin = [];
 
-    /**
-     * モデルの配列形態に追加するアクセサ
-     *
-     * @var array
-     */
-    protected $appends = [
-        "type_name",
-        "product_evaluation",
-    ];
-
+ 
     /**
      * 更新日時を更新すべき全リレーション
      *
@@ -201,14 +183,4 @@ class ReportContent extends BaseReportContent implements Auditable
             ->withTimestamps();
     }
 
-    /**
-     * 配列/JSONシリアル化の日付の準備
-     *
-     * @param \DateTimeInterface $date
-     * @return string
-     */
-    protected function serializeDate(DateTimeInterface $date): string
-    {
-        return $date->format("Y-m-d H:i");
-    }
 }

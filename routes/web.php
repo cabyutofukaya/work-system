@@ -22,6 +22,7 @@ use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\ImageCacheController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ReportFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,19 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 社内ToDo対応済みフラグトグル
     Route::put('reports/comment/{report_comment}/complete', [ReportCommentController::class, "complete"])->name('report-comments.complete');
+    
+    // 日報のファイル削除
+    Route::post('reports/file/delete', [ReportFileController::class, "destroy"])->name('reports-file.delete');
+
+    // 日報のファイル編集
+    Route::get('reports/{report}/file/edit/', [ReportFileController::class, "edit"])->name('reports.file.edit');
+
+    // 日報のファイル追加
+    Route::post('reports/{report}/file/store', [ReportFileController::class, "store"])->name('reports.file.store');
+
+    // 日報のファイル追加
+    Route::post('reports/{report}', [ReportController::class, "update"])->name('reports.update');
+
 });
 
 // ファイルダウンロード

@@ -288,9 +288,18 @@
               </v-col>
 
               <v-col cols="12" sm="7">
-                <span style="white-space: pre-line;font-size: smaller;color:rgb(30, 132, 180); background-color: rgb(240, 217, 101);" v-if="report_comment.mention_name">@{{
-                  report_comment.mention_name }}<br /></span>
+               
+                <span v-for="(mention, index) in report_comment['mention']" :key="index" style="font-size: smaller; color:rgb(30, 132, 180); background-color: rgb(240, 217, 101);">
+                  @{{ mention.name }}
+                </span>
+
+                <br v-if="report_comment['mention']">
+
                 <span style="white-space: pre-line;">{{ report_comment.comment }}</span>
+
+              
+                <!-- <span style="white-space: pre-line;font-size: smaller;color:rgb(255, 145, 0);padding" v-if="report_comment.mention_name">(@{{
+                  report_comment.mention_name }})</span> -->
               </v-col>
 
               <v-spacer></v-spacer>
@@ -298,19 +307,22 @@
               <v-col cols="12" sm="2" class="text-right">
 
                 <!-- v-if="Number(report_comment['user_id']) === Number($page.props.auth.user.id) || report_comment.is_readed == 0 && Number(report_comment['mention_id']) === Number($page.props.auth.user.id)" -->
-                <div v-if="report_comment['is_readed'] == 0">
-                <Link as="Button" color="primary" dark class="ml-2" :small="$vuetify.breakpoint.xs" style="max-width:100%"
-                v-if="(report_comment['mention_id'] == null && Number(report_comment['user_id']) == Number($page.props.report.user_id)) || (report_comment['mention_id'] != null && (Number(report_comment['mention_id']) === Number($page.props.auth.user.id)))"
-                  @click.native.prevent="isReadedComment(report_comment.id)"
-                  :loading="loading['report-comment-update-' + report_comment.id]" dusk="reportCommentUpdate">
-                <v-icon left>
-                  mdi-checkbox-marked-outline
-                </v-icon>
-                既読 
-                </Link>
-              </div>
-                <!-- v-if="report_comment.is_readed == 0 && (Number(report_comment['mention_id']) === Number($page.props.auth.user.id)) || !(report_comment['mention_id'])" -->
+              
+                  <div v-for="(mention, index) in report_comment['mention']" :key="index" >
+                    <Link as="Button" color="primary" dark class="ml-2" :small="$vuetify.breakpoint.xs"
+                    style="max-width:100%"
+                    v-if="mention.id == Number($page.props.auth.user.id) && mention['pivot']['is_readed'] == 0"
+                    @click.native.prevent="isReadedComment(mention.id,report_comment.id)"
+                    :loading="loading['report-comment-update-' + report_comment.id]" dusk="reportCommentUpdate">
+                  <v-icon left>
+                    mdi-checkbox-marked-outline
+                  </v-icon>
+                  既読
+                  </Link>
+                  </div>
 
+                 
+                <!-- v-if="report_comment.is_readed == 0 && (Number(report_comment['mention_id']) === Number($page.props.auth.user.id)) || !(report_comment['mention_id'])" -->
 
 
                 <Link as="Button" :small="$vuetify.breakpoint.xs" class="ml-2" color="error" style="max-width:100%"
@@ -457,18 +469,18 @@ export default {
     },
 
     // ToDo対応済み
-    isReadedComment($reportCommentId) {
+    isReadedComment(user_id,report_comment) {
       this.$confirm(
         "このコメントを既読済みにしてよろしいですか？",
         { color: 'info' }
       ).then(isAccept => {
         if (isAccept) {
-          this.$inertia.put(this.$route('report-comments.complete', { report_comment: $reportCommentId }), {}, {
+          this.$inertia.put(this.$route('report-comments.complete', { report_comment: report_comment ,user_id: user_id }), {}, {
             // only: ['report_commnet'],
             preserveScroll: true,
-            onStart: () => this.$set(this.loading, "report-comment-update-" + $reportCommentId, true),
+            onStart: () => this.$set(this.loading, "report-comment-update-" + report_comment, true),
             onSuccess: () => this.$toasted.show('既読済みにしました'),
-            onFinish: () => this.$set(this.loading, "report-comment-update-" + $reportCommentId, false),
+            onFinish: () => this.$set(this.loading, "report-comment-update-" + report_comment, false),
           })
         }
       })

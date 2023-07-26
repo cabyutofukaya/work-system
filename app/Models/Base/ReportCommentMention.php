@@ -8,7 +8,6 @@ namespace App\Models\Base;
 
 use App\Models\Report;
 use App\Models\User;
-use App\Models\ReportCommentMention;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,17 +28,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models\Base
  */
-class ReportComment extends Model
+class ReportCommentMention extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'report_comments';
+    protected $table = 'report_comment_mention';
 
     protected $casts = [
-        'report_id' => 'int',
+        'report_comment_id' => 'int',
         'user_id' => 'int',
-        'mention_id' => 'int',
-        'mention_name' => 'string',
     ];
 
     public function report()
@@ -49,23 +46,14 @@ class ReportComment extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)
+        ->withPivot('id', 'report_comment_id');
     }
 
-
-    public function mention_list()
-    {
-        return $this->belongsTo(ReportCommentMention::class);
-    }
-
-
-    public function mention()
+    public function comment_mention()
 	{
-		return $this->belongsToMany(User::class,'report_comment_mention')
-        ->withPivot('id', 'is_readed')   
-        ->withTimestamps();
-
-      
+		return $this->belongsToMany(Product::class, 'report_content_product')
+					->withPivot('id', 'evaluation_id')
+					->withTimestamps();
 	}
-
 }

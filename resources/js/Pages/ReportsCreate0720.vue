@@ -39,7 +39,9 @@
             </v-col>
 
             <v-col>
-              <v-file-input chips prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name" label="ファイルを選択する" v-model="form.file_name" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
+              <v-file-input dense filled prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name"
+                id="file_name" label="ファイルを選択する" v-model="form.file_name"
+                accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
             </v-col>
           </v-row>
 
@@ -113,12 +115,12 @@
                 </template>
 
                 <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
-                {{ report_content["product_description"] }}   
-                
-            
+                {{ report_content["product_description"] }}
+
+
               </template>
 
-          
+
 
             </v-col>
 
@@ -151,15 +153,7 @@
                 <span style="white-space: pre-line;">{{ report_content.description }}</span>
               </div>
 
-              <!-- <div v-if="report_content.file_name">
-                <h4 class="mb-1">
-                ファイル
-              </h4>
-              <span>{{ report_content.file_name.name }}</span>
-              </div> -->
-             
 
-           
             </v-col>
           </v-row>
         </div>
@@ -185,6 +179,24 @@
         </v-row>
       </v-card-text>
 
+      <!-- <v-card-text class="mt-4 pb-0">
+        <div class=report-description-list>
+          
+          <v-row>
+            <v-col cols="12" sm="4" class="align-self-center">
+              <h4>ファイル</h4>
+            </v-col>
+
+            <v-col>
+              <v-file-input dense filled prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name"
+            label="ファイルを選択する" v-model="reportContentForm.file_name"
+            accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
+            </v-col>
+          </v-row>
+
+        </div>
+      </v-card-text> -->
+
       <v-divider class="mx-4 my-4"></v-divider>
 
       <!-- 追加ボタン -->
@@ -208,6 +220,10 @@
         </div>
       </v-card-text>
 
+
+
+
+
       <!-- 日報作成ボタン -->
       <v-card-text class="text-center" v-if="form.report_contents.length">
         <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="create"
@@ -219,7 +235,11 @@
         </Button>
       </v-card-text>
 
+
       <v-divider></v-divider>
+
+
+
 
       <v-card-text class="text-right">
         <BackButton></BackButton>
@@ -382,7 +402,7 @@
               </v-list-item>
 
 
-             
+
 
               <v-divider class="my-4"></v-divider>
 
@@ -417,12 +437,10 @@
                     name="product_description" v-model="reportContentForm.product_description"></v-textarea>
                 </v-list-item>
 
-               
+
               </template>
 
-              <!-- <v-list-item>
-                <v-file-input dense filled prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name" label="ファイルを選択する" v-model="reportContentForm.file_name" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
-              </v-list-item> -->
+
 
               <v-divider class="my-4"></v-divider>
 
@@ -483,7 +501,7 @@ export default {
       form: this.$inertia.form('ReportsCreate', {
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         is_private: false,
-        file_name:undefined,
+        file_name: "",
         report_contents: [],
       }),
 
@@ -507,7 +525,6 @@ export default {
         product_description: "",
         is_complaint: false,
         is_zaitaku: false,
-        // file_name: {},
         product_evaluation: {},
       },
 
@@ -703,7 +720,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id","product_evaluation"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -738,9 +755,6 @@ export default {
 
     // 日報作成実行
     create: function () {
-
-      console.log(this.form.file_name);
-
       this.form
         .transform((data) => {
           // 日報コンテンツ情報をディープコピー
@@ -762,13 +776,10 @@ export default {
             delete report_content.sales_method;
           });
 
-          console.log(data);
-
           return {
             ...data,
             report_contents: report_contents,
           }
-        
         }
         )
         .post(this.$route('reports.store'), {
