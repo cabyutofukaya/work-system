@@ -157,6 +157,7 @@ return [
         'date' => '日付',
         'created_at' => '作成日時',
         'updated_at' => '更新日時',
+        'login_at' => '最終ログイン日時',
         'deleted_at' => '削除日時',
         'username' => 'ログインID',
         'gender' => '性別',

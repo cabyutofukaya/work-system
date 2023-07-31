@@ -68,6 +68,7 @@ class UserController extends BaseController
         $grid->column('tel', $this->trans('tel', 'users'));
         $grid->column('department', $this->trans('department', 'users'));
         $grid->column('created_at', $this->trans('Created at'));
+        $grid->column('login_at', $this->trans('login_at'));
 
         return $grid;
     }

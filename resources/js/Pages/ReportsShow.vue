@@ -228,12 +228,21 @@
                   </div>
                 </a>
 
-                <v-img :width="200" :height="150" cover :src="`/storage/report/${report_file.path}`"
-                  v-if="report_file.type == 'image'"></v-img>
+                <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'image'">
+            <div class="text-right my-3">
+            <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"
+              ></v-img>
+            </div>
+          </a>
+
+                <!-- <v-img :width="200" :height="150" cover :src="`/storage/report/${report_file.path}`"
+                  v-if="report_file.type == 'image'"></v-img> -->
               </v-row>
             </div>
           </v-card-text>
         </div>
+
+
 
       </v-card>
 

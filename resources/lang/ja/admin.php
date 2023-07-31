@@ -65,6 +65,7 @@ return [
     'slug'                  => 'スラッグ',
     'created_at'            => '作成日時',
     'updated_at'            => '更新日時',
+    'login_at'              => '最終ログイン日時',
     'alert'                 => '注意',
     'parent_id'             => '親ID',
     'icon'                  => 'アイコン',
