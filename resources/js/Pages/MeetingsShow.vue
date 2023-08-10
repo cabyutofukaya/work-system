@@ -55,14 +55,28 @@
             <v-row>
               <v-col cols="12" sm="4">作成者</v-col>
               <v-col>
+                <div style="display: flex;">
                 <template v-if="!meeting.user['deleted_at']">
                   <Link :href="$route('users.show', {user: meeting['user_id']})">
                     {{ meeting.user.name }}
                   </Link>
+
+                  <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
+                  v-if="user.img_file"/>
+                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
+
+
                 </template>
                 <template v-else>
                   {{ meeting.user.name }}
+
+                  <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
+                  v-if="user.img_file"/>
+                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
+
+
                 </template>
+              </div>
               </v-col>
             </v-row>
 
@@ -269,7 +283,7 @@ import {Link} from "@inertiajs/inertia-vue";
 export default {
   components: {Layout, Link},
   name: 'MeetingsShow',
-  props: ['meeting', 'users'],
+  props: ['meeting', 'users','user'],
   data() {
     return {
       meetingType: this.$route().params.meetingType ?? null,

@@ -465,12 +465,14 @@ class ReportController extends Controller
             ->makeHidden("email");
 
 
+
         return inertia('ReportsShow', [
             'report' => $report,
             'report_comment' => $report,
             'users' => $users,
             // 社内担当者リスト
             'mentions' => User::whereNull('deleted_at')->get(["id", "name"]),
+            'user' => User::where('id',$report->user_id)->first(),
         ]);
     }
 

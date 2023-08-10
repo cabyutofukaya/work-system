@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreNotice;
 use App\Http\Requests\UpdateNotice;
 use App\Models\Notice;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
 use Inertia\ResponseFactory;
@@ -73,6 +74,7 @@ class NoticeController extends Controller
 
         return inertia('NoticesShow', [
             'notice' => $notice,
+            'user' => User::where('id',$notice->user_id)->first(),
         ]);
     }
 

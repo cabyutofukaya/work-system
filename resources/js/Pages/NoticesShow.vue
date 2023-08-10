@@ -46,11 +46,18 @@
         <div class="mb-1">
           {{ notice["created_at"] }}<br>
         </div>
-        <div>
+        <div style="display: flex;padding: 20px 0;">
           <template v-if="!notice['user']['deleted_at']">
             <Link :href="$route('users.show', {user: notice['user_id']})">
               {{ notice["user"]["name"] }}
             </Link>
+
+            <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
+                  v-if="user.img_file"/>
+                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
+
+
+
           </template>
           <template v-else>
             {{ notice["user"]["name"] }}
@@ -140,6 +147,8 @@ import {Link} from "@inertiajs/inertia-vue";
 
 export default {
   components: {Layout, Link},
+
+  props: ['user'],
 
   data() {
     return {

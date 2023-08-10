@@ -233,6 +233,8 @@ class MeetingController extends Controller
         return inertia('MeetingsShow', [
             'meeting' => $meeting,
             'users' => $users,
+            'user' => User::where('id',$meeting->user_id)->first(),
+
         ]);
     }
 

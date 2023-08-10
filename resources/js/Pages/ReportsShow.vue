@@ -10,15 +10,25 @@
         <v-card-text>
           <v-row>
             <v-col cols="12" sm="" class="text-h6">
+              <div style="display: flex;">
+                
               {{ report.date }}
               <template v-if="!report.user.deleted_at">
                 <Link :href="$route('users.show', { user: report['user_id'] })">
                 {{ report.user.name }}
                 </Link>
+
+                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
+                  v-if="user.img_file"/>
+                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
+
               </template>
               <template v-else>
                 {{ report.user.name }}
+
+      
               </template>
+            </div>
             </v-col>
 
             <v-col cols="12" sm="" :class="{ 'text-right': $vuetify.breakpoint.smAndUp }">
@@ -209,17 +219,17 @@
         </div>
 
 
-        <div v-for="(report_file ,index) in report['report_files']" :key="report_file.id">
+        <div v-for="(report_file, index) in report['report_files']" :key="report_file.id">
           <v-card-text>
             <div class="report-description-list">
 
               <v-row class="grey lighten-3 px-6" v-if="index == 0">
-            <v-col>
-              <h3>
-                <template>ファイル</template>
-              </h3>
-            </v-col>
-          </v-row>
+                <v-col>
+                  <h3>
+                    <template>ファイル</template>
+                  </h3>
+                </v-col>
+              </v-row>
 
               <v-row class="lighten-3 px-6">
                 <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'file'">
@@ -229,11 +239,10 @@
                 </a>
 
                 <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'image'">
-            <div class="text-right my-3">
-            <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"
-              ></v-img>
-            </div>
-          </a>
+                  <div class="text-right my-3">
+                    <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"></v-img>
+                  </div>
+                </a>
 
                 <!-- <v-img :width="200" :height="150" cover :src="`/storage/report/${report_file.path}`"
                   v-if="report_file.type == 'image'"></v-img> -->
@@ -297,8 +306,10 @@
               </v-col>
 
               <v-col cols="12" sm="7">
-                <span style="white-space: pre-line;font-size: smaller;color:rgb(30, 132, 180); background-color: rgb(240, 217, 101);" v-if="report_comment.mention_name">@{{
-                  report_comment.mention_name }}<br /></span>
+                <span
+                  style="white-space: pre-line;font-size: smaller;color:rgb(30, 132, 180); background-color: rgb(240, 217, 101);"
+                  v-if="report_comment.mention_name">@{{
+                    report_comment.mention_name }}<br /></span>
                 <span style="white-space: pre-line;">{{ report_comment.comment }}</span>
               </v-col>
 
@@ -308,16 +319,17 @@
 
                 <!-- v-if="Number(report_comment['user_id']) === Number($page.props.auth.user.id) || report_comment.is_readed == 0 && Number(report_comment['mention_id']) === Number($page.props.auth.user.id)" -->
                 <div v-if="report_comment['is_readed'] == 0">
-                <Link as="Button" color="primary" dark class="ml-2" :small="$vuetify.breakpoint.xs" style="max-width:100%"
-                v-if="(report_comment['mention_id'] == null && Number(report_comment['user_id']) == Number($page.props.report.user_id)) || (report_comment['mention_id'] != null && (Number(report_comment['mention_id']) === Number($page.props.auth.user.id)))"
-                  @click.native.prevent="isReadedComment(report_comment.id)"
-                  :loading="loading['report-comment-update-' + report_comment.id]" dusk="reportCommentUpdate">
-                <v-icon left>
-                  mdi-checkbox-marked-outline
-                </v-icon>
-                既読 
-                </Link>
-              </div>
+                  <Link as="Button" color="primary" dark class="ml-2" :small="$vuetify.breakpoint.xs"
+                    style="max-width:100%"
+                    v-if="(report_comment['mention_id'] == null && Number(report_comment['user_id']) == Number($page.props.report.user_id)) || (report_comment['mention_id'] != null && (Number(report_comment['mention_id']) === Number($page.props.auth.user.id)))"
+                    @click.native.prevent="isReadedComment(report_comment.id)"
+                    :loading="loading['report-comment-update-' + report_comment.id]" dusk="reportCommentUpdate">
+                  <v-icon left>
+                    mdi-checkbox-marked-outline
+                  </v-icon>
+                  既読
+                  </Link>
+                </div>
                 <!-- v-if="report_comment.is_readed == 0 && (Number(report_comment['mention_id']) === Number($page.props.auth.user.id)) || !(report_comment['mention_id'])" -->
 
 
@@ -361,7 +373,8 @@
 
               <v-list-item>
                 <v-autocomplete dense hint="メンションする場合は、選択してください" persistent-hint name="mention"
-                  v-model="formReportComment.mention_id" :items="mentions" item-value="id" item-text="name"></v-autocomplete>
+                  v-model="formReportComment.mention_id" :items="mentions" item-value="id"
+                  item-text="name"></v-autocomplete>
               </v-list-item>
 
             </v-list>
@@ -406,7 +419,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['report', 'users', 'mentions', 'mentions'],
+  props: ['report', 'users', 'mentions', 'mentions', 'user'],
 
 
   data() {

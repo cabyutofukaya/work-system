@@ -262,7 +262,7 @@ class ScheduleController extends Controller
      */
     public function destroy(Schedule $schedule)
     {
-        dd($schedule);
+        // dd($schedule);
     }
 
     public function getData(int $scheduleId)
