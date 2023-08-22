@@ -11,24 +11,38 @@
           <v-row>
             <v-col cols="12" sm="" class="text-h6">
               <div style="display: flex;">
-                
-              {{ report.date }}
-              <template v-if="!report.user.deleted_at">
-                <Link :href="$route('users.show', { user: report['user_id'] })">
-                {{ report.user.name }}
-                </Link>
 
-                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
-                  v-if="user.img_file"/>
-                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
+                {{ report.date }}
+                <template v-if="!report.user.deleted_at">
+                  <Link :href="$route('users.show', { user: report['user_id'] })">
+                  {{ report.user.name }}
+                  </Link>
 
-              </template>
-              <template v-else>
-                {{ report.user.name }}
+                  <v-card max-width="400" flat tile style="margin-top: -14px;">
 
-      
-              </template>
-            </div>
+                    <v-card-actions>
+                      <v-list-item class="w-100">
+                        <v-img :width="50" :height="50" cover :src="`/storage/user/${user.img_file}`"
+                          v-if="user.img_file"></v-img>
+                        <v-img :width="50" :height="50" cover src="/storage/user/noimg.jpeg"
+                          v-if="!user.img_file"></v-img>
+
+                      </v-list-item>
+                    </v-card-actions>
+                  </v-card>
+
+                  <!-- <v-img :width="50" :src="`/storage/user/${user.img_file}`" v-if="user.img_file"></v-img>
+                  <v-img :width="50" src="/storage/user/noimg.jpeg" v-if="!user.img_file"></v-img> -->
+
+
+
+                </template>
+                <template v-else>
+                  {{ report.user.name }}
+
+
+                </template>
+              </div>
             </v-col>
 
             <v-col cols="12" sm="" :class="{ 'text-right': $vuetify.breakpoint.smAndUp }">
@@ -232,13 +246,15 @@
               </v-row>
 
               <v-row class="lighten-3 px-6">
-                <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'file'">
+                <a :href="`/storage/report/${report_file.path}`" :download="`${report_file.name}`"
+                  v-if="report_file.type == 'file'">
                   <div class="text-right mt-2">
                     {{ report_file.name }}
                   </div>
                 </a>
 
-                <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'image'">
+                <a :href="`/storage/report/${report_file.path}`" :download="`${report_file.name}`"
+                  v-if="report_file.type == 'image'">
                   <div class="text-right my-3">
                     <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"></v-img>
                   </div>
@@ -351,7 +367,15 @@
         <v-divider></v-divider>
 
         <v-card-text class="text-right">
-          <BackButton></BackButton>
+          <!-- <BackButton></BackButton> -->
+          <a :href=report_url>
+          <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+            <v-icon left>
+              mdi-arrow-left
+            </v-icon>
+            戻る
+          </v-btn>
+        </a>
         </v-card-text>
       </v-card>
 
@@ -419,7 +443,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['report', 'users', 'mentions', 'mentions', 'user'],
+  props: ['report', 'users', 'mentions', 'mentions', 'user','report_url'],
 
 
   data() {
@@ -495,6 +519,10 @@ export default {
         }
       })
     },
+    // back(){
+    //   alert();
+
+    // }
 
   }
 }

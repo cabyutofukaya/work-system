@@ -29,7 +29,19 @@ a.Link_item{
             </v-icon>
             絞り込み<span v-if="formParamsCount">({{ formParamsCount }})</span>
             </Link>
+
+            <a :href=report_url>
+            <Link as="Button" :small="$vuetify.breakpoint.xs">
+            <v-icon left>
+              mdi-reload
+            </v-icon>
+            リロード
+            </Link>
+          </a>
+
           </v-col>
+
+         
 
           <v-col class="text-right">
             <Link as="Button" :class="{ 'mb-2': $vuetify.breakpoint.xs }" :small="$vuetify.breakpoint.xs"
@@ -304,7 +316,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['reports', 'form_params', 'client','user'],
+  props: ['reports', 'form_params', 'client','user','report_url'],
 
   data() {
 

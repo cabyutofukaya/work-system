@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 use Intervention\Image\ImageCacheController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ReportFileController;
+use App\Http\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,6 +144,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 日報のファイル追加
     Route::post('reports/{report}', [ReportController::class, "update"])->name('reports.update');
+
+
+    // 集計データの項目
+    Route::get('sales', [SalesController::class, "index"]);
 
 });
 

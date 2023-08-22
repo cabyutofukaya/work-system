@@ -1,9 +1,7 @@
 <template>
   <Layout>
     <div>
-      <v-card
-          flat tile
-      >
+      <v-card flat tile>
         <v-card-title>
           <v-icon dark left>mdi-file-document-edit</v-icon>
           議事録
@@ -11,7 +9,7 @@
 
         <v-card-text>
           <v-row>
-            <v-col cols="12" sm="" :class="{'text-right': $vuetify.breakpoint.smAndUp}">
+            <v-col cols="12" sm="" :class="{ 'text-right': $vuetify.breakpoint.smAndUp }">
               <v-chip small class="mr-2" @click="$vuetify.goTo($refs.commentVisitedUser)">
                 閲覧者
                 {{ Math.max(meeting["meeting_visitors_count"] - 1, 0) /* 閲覧者自身を除外するため一人減らす */ }}
@@ -23,12 +21,8 @@
               </v-chip>
 
 
-              <Button
-                  v-if="Number(meeting['user_id']) === Number($page.props.auth.user.id)"
-                  :small="$vuetify.breakpoint.xs"
-                  class="ml-2"
-                  :to="$route('meetings.edit',{meeting : meeting['id']})"
-              >
+              <Button v-if="Number(meeting['user_id']) === Number($page.props.auth.user.id)"
+                :small="$vuetify.breakpoint.xs" class="ml-2" :to="$route('meetings.edit', { meeting: meeting['id'] })">
                 <v-icon left>
                   mdi-pencil
                 </v-icon>
@@ -56,27 +50,35 @@
               <v-col cols="12" sm="4">作成者</v-col>
               <v-col>
                 <div style="display: flex;">
-                <template v-if="!meeting.user['deleted_at']">
-                  <Link :href="$route('users.show', {user: meeting['user_id']})">
+                  <template v-if="!meeting.user['deleted_at']">
+                    <Link :href="$route('users.show', { user: meeting['user_id'] })">
                     {{ meeting.user.name }}
-                  </Link>
+                    </Link>
 
-                  <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
+                    <v-card max-width="400" flat tile style="margin-top: -12px;">
+
+                      <v-card-actions>
+                        <v-list-item class="w-100">
+                          <v-img :width="50" :height="50" cover :src="`/storage/user/${user.img_file}`"
+                            v-if="user.img_file"></v-img>
+                          <v-img :width="50" :height="50" cover src="/storage/user/noimg.jpeg"
+                            v-if="!user.img_file"></v-img>
+
+                        </v-list-item>
+                      </v-card-actions>
+                    </v-card>
+
+                    <!-- <img style="width: 60px;height: 60px;margin-left: 20px;" :src="`/storage/user/${user.img_file}`"
                   v-if="user.img_file"/>
-                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
+                <img style="width: 60px;height: 60px;margin-left: 20px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/> -->
 
 
-                </template>
-                <template v-else>
-                  {{ meeting.user.name }}
+                  </template>
+                  <template v-else>
+                    {{ meeting.user.name }}
 
-                  <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" :src="`/storage/user/${user.img_file}`"
-                  v-if="user.img_file"/>
-                <img style="width: 60px;height: 60px;margin-left: 20px;margin-top: -14px;" src="/storage/user/noimg.jpeg" v-if="!user.img_file"/>
-
-
-                </template>
-              </div>
+                  </template>
+                </div>
               </v-col>
             </v-row>
 
@@ -98,13 +100,8 @@
           <v-row>
 
             <v-col class="text-right">
-              <v-chip
-                  small class="mr-2"
-                  color="primary"
-                  :outlined="!meeting['has_own_like']"
-                  style="cursor:pointer"
-                  @click.native="meetingLikeChange(meeting['id'])"
-              >
+              <v-chip small class="mr-2" color="primary" :outlined="!meeting['has_own_like']" style="cursor:pointer"
+                @click.native="meetingLikeChange(meeting['id'])">
                 いいね {{ meeting['likes_count'] }}
                 <v-icon small right dark>
                   mdi-thumb-up
@@ -115,11 +112,7 @@
         </v-card-text>
       </v-card>
 
-      <v-card
-          flat tile
-          class="my-4"
-          ref="commentVisitedUser"
-      >
+      <v-card flat tile class="my-4" ref="commentVisitedUser">
         <v-card-title>
           閲覧者
         </v-card-title>
@@ -127,19 +120,15 @@
         <v-card-text class="mt-4">
           <v-row>
             <v-col cols="4" sm="2" v-for="user in users" :key="user['id']">
-              <Link :href="$route('users.show', {user: user['id']})">
-                <span :class="{'visited-user' : user['meeting_visitors_exists']}">{{ user['name'] }}</span>
+              <Link :href="$route('users.show', { user: user['id'] })">
+              <span :class="{ 'visited-user': user['meeting_visitors_exists'] }">{{ user['name'] }}</span>
               </Link>
             </v-col>
           </v-row>
         </v-card-text>
       </v-card>
 
-      <v-card
-          flat tile
-          class="my-4"
-          ref="comment"
-      >
+      <v-card flat tile class="my-4" ref="comment">
         <v-card-title>
           コメント
         </v-card-title>
@@ -151,14 +140,11 @@
             </v-col>
 
             <v-col cols="12" sm="" class="text-right">
-              <Link as="Button"
-                    :small="$vuetify.breakpoint.xs"
-                    @click.native="formMeetingCommentDialog = true"
-              >
-                <v-icon left>
-                  mdi-plus
-                </v-icon>
-                コメントを書く
+              <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="formMeetingCommentDialog = true">
+              <v-icon left>
+                mdi-plus
+              </v-icon>
+              コメントを書く
               </Link>
             </v-col>
           </v-row>
@@ -182,23 +168,15 @@
 
               <v-spacer></v-spacer>
 
-              <v-col
-                  cols="12" sm="2"
-                  class="text-right"
-                  v-if="Number(meeting_comment['user_id']) === Number($page.props.auth.user.id)"
-              >
-                <Link as="Button"
-                      :small="$vuetify.breakpoint.xs"
-                      class="ml-2"
-                      color="error"
-                      style="max-width:100%"
-                      @click.native="meetingCommentDelete(meeting_comment.id)"
-                      :loading="loading['meeting-comment-delete-' + meeting_comment.id]"
-                >
-                  <v-icon left>
-                    mdi-delete-outline
-                  </v-icon>
-                  削除
+              <v-col cols="12" sm="2" class="text-right"
+                v-if="Number(meeting_comment['user_id']) === Number($page.props.auth.user.id)">
+                <Link as="Button" :small="$vuetify.breakpoint.xs" class="ml-2" color="error" style="max-width:100%"
+                  @click.native="meetingCommentDelete(meeting_comment.id)"
+                  :loading="loading['meeting-comment-delete-' + meeting_comment.id]">
+                <v-icon left>
+                  mdi-delete-outline
+                </v-icon>
+                削除
                 </Link>
               </v-col>
             </v-row>
@@ -213,11 +191,8 @@
       </v-card>
 
       <!-- コメント入力ダイアログ -->
-      <v-dialog
-          v-model="formMeetingCommentDialog"
-          :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-          @click:outside="resetMeetingCommentDialog"
-      >
+      <v-dialog v-model="formMeetingCommentDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+        @click:outside="resetMeetingCommentDialog">
         <v-card flat tile>
           <v-card-title>
             コメントを書く
@@ -226,42 +201,31 @@
           <v-card-text>
             <v-list>
               <v-list-item>
-                <v-textarea
-                    dense filled
-                    prepend-inner-icon="mdi-pencil"
-                    v-model="formMeetingComment.comment"
-                    :error="Boolean(formMeetingComment.errors.comment)"
-                    :error-messages="formMeetingComment.errors.comment"
-                ></v-textarea>
+                <v-textarea dense filled prepend-inner-icon="mdi-pencil" v-model="formMeetingComment.comment"
+                  :error="Boolean(formMeetingComment.errors.comment)"
+                  :error-messages="formMeetingComment.errors.comment"></v-textarea>
               </v-list-item>
             </v-list>
           </v-card-text>
 
           <v-card-text class="text-center">
-            <Link as="Button"
-                  color="primary"
-                  @click.native="meetingCommentCreate"
-                  :loading="loading['meeting-comment-create']"
-            >
-              <v-icon left>
-                mdi-content-save-outline
-              </v-icon>
-              この内容で投稿する
+            <Link as="Button" color="primary" @click.native="meetingCommentCreate"
+              :loading="loading['meeting-comment-create']">
+            <v-icon left>
+              mdi-content-save-outline
+            </v-icon>
+            この内容で投稿する
             </Link>
           </v-card-text>
 
           <v-divider></v-divider>
 
           <v-card-text class="text-right">
-            <Link as="Button"
-                  class="mt-4"
-                  :small="$vuetify.breakpoint.xs"
-                  @click.native="resetMeetingCommentDialog"
-            >
-              <v-icon>
-                mdi-close
-              </v-icon>
-              閉じる
+            <Link as="Button" class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="resetMeetingCommentDialog">
+            <v-icon>
+              mdi-close
+            </v-icon>
+            閉じる
             </Link>
           </v-card-text>
         </v-card>
@@ -278,12 +242,12 @@
 
 <script>
 import Layout from "./Layout";
-import {Link} from "@inertiajs/inertia-vue";
+import { Link } from "@inertiajs/inertia-vue";
 
 export default {
-  components: {Layout, Link},
+  components: { Layout, Link },
   name: 'MeetingsShow',
-  props: ['meeting', 'users','user'],
+  props: ['meeting', 'users', 'user'],
   data() {
     return {
       meetingType: this.$route().params.meetingType ?? null,
@@ -299,7 +263,7 @@ export default {
 
   methods: {
     meetingCommentCreate() {
-      this.formMeetingComment.post(this.$route('meeting-comments.store', {meeting: this.meeting.id}), {
+      this.formMeetingComment.post(this.$route('meeting-comments.store', { meeting: this.meeting.id }), {
         preserveScroll: true,
         onStart: () => this.$set(this.loading, "meeting-comment-create", true),
         onSuccess: () => {
@@ -320,7 +284,7 @@ export default {
     meetingCommentDelete($meetingCommentId) {
       this.$confirm('このコメントを削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
         if (isAccept) {
-          this.formMeetingComment.delete(this.$route('meeting-comments.destroy', {meeting_comment: $meetingCommentId}), {
+          this.formMeetingComment.delete(this.$route('meeting-comments.destroy', { meeting_comment: $meetingCommentId }), {
             preserveScroll: true,
             onStart: () => this.$set(this.loading, "meeting-comment-delete-" + $meetingCommentId, true),
             onSuccess: () => this.$toasted.show('コメントを削除しました'),
@@ -333,9 +297,9 @@ export default {
     // いいねトグル
     meetingLikeChange($meetingId) {
       this.$inertia.put(
-          this.$route('meetings.like', {meeting: $meetingId}), {}, {
-            preserveScroll: true,
-          });
+        this.$route('meetings.like', { meeting: $meetingId }), {}, {
+        preserveScroll: true,
+      });
     },
   }
 }

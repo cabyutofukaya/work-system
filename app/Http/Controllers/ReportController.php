@@ -58,6 +58,9 @@ class ReportController extends Controller
         // 非公開の日報を除外
         $reports->exceptPrivate();
 
+        session(['report_url' => $request->getRequestUri()]);
+        $report_url = session()->get('report_url');
+
         return inertia('Reports', [
 
 
@@ -79,6 +82,8 @@ class ReportController extends Controller
 
             // 会社ID検索時の対象
             'client' => Client::find($request->input('client_id'), ["id", "name"]),
+
+            'report_url' => $report_url,
         ]);
     }
 
@@ -464,7 +469,7 @@ class ReportController extends Controller
             ->get()
             ->makeHidden("email");
 
-
+        $report_url = session()->get('report_url');
 
         return inertia('ReportsShow', [
             'report' => $report,
@@ -473,6 +478,7 @@ class ReportController extends Controller
             // 社内担当者リスト
             'mentions' => User::whereNull('deleted_at')->get(["id", "name"]),
             'user' => User::where('id',$report->user_id)->first(),
+            'report_url' => $report_url,
         ]);
     }
 
