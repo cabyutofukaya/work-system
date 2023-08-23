@@ -1,5 +1,5 @@
 <style>
-a.Link_item{
+a.Link_item {
   text-decoration: none;
   color: rgba(0, 0, 0, 0.87);
   padding: 0px 20px;
@@ -31,17 +31,17 @@ a.Link_item{
             </Link>
 
             <a :href=report_url>
-            <Link as="Button" :small="$vuetify.breakpoint.xs">
-            <v-icon left>
-              mdi-reload
-            </v-icon>
-            リロード
-            </Link>
-          </a>
+              <Link as="Button" :small="$vuetify.breakpoint.xs">
+              <v-icon left>
+                mdi-reload
+              </v-icon>
+              リロード
+              </Link>
+            </a>
 
           </v-col>
 
-         
+
 
           <v-col class="text-right">
             <Link as="Button" :class="{ 'mb-2': $vuetify.breakpoint.xs }" :small="$vuetify.breakpoint.xs"
@@ -91,7 +91,7 @@ a.Link_item{
                 <v-col cols="12" sm="6">
                   日報の種類
                 </v-col>
-               
+
                 <v-col cols="12" sm="1" class="text-center">
                   いいね
                 </v-col>
@@ -107,73 +107,73 @@ a.Link_item{
 
         <div v-for="report in reports['data']" :key="report.id">
           <!-- <Link as="v-list-item" :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item"> -->
-            <v-list-item class="Link_item">
-          <v-list-item-content>
-            <v-row :class="{ 'grey': report['is_visited'], 'lighten-4': report['is_visited'] }">
-              <!-- PCビュー -->
-              <template v-if="$vuetify.breakpoint.smAndUp">
-                <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
-                  {{ report.date }}
-                </v-col>
-                <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
-                  {{ report.user.name }}
-                </v-col>
-                <v-col sm="6" :class="{ 'font-weight-bold': !report['is_visited'] }">
-                  <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
-                  <span v-if="report['report_contents_sales_exists']">営業日報</span><span
-                    v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                    v-if="report['report_contents_work_exists']">業務日報</span>
-                  </a>
-                  <span v-if="!report['is_zaitaku']">(在宅)</span> 
-                </v-col>
-
-             
-              </template>
-
-              <!-- スマートフォンビュー -->
-              <template v-else>
-                <v-col cols="12">
-                  <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.date }}</div>
-                  <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}</div>
-                  <div :class="{ 'font-weight-bold': !report['is_visited'] }">
+          <v-list-item class="Link_item">
+            <v-list-item-content>
+              <v-row :class="{ 'grey': report['is_visited'], 'lighten-4': report['is_visited'] }">
+                <!-- PCビュー -->
+                <template v-if="$vuetify.breakpoint.smAndUp">
+                  <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
+                    {{ report.date }}
+                  </v-col>
+                  <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
+                    {{ report.user.name }}
+                  </v-col>
+                  <v-col sm="6" :class="{ 'font-weight-bold': !report['is_visited'] }">
                     <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
-                      <span
-                      v-if="report['report_contents_sales_exists']">営業日報</span><span
-                      v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                      v-if="report['report_contents_work_exists']">業務日報</span></a>   <span v-if="!report['is_zaitaku']">(在宅)</span> 
+                      <span v-if="report['report_contents_sales_exists']">営業日報</span><span
+                        v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
+                        v-if="report['report_contents_work_exists']">業務日報</span>
+                    </a>
+                    <span v-if="!report['is_zaitaku']">(在宅)</span>
+                  </v-col>
+
+
+                </template>
+
+                <!-- スマートフォンビュー -->
+                <template v-else>
+                  <v-col cols="12">
+                    <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.date }}</div>
+                    <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}</div>
+                    <div :class="{ 'font-weight-bold': !report['is_visited'] }">
+                      <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
+                        <span v-if="report['report_contents_sales_exists']">営業日報</span><span
+                          v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
+                          v-if="report['report_contents_work_exists']">業務日報</span></a> <span
+                        v-if="!report['is_zaitaku']">(在宅)</span>
                     </div>
-                 
-                </v-col>
-              </template>
 
-              <!-- PCビュー -->
-              <template v-if="$vuetify.breakpoint.smAndUp">
-                <v-col sm="1" class="text-center">
-                  {{ report["report_content_likes_count"] }}
-                </v-col>
-                <v-col sm="1" class="text-center" :class="{ is_readed: report.is_readed != 0 }">
-                  {{ report["report_comments_count"] }}
-                </v-col>
-              
+                  </v-col>
+                </template>
 
-              </template>
-
-              <!-- スマートフォンビュー -->
-              <template v-else>
-                <v-col cols="12" class="text-right">
-                  <v-chip small class="mr-2">
-                    いいね
+                <!-- PCビュー -->
+                <template v-if="$vuetify.breakpoint.smAndUp">
+                  <v-col sm="1" class="text-center">
                     {{ report["report_content_likes_count"] }}
-                  </v-chip>
-                  <v-chip small class="mr-2" :class="{ is_readed: report.is_readed != 0 }">
-                    コメント
+                  </v-col>
+                  <v-col sm="1" class="text-center" :class="{ is_readed: report.is_readed != 0 }">
                     {{ report["report_comments_count"] }}
-                  </v-chip>
-                </v-col>
-              </template>
-            </v-row>
-          </v-list-item-content>
-            </v-list-item>
+                  </v-col>
+
+
+                </template>
+
+                <!-- スマートフォンビュー -->
+                <template v-else>
+                  <v-col cols="12" class="text-right">
+                    <v-chip small class="mr-2">
+                      いいね
+                      {{ report["report_content_likes_count"] }}
+                    </v-chip>
+                    <v-chip small class="mr-2" :class="{ is_readed: report.is_readed != 0 }">
+                      コメント
+                      {{ report["report_comments_count"] }}
+                    </v-chip>
+                  </v-col>
+                </template>
+              </v-row>
+            </v-list-item-content>
+          </v-list-item>
           <!-- </Link> -->
 
           <v-divider class="mx-4"></v-divider>
@@ -236,39 +236,41 @@ a.Link_item{
 
 
               <v-list-item class="mt-4">
-                <v-switch dense filled class="mt-0 ml-2" color="warning" label="未読分表示" hint="未読分を絞り込みます"
-                  persistent-hint name="is_visited" v-model="form.is_visited" true-value="1" false-value=""
+                <v-switch dense filled class="mt-0 ml-2" color="warning" label="未読分表示" hint="未読分を絞り込みます" persistent-hint
+                  name="is_visited" v-model="form.is_visited" true-value="1" false-value=""
                   :error="Boolean(form.errors.is_visited)" :error-messages="form.errors.is_visited"></v-switch>
               </v-list-item>
 
 
               <v-list-item class="mt-4">
-                <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読あり"
-                  persistent-hint name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
+                <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読あり" persistent-hint
+                  name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
                   :error="Boolean(form.errors.is_readed)" :error-messages="form.errors.is_readed"></v-switch>
               </v-list-item>
 
 
-              <v-list-item class="mt-4" v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
-                <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅"
-                  persistent-hint name="is_zaitaku" v-model="form.is_zaitaku" true-value="1" false-value=""
-                  :error="Boolean(form.errors.is_zaitaku)" :error-messages="form.errors.is_zaitaku"></v-switch>
+              <v-list-item class="mt-4"
+                v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
+                <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅" persistent-hint name="is_zaitaku"
+                  v-model="form.is_zaitaku" true-value="1" false-value="" :error="Boolean(form.errors.is_zaitaku)"
+                  :error-messages="form.errors.is_zaitaku"></v-switch>
               </v-list-item>
 
 
-              <v-list-item class="mt-4" v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
+              <v-list-item class="mt-4"
+                v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
                 <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="開始表示期間" class="mx-5"
-                  hint="表示を絞り込む開始期間を記載してください" persistent-hint type="date"
-                  name="start_date" v-model="form.start_date" maxlength="200" :error="Boolean(form.errors.start_date)"
-                  :error-messages="form.errors.start_date" :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
-                   
-                  <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="終了表示期間" class="mx-5"
-                  hint="表示を絞り込む終了期間を記載してください" persistent-hint type="date"
-                  name="end_date" v-model="form.end_date" maxlength="200" :error="Boolean(form.errors.end_date)"
-                  :error-messages="form.errors.end_date" :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
+                  hint="表示を絞り込む開始期間を記載してください" persistent-hint type="date" name="start_date" v-model="form.start_date"
+                  maxlength="200" :error="Boolean(form.errors.start_date)" :error-messages="form.errors.start_date"
+                  :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
+
+                <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="終了表示期間" class="mx-5"
+                  hint="表示を絞り込む終了期間を記載してください" persistent-hint type="date" name="end_date" v-model="form.end_date"
+                  maxlength="200" :error="Boolean(form.errors.end_date)" :error-messages="form.errors.end_date"
+                  :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
               </v-list-item>
 
-              
+
             </v-list>
           </v-card-text>
 
@@ -284,7 +286,7 @@ a.Link_item{
 
         <v-divider></v-divider>
 
-  
+
         <v-card-text class="text-right">
           <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="searchDialog = false">
             <v-icon>
@@ -304,19 +306,32 @@ a.Link_item{
   margin-top: -8px;
   margin-bottom: -8px;
 }
-.is_readed{
+
+.is_readed {
   color: rgb(240, 49, 42);
 }
 </style>
+
+<!-- <script>
+window.addEventListener('pageshow', () => {
+
+  var perfEntries = performance.getEntriesByType("navigation");
+  console.log(perfEntries);
+
+});
+
+</script> -->
 
 <script>
 import Layout from "./Layout";
 import { Link } from "@inertiajs/inertia-vue";
 
+
 export default {
   components: { Layout, Link },
 
-  props: ['reports', 'form_params', 'client','user','report_url'],
+  props: ['reports', 'form_params', 'client', 'user', 'report_url'],
+
 
   data() {
 
@@ -338,16 +353,104 @@ export default {
         .filter(function (param) {
           return param[1] && param[1].length !== 0;
         }).length,
+
     };
   },
 
+  //   mounted() {
+  //     window.onpopstate = function (event) {
+  //       alert();
+  //       console.log(event);
+  //       console.log("popstate action");
+  //     };
+  // },
+  // mounted() {
+
+  //   // this.$router.go({ path: this.$router.currentRoute.path, force: true });
+
+
+  //   history.pushState(null, null, null);
+  //   window.addEventListener('pageshow', () => {
+
+
+  //     var perfEntries = performance.getEntriesByType("navigation");
+  //     // let url = '/meetings';
+  //     var url_type = 0;
+
+  //     perfEntries.forEach(function (pe) {
+  //       switch (pe.type) {
+  //         case 'navigate':
+  //           console.log('通常のアクセス');
+  //           break;
+  //         case 'reload':
+  //           // url_type = 1;
+  //           console.log('更新によるアクセス');
+  //           break;
+  //         case 'back_forward':
+  //           url_type = 1;
+  //           console.log('戻るによるアクセス');
+  //           break;
+  //         case 'prerender':
+  //           console.log('レンダリング前');
+  //           break;
+  //       }
+  //     });
+
+  //     if(url_type == 1){
+  //       window.location.href = this.report_url;
+  //       this.$inertia.get(this.report_url);
+  //     }
+     
+
+  //     alert(1);
+  //     console.log(performance.getEntriesByType("navigation"));
+  //     console.log(performance.getEntriesByType("navigation")[0].type);
+
+  //     if (performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+  //       //ここに処理
+  //       alert(2);
+  //       let url = '/reports';
+  //       this.$inertia.get(url);
+  //       // this.$router.go({ path: this.$router.currentRoute.path, force: true });
+  //       alert(3);
+
+  //     }
+  //   });
+
+
+
+
+
+  //   window.addEventListener('popstate', () => {
+  //     alert(66);
+  //   });
+
+  //   history.replaceState(null, null, null);
+  //   window.addEventListener('popstate', this.handlePopstate);
+  //   history.replaceState(null, null, null);
+  //   alert("popstate");
+  //   window.addEventListener("popstate", this.handlePopstate);
+  // },
+  // beforeDestroy() {
+  //   window.removeEventListener("popstate", this.handlePopstate);
+  // },
+
+  // beforeRouteLeave(to, from, next) {
+  //   alert(1);
+  //   const answer = window.confirm('保存していないデータがありますが、ページを離れてもよろしいですか？');
+  // },
+
+  // popstateEvent() {
+  //   window.confirm('保存していないデータがありますが、ページを離れてもよろしいですか？');
+  // },
+
   methods: {
     // ページ移動
-   
+
     changePage() {
       // サーバ側で生成された検索パラメータを含む最終ページURLを取得
       let url = new URL(this.reports["last_page_url"]);
-     
+
       // ページ数の書き換え
       if (this.page !== 1) {
         url.searchParams.set('page', String(this.page));
@@ -388,7 +491,13 @@ export default {
     closeSearchDialog() {
       //  ダイアログを閉じる
       this.searchDialog = false;
-    }
+    },
+
+    // handlePopstate() {
+    //   alert('3');
+    //   console.log("popstate action");
+    // },
+
   }
 }
 </script>

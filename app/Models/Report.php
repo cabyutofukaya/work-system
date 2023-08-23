@@ -29,7 +29,8 @@ class Report extends BaseReport implements Auditable
         'date',
         'user_id',
         'is_private',
-        'comment_updated_at'
+        'comment_updated_at',
+        'created_at'
     ];
 
     /**
@@ -38,7 +39,7 @@ class Report extends BaseReport implements Auditable
      * @var array
      */
     // メンバー
-    protected $hidden = ['created_at', 'updated_at', "fiscal_year"];
+    protected $hidden = ['updated_at', "fiscal_year"];
     // 管理者
     protected array $hiddenAdmin = ["fiscal_year"];
 

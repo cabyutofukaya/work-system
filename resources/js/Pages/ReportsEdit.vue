@@ -378,7 +378,7 @@
 
               <!-- 仕事内容 -->
               <v-list-item v-if="reportContentForm.type === 'work'">
-                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" required maxlength="200"
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" required maxlength="300"
                   name="title" v-model="reportContentForm.title"></v-text-field>
               </v-list-item>
 
@@ -390,7 +390,7 @@
 
               <!-- 仕事本文内容/面談内容 -->
               <v-list-item>
-                <v-textarea dense filled counter="200" maxlength="200" prepend-inner-icon="mdi-pencil"
+                <v-textarea dense filled counter="300" maxlength="300" prepend-inner-icon="mdi-pencil"
                   :label="(reportContentForm.type === 'work') ? '本文' : '面談内容'" required name="description"
                   v-model="reportContentForm.description"></v-textarea>
               </v-list-item>

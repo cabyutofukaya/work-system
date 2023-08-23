@@ -1,10 +1,37 @@
 <template>
   <Layout>
     <div>
+
+
+        <!-- <v-card-text> -->
+          <!-- <BackButton></BackButton> -->
+          <!-- <a :href=report_url>
+            <v-btn tile depressed class="text-capitalize" color="#969797" dark :small="$vuetify.breakpoint.xs">
+              <v-icon left>
+                mdi-arrow-left
+              </v-icon>
+              戻る
+            </v-btn>
+          </a> -->
+        <!-- </v-card-text> -->
+   
+
       <v-card flat tile>
         <v-card-title>
           <v-icon dark left>mdi-notebook</v-icon>
           日報
+          
+          <!-- <div class="text-right">
+          <a :href=report_url >
+            <v-btn tile depressed dark :small="$vuetify.breakpoint.xs" color="#969797">
+              <v-icon left>
+                mdi-arrow-left
+              </v-icon>
+              戻る
+            </v-btn>
+          </a>
+        </div> -->
+
         </v-card-title>
 
         <v-card-text>
@@ -12,9 +39,12 @@
             <v-col cols="12" sm="" class="text-h6">
               <div style="display: flex;">
 
-                {{ report.date }}
+     
+                {{ report.created_at.substr(0,16) }}
+                <!-- <span class="ml-2">{{ report.created_at.substr(11,5) }}</span> -->
+
                 <template v-if="!report.user.deleted_at">
-                  <Link :href="$route('users.show', { user: report['user_id'] })">
+                  <Link :href="$route('users.show', { user: report['user_id'] })" class="ml-5">
                   {{ report.user.name }}
                   </Link>
 
@@ -65,6 +95,8 @@
               </Button>
             </v-col>
           </v-row>
+
+         
         </v-card-text>
 
         <div v-for="report_content in report['report_contents']" :key="report_content.id">
@@ -369,13 +401,13 @@
         <v-card-text class="text-right">
           <!-- <BackButton></BackButton> -->
           <a :href=report_url>
-          <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
-            <v-icon left>
-              mdi-arrow-left
-            </v-icon>
-            戻る
-          </v-btn>
-        </a>
+            <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+              <v-icon left>
+                mdi-arrow-left
+              </v-icon>
+              戻る
+            </v-btn>
+          </a>
         </v-card-text>
       </v-card>
 
@@ -443,7 +475,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['report', 'users', 'mentions', 'mentions', 'user','report_url'],
+  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url'],
 
 
   data() {
@@ -460,6 +492,12 @@ export default {
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
     };
   },
+
+
+  // beforeDestroy() {
+  //   window.removeEventListener("popstate", this.handlePopstate);
+  // },
+
 
   methods: {
     reportCommentCreate() {
@@ -519,6 +557,11 @@ export default {
         }
       })
     },
+
+    // handlePopstate() {
+    //   alert('000');
+    //   console.log("popstate action");
+    // },
     // back(){
     //   alert();
 

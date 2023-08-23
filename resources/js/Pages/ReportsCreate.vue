@@ -39,7 +39,9 @@
             </v-col>
 
             <v-col>
-              <v-file-input chips prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name" label="ファイルを選択する" v-model="form.file_name" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
+              <v-file-input chips prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name"
+                id="file_name" label="ファイルを選択する" v-model="form.file_name"
+                accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
             </v-col>
           </v-row>
 
@@ -113,12 +115,12 @@
                 </template>
 
                 <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
-                {{ report_content["product_description"] }}   
-                
-            
+                {{ report_content["product_description"] }}
+
+
               </template>
 
-          
+
 
             </v-col>
 
@@ -157,9 +159,9 @@
               </h4>
               <span>{{ report_content.file_name.name }}</span>
               </div> -->
-             
 
-           
+
+
             </v-col>
           </v-row>
         </div>
@@ -230,10 +232,23 @@
     <v-dialog :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'" v-model="dialog">
       <v-card flat tile>
         <form @submit.prevent="reportContentMode === 'create' ? addReportContent() : updateReportContent()">
+
           <v-card-title>
             <span v-html="reportContentForm.type === 'work' ? '業務' : '営業'"></span>日報の<span
               v-html="reportContentMode === 'create' ? '追加' : '編集'"></span>
+
+            <span class="ml-auto">
+              <a href="/client-types/clients/create" target="_blank">
+              <v-btn tile depressed color="#969797" dark
+                :small="$vuetify.breakpoint.xs">
+                会社登録
+              </v-btn>
+            </a>
+            </span>
+
           </v-card-title>
+
+
 
           <v-card-text>
             <v-list>
@@ -333,7 +348,7 @@
 
               <!-- 仕事内容 -->
               <v-list-item v-if="reportContentForm.type === 'work'">
-                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" required maxlength="200"
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" required maxlength="300"
                   name="title" v-model="reportContentForm.title"></v-text-field>
               </v-list-item>
 
@@ -345,7 +360,7 @@
 
               <!-- 仕事本文内容/面談内容 -->
               <v-list-item>
-                <v-textarea dense filled counter="200" maxlength="200" prepend-inner-icon="mdi-pencil"
+                <v-textarea dense filled counter="300" maxlength="300" prepend-inner-icon="mdi-pencil"
                   :label="(reportContentForm.type === 'work') ? '本文' : '面談内容'" required name="description"
                   v-model="reportContentForm.description"></v-textarea>
               </v-list-item>
@@ -382,7 +397,7 @@
               </v-list-item>
 
 
-             
+
 
               <v-divider class="my-4"></v-divider>
 
@@ -417,7 +432,7 @@
                     name="product_description" v-model="reportContentForm.product_description"></v-textarea>
                 </v-list-item>
 
-               
+
               </template>
 
               <!-- <v-list-item>
@@ -483,7 +498,7 @@ export default {
       form: this.$inertia.form('ReportsCreate', {
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         is_private: false,
-        file_name:undefined,
+        file_name: undefined,
         report_contents: [],
       }),
 
@@ -703,7 +718,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id","product_evaluation"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -768,7 +783,7 @@ export default {
             ...data,
             report_contents: report_contents,
           }
-        
+
         }
         )
         .post(this.$route('reports.store'), {

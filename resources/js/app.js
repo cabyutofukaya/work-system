@@ -69,6 +69,16 @@ Vue.use(GmapVue, {
     }
 });
 
+// Vue.prototype.$browserBackFlg = false
+// history.replaceState(null, '', null)
+// window.addEventListener('popstate', function() {
+//   Vue.prototype.$browserBackFlg = true
+
+//   window.setTimeout(() => {
+//     Vue.prototype.$browserBackFlg = false
+//   }, 500)
+// })
+
 // グローバルコンポーネントを登録
 import Button from './Components/Button';
 import BackButton from './Components/BackButton';

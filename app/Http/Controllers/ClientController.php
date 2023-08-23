@@ -531,4 +531,16 @@ class ClientController extends Controller
 
         return redirect()->route('client-types.clients.index', ['client_type' => $client_type_id]);
     }
+
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @param $client_type_id
+     * @return \Inertia\Response|\Inertia\ResponseFactory
+     */
+    public function select(): Response|ResponseFactory
+    {
+        return inertia('ClientsSelect');
+    }
 }

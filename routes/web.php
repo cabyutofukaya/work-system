@@ -149,6 +149,9 @@ Route::group(['middleware' => 'auth'], function () {
     // 集計データの項目
     Route::get('sales', [SalesController::class, "index"]);
 
+    // 会社情報作成選択画面
+    Route::get('client-types/clients/create', [ClientController::class, "select"]);
+
 });
 
 // ファイルダウンロード

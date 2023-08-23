@@ -86,14 +86,14 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <!-- <v-row>
               <v-col cols="12" sm="4">所属部署</v-col>
               <v-col>
                 <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="department"
                   v-model="formProfile.department" maxlength="200" :error="Boolean(formProfile.errors.department)"
-                  :error-messages="formProfile.errors.department"></v-text-field>
+                  :error-messages="formProfile.errors.department" disabled></v-text-field>
               </v-col>
-            </v-row>
+            </v-row> -->
 
 
             <v-row>
