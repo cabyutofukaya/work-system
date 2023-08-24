@@ -121,7 +121,8 @@ a.Link_item {
                 <!-- PCビュー -->
                 <template v-if="$vuetify.breakpoint.smAndUp">
                   <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
-                    {{ report.date }}
+                    <!-- {{ report.date }} -->
+                    {{ report.created_at.substr(0,16) }}
                   </v-col>
                   <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
                     {{ report.user.name }}
@@ -141,7 +142,10 @@ a.Link_item {
                 <!-- スマートフォンビュー -->
                 <template v-else>
                   <v-col cols="12">
-                    <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.date }}</div>
+                    <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">
+                      <!-- {{ report.date }} -->
+                      {{ report.created_at.substr(0,16) }}
+                    </div>
                     <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}</div>
                     <div :class="{ 'font-weight-bold': !report['is_visited'] }">
                       <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">

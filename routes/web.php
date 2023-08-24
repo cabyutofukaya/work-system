@@ -24,6 +24,7 @@ use Intervention\Image\ImageCacheController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ReportFileController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\UserScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,12 +146,14 @@ Route::group(['middleware' => 'auth'], function () {
     // 日報のファイル追加
     Route::post('reports/{report}', [ReportController::class, "update"])->name('reports.update');
 
-
     // 集計データの項目
     Route::get('sales', [SalesController::class, "index"]);
 
     // 会社情報作成選択画面
     Route::get('client-types/clients/create', [ClientController::class, "select"]);
+
+    // メンバースケジュール一覧
+    Route::get('list/schedule', [UserScheduleController::class, "index"])->name('users.schedule.index');
 
 });
 

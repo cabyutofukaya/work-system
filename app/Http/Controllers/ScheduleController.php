@@ -286,4 +286,13 @@ class ScheduleController extends Controller
 
         return redirect()->route('users.show', ['user' => Auth::user()->id]);
     }
+
+    public function user_list()
+    {
+        $user = Auth::user();
+        $department = $user->department;
+
+        dd($department);
+    }
+    
 }
