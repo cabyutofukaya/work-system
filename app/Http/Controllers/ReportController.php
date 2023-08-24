@@ -69,7 +69,7 @@ class ReportController extends Controller
         $report_url = session()->get('report_url');
 
         if($isPhone){
-            $reports = $reports->paginate(10)->withQueryString();
+            $reports = $reports->paginate(15)->withQueryString();
         }else{
             $reports = $reports->paginate()->withQueryString();
         }
