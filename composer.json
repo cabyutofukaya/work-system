@@ -19,6 +19,7 @@
         "inertiajs/inertia-laravel": "^0.5.2",
         "intervention/image": "^2.7",
         "intervention/imagecache": "^2.5",
+        "jenssegers/agent": "^2.6",
         "laravel-admin-ext/helpers": "1.*",
         "laravel-admin-ext/latlong": "1.x",
         "laravel-admin-ext/log-viewer": "^1.0",

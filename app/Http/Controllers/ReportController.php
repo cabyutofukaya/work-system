@@ -27,6 +27,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 use Log;
+use Jenssegers\Agent\Agent;
+
 
 class ReportController extends Controller
 {
@@ -50,6 +52,11 @@ class ReportController extends Controller
      */
     public function index(Request $request): \Illuminate\Http\Response|Response|ResponseFactory|Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
+
+        //スマホ確認
+        $agent = new Agent();
+        $isPhone = $agent->isPhone();
+
         // index/mine共通処理
         // 以降の $request->input はバリデーション済み
         $reports = $this->search($request);
@@ -61,10 +68,17 @@ class ReportController extends Controller
         session(['report_url' => $request->getRequestUri()]);
         $report_url = session()->get('report_url');
 
+        if($isPhone){
+            $reports = $reports->paginate(10)->withQueryString();
+        }else{
+            $reports = $reports->paginate()->withQueryString();
+        }
+
         return inertia('Reports', [
 
+            'reports' => $reports,
 
-            'reports' => $reports->paginate()->withQueryString(),
+            // 'reports' => $reports->paginate()->withQueryString(),
 
             // 'reports' => $report,
 

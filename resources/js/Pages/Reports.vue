@@ -21,23 +21,31 @@ a.Link_item {
 
       <v-card-text>
         <v-row>
-          <v-col>
+          <v-col class="text-left">
             <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="searchDialog = true"
-              :color="formParamsCount ? 'warning' : undefined">
+              :color="formParamsCount ? 'warning' : undefined" :class="{ 'mb-2': $vuetify.breakpoint.xs }">
             <v-icon left>
               mdi-filter-outline
             </v-icon>
             絞り込み<span v-if="formParamsCount">({{ formParamsCount }})</span>
             </Link>
 
-            <a :href=report_url>
+
+            <Link as="Button" :to="report_url" :small="$vuetify.breakpoint.xs">
+            <v-icon edit>
+              mdi-reload
+            </v-icon>
+            リロード
+            </Link>
+
+            <!-- <a :href=report_url>
               <Link as="Button" :small="$vuetify.breakpoint.xs">
               <v-icon left>
                 mdi-reload
               </v-icon>
               リロード
               </Link>
-            </a>
+            </a> -->
 
           </v-col>
 

@@ -237,7 +237,7 @@
             <span v-html="reportContentForm.type === 'work' ? '業務' : '営業'"></span>日報の<span
               v-html="reportContentMode === 'create' ? '追加' : '編集'"></span>
 
-            <span class="ml-auto">
+            <span class="ml-auto" v-if="reportContentForm.type === 'sales'">
               <a href="/client-types/clients/create" target="_blank">
               <v-btn tile depressed color="#969797" dark
                 :small="$vuetify.breakpoint.xs">

@@ -71,7 +71,8 @@
       <!-- ページトップスクロールボタン -->
       <transition name="scroll-top-btn">
         <v-btn
-            fab dark fixed bottom right
+          
+            fab dark fixed bottom left
             class="mb-n2"
             color="info"
             v-scroll="onScroll"
