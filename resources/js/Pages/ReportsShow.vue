@@ -35,7 +35,7 @@
         </v-card-title>
 
 
-        <v-card-text class="text-left">
+        <v-card-text class="text-left" v-if="is_phone">
           <!-- <BackButton></BackButton> -->
           <a :href=report_url>
             <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">

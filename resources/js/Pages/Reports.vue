@@ -113,7 +113,7 @@ a.Link_item {
           <v-divider class="mx-4"></v-divider>
         </template>
 
-        <div v-for="report in reports['data']" :key="report.id" :id="report.id">
+        <div v-for="(report,index) in reports['data']" :key="report.id" :id="'report_' + report.id">
           <!-- <Link as="v-list-item" :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item"> -->
           <v-list-item class="Link_item">
             <v-list-item-content>
@@ -133,6 +133,8 @@ a.Link_item {
                         v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
                         v-if="report['report_contents_work_exists']">業務日報</span>
                     </a>
+
+    
                     <span v-if="!report['is_zaitaku']">(在宅)</span>
                   </v-col>
 
@@ -376,41 +378,42 @@ export default {
     };
   },
 
-  // mounted(){
-  //   console.log(this.reports);
-  //   console.log(this.report_url);
+  mounted(){
+    window.moveTo(0,-200);
+    // console.log(this.reports);
+    // console.log(this.report_url);
 
-  //   console.log(this.is_phone);
+    // console.log(this.is_phone);
 
-  //   if(this.is_phone){
-  //     alert();
-  //     var url = '/api' + this.report_url;
-  //       axios
-  //       .get(url)
-  //       .then((response) => {
-  //       // handle success(axiosの処理が成功した場合に処理させたいことを記述)
-  //       console.log(response.data);
+    // if(this.is_phone){
+    //   alert();
+    //   var url = '/api' + this.report_url;
+    //     axios
+    //     .get(url)
+    //     .then((response) => {
+    //     // handle success(axiosの処理が成功した場合に処理させたいことを記述)
+    //     console.log(response.data);
 
-  //       console.log(response.data['current_page']);
-  //       console.log(response.data.current_page);
-  //       console.log(response.data.data);
-  //       console.log(this.reports.data);
+    //     console.log(response.data['current_page']);
+    //     console.log(response.data.current_page);
+    //     console.log(response.data.data);
+    //     console.log(this.reports.data);
 
-  //       this.reports.data = response.data.data;
+    //     this.reports.data = response.data.data;
 
-  //       })
-  //       .catch((error) => {
-  //       // handle error(axiosの処理にエラーが発生した場合に処理させたいことを記述)
-  //       console.log(error);
-  //       })
-  //       .finally( () =>  {
-  //       // always executed(axiosの処理結果によらずいつも実行させたい処理を記述)
-  //       console.log('終了');
-  //       });
-  //   }
+    //     })
+    //     .catch((error) => {
+    //     // handle error(axiosの処理にエラーが発生した場合に処理させたいことを記述)
+    //     console.log(error);
+    //     })
+    //     .finally( () =>  {
+    //     // always executed(axiosの処理結果によらずいつも実行させたい処理を記述)
+    //     console.log('終了');
+    //     });
+    // }
    
 
-  // },
+  },
 
 
   //   mounted() {

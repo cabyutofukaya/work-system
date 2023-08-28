@@ -433,6 +433,7 @@ class ReportController extends Controller
      */
     public function show(Report $report): Response|ResponseFactory
     {
+        
          //スマホ確認
          $agent = new Agent();
          $isPhone = $agent->isPhone();
@@ -489,7 +490,7 @@ class ReportController extends Controller
             ->makeHidden("email");
 
         $report_url = session()->get('report_url');
-        $report_url = $report_url . '#' . $report->id;
+        $report_url = $report_url . '#report_' . $report->id;
 
         return inertia('ReportsShow', [
             'report' => $report,
