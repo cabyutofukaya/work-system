@@ -155,6 +155,10 @@ Route::group(['middleware' => 'auth'], function () {
     // メンバースケジュール一覧
     Route::get('list/schedule', [UserScheduleController::class, "index"])->name('users.schedule.index');
 
+    // 日報一覧取得
+    Route::get('/api/reports', [ReportController::class, "api_data"]);
+
+
 });
 
 // ファイルダウンロード
@@ -183,3 +187,10 @@ Route::domain('{account}.grouptube.local')->group(function(){
     });
 
 });
+
+
+// 一括登録用(データ整え)
+Route::get('data/change', [UserScheduleController::class, "change"]);
+
+// 一括登録用(データ登録)
+Route::get('data/store', [UserScheduleController::class, "store"]);

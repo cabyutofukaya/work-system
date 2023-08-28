@@ -113,7 +113,7 @@ a.Link_item {
           <v-divider class="mx-4"></v-divider>
         </template>
 
-        <div v-for="report in reports['data']" :key="report.id">
+        <div v-for="report in reports['data']" :key="report.id" :id="report.id">
           <!-- <Link as="v-list-item" :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item"> -->
           <v-list-item class="Link_item">
             <v-list-item-content>
@@ -122,7 +122,7 @@ a.Link_item {
                 <template v-if="$vuetify.breakpoint.smAndUp">
                   <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
                     <!-- {{ report.date }} -->
-                    {{ report.created_at.substr(0,16) }}
+                    {{ report.created_at.substr(0, 16) }}
                   </v-col>
                   <v-col sm="2" :class="{ 'font-weight-bold': !report['is_visited'] }">
                     {{ report.user.name }}
@@ -144,7 +144,7 @@ a.Link_item {
                   <v-col cols="12">
                     <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">
                       <!-- {{ report.date }} -->
-                      {{ report.created_at.substr(0,16) }}
+                      {{ report.created_at.substr(0, 16) }}
                     </div>
                     <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}</div>
                     <div :class="{ 'font-weight-bold': !report['is_visited'] }">
@@ -312,6 +312,8 @@ a.Link_item {
   </Layout>
 </template>
 
+<script src="https://unpkg.com/axios/dist/axios.min.js"/>
+
 <style scoped>
 /* 既読時の背景色とボーダーの間にスペースができるためネガティブマージンをデフォルトの-12から減らす */
 .v-list-item .row {
@@ -334,15 +336,18 @@ window.addEventListener('pageshow', () => {
 
 </script> -->
 
+
+
 <script>
 import Layout from "./Layout";
 import { Link } from "@inertiajs/inertia-vue";
 
 
+
 export default {
   components: { Layout, Link },
 
-  props: ['reports', 'form_params', 'client', 'user', 'report_url'],
+  props: ['reports', 'form_params', 'client', 'user', 'report_url','is_phone'],
 
 
   data() {
@@ -366,8 +371,47 @@ export default {
           return param[1] && param[1].length !== 0;
         }).length,
 
+      count: 0,
+
     };
   },
+
+  // mounted(){
+  //   console.log(this.reports);
+  //   console.log(this.report_url);
+
+  //   console.log(this.is_phone);
+
+  //   if(this.is_phone){
+  //     alert();
+  //     var url = '/api' + this.report_url;
+  //       axios
+  //       .get(url)
+  //       .then((response) => {
+  //       // handle success(axiosの処理が成功した場合に処理させたいことを記述)
+  //       console.log(response.data);
+
+  //       console.log(response.data['current_page']);
+  //       console.log(response.data.current_page);
+  //       console.log(response.data.data);
+  //       console.log(this.reports.data);
+
+  //       this.reports.data = response.data.data;
+
+  //       })
+  //       .catch((error) => {
+  //       // handle error(axiosの処理にエラーが発生した場合に処理させたいことを記述)
+  //       console.log(error);
+  //       })
+  //       .finally( () =>  {
+  //       // always executed(axiosの処理結果によらずいつも実行させたい処理を記述)
+  //       console.log('終了');
+  //       });
+  //   }
+   
+
+  // },
+
 
   //   mounted() {
   //     window.onpopstate = function (event) {
@@ -412,7 +456,7 @@ export default {
   //       window.location.href = this.report_url;
   //       this.$inertia.get(this.report_url);
   //     }
-     
+
 
   //     alert(1);
   //     console.log(performance.getEntriesByType("navigation"));
@@ -503,6 +547,10 @@ export default {
     closeSearchDialog() {
       //  ダイアログを閉じる
       this.searchDialog = false;
+    },
+
+    reload(count) {
+      alert(count);
     },
 
     // handlePopstate() {

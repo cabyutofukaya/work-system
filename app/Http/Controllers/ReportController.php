@@ -91,13 +91,14 @@ class ReportController extends Controller
                 'is_readed' => $request->input('is_readed'),
                 'is_zaitaku' => $request->input('is_zaitaku'),
                 'start_date' => $request->input('start_date'),
-                'end_date' => $request->input('end_date'),
+                'end_date' => $request->input('end_date'), 
             ],
 
             // 会社ID検索時の対象
             'client' => Client::find($request->input('client_id'), ["id", "name"]),
 
             'report_url' => $report_url,
+            'is_phone' => $isPhone,
         ]);
     }
 
@@ -432,6 +433,10 @@ class ReportController extends Controller
      */
     public function show(Report $report): Response|ResponseFactory
     {
+         //スマホ確認
+         $agent = new Agent();
+         $isPhone = $agent->isPhone();
+
         $report->load([
             'user:id,name,deleted_at',
             'report_contents.client',
@@ -484,6 +489,7 @@ class ReportController extends Controller
             ->makeHidden("email");
 
         $report_url = session()->get('report_url');
+        $report_url = $report_url . '#' . $report->id;
 
         return inertia('ReportsShow', [
             'report' => $report,
@@ -493,6 +499,7 @@ class ReportController extends Controller
             'mentions' => User::whereNull('deleted_at')->get(["id", "name"]),
             'user' => User::where('id',$report->user_id)->first(),
             'report_url' => $report_url,
+            'is_phone' => $isPhone,
         ]);
     }
 
@@ -719,4 +726,21 @@ class ReportController extends Controller
 
         return redirect()->route('reports.mine');
     }
+
+    public function api_data(Request $request)
+    {
+        // index/mine共通処理
+        // 以降の $request->input はバリデーション済み
+        $reports = $this->search($request);
+
+        // 非公開の日報を除外
+        $reports->exceptPrivate();
+
+        $reports = $reports->paginate(10)->withQueryString();
+
+        echo json_encode($reports);
+       
+    }
+
+    
 }

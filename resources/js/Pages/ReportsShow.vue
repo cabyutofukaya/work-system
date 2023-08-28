@@ -34,6 +34,19 @@
 
         </v-card-title>
 
+
+        <v-card-text class="text-left">
+          <!-- <BackButton></BackButton> -->
+          <a :href=report_url>
+            <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+              <v-icon left>
+                mdi-arrow-left
+              </v-icon>
+              戻る
+            </v-btn>
+          </a>
+        </v-card-text>
+
         <v-card-text>
           <v-row>
             <v-col cols="12" sm="" class="text-h6">
@@ -93,6 +106,15 @@
                 </v-icon>
                 編集
               </Button>
+
+              <!-- <Button
+                :small="$vuetify.breakpoint.xs" class="ml-2" :to="report_url">
+                <v-icon left>
+                  mdi-arrow-left
+                </v-icon>
+                戻る
+              </Button> -->
+
             </v-col>
           </v-row>
 
@@ -399,7 +421,7 @@
         <v-divider></v-divider>
 
         <v-card-text class="text-right">
-          <!-- <BackButton></BackButton> -->
+          <!-- <BackButton v-if="is_phone"></BackButton> -->
           <a :href=report_url>
             <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
               <v-icon left>
@@ -475,7 +497,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url'],
+  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url','is_phone'],
 
 
   data() {
