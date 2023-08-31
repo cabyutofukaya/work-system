@@ -3,9 +3,9 @@
     <div>
 
 
-        <!-- <v-card-text> -->
-          <!-- <BackButton></BackButton> -->
-          <!-- <a :href=report_url>
+      <!-- <v-card-text> -->
+      <!-- <BackButton></BackButton> -->
+      <!-- <a :href=report_url>
             <v-btn tile depressed class="text-capitalize" color="#969797" dark :small="$vuetify.breakpoint.xs">
               <v-icon left>
                 mdi-arrow-left
@@ -13,14 +13,14 @@
               戻る
             </v-btn>
           </a> -->
-        <!-- </v-card-text> -->
-   
+      <!-- </v-card-text> -->
+
 
       <v-card flat tile>
         <v-card-title>
           <v-icon dark left>mdi-notebook</v-icon>
           日報
-          
+
           <!-- <div class="text-right">
           <a :href=report_url >
             <v-btn tile depressed dark :small="$vuetify.breakpoint.xs" color="#969797">
@@ -52,8 +52,8 @@
             <v-col cols="12" sm="" class="text-h6">
               <div style="display: flex;">
 
-     
-                {{ report.created_at.substr(0,16) }}
+
+                {{ report.created_at.substr(0, 16) }}
                 <!-- <span class="ml-2">{{ report.created_at.substr(11,5) }}</span> -->
 
                 <template v-if="!report.user.deleted_at">
@@ -61,7 +61,7 @@
                   {{ report.user.name }}
                   </Link>
 
-                  <v-card max-width="400" flat tile style="margin-top: -14px;">
+                  <v-card max-width="400" flat tile style="margin-top: -14px;" v-if="$vuetify.breakpoint.smAndUp">
 
                     <v-card-actions>
                       <v-list-item class="w-100">
@@ -118,7 +118,19 @@
             </v-col>
           </v-row>
 
-         
+
+        </v-card-text>
+
+        <v-card-text class="text-right" v-if="!is_phone">
+          <!-- <BackButton></BackButton> -->
+          <a :href=report_url>
+            <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+              <v-icon left>
+                mdi-arrow-left
+              </v-icon>
+              戻る
+            </v-btn>
+          </a>
         </v-card-text>
 
         <div v-for="report_content in report['report_contents']" :key="report_content.id">
@@ -220,22 +232,24 @@
                       </div>
                     </div>
 
+                    <span v-if="report_content.departments">
+                <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
+                {{ report_content.departments }}
+              </span>
+
+
                     <h4 class="mt-2 mb-1">面談者</h4>
                     {{ report_content["participants"] }}
+
+
 
                     <h4 class="mt-2 mb-1">営業手段</h4>
                     {{ report_content["sales_method"]["name"] }}
 
-                    <template v-if="report_content['products'].length">
-                      <h4 class="mt-2 mb-1">商材の評価</h4>
-                      <div v-for="(product, index) in report_content['products']" :key="index">
-                        <EvaluationIcon :evaluation="product['pivot']['evaluation']['grade']"></EvaluationIcon>
-                        {{ product.name }}
-                      </div>
-                    </template>
+                    <h4 class="mt-2 mb-1">商談所要時間</h4>
+                    {{ report_content.required_time }}
 
-                    <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
-                    {{ report_content["product_description"] }}
+                  
 
 
                   </v-col>
@@ -249,6 +263,17 @@
                     </h4>
                     <span style="white-space: pre-line;">{{ report_content.description }}</span>
 
+                    <template v-if="report_content['products'].length">
+                      <h4 class="mt-2 mb-1">商材の評価</h4>
+                      <div v-for="(product, index) in report_content['products']" :key="index">
+                        <EvaluationIcon :evaluation="product['pivot']['evaluation']['grade']"></EvaluationIcon>
+                        {{ product.name }}
+                      </div>
+                    </template>
+
+                    <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
+                    {{ report_content["product_description"] }}
+                    
 
                     <div class="text-right mt-2">
                       <v-chip small class="mr-2" color="primary" :outlined="!report_content['has_own_like']"
@@ -274,6 +299,9 @@
                       </div>
 
                     </div> -->
+
+
+                    
 
 
                   </v-col>
@@ -497,7 +525,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url','is_phone'],
+  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url', 'is_phone'],
 
 
   data() {

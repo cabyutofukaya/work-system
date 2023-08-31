@@ -45,6 +45,10 @@ class StoreReport extends FormRequest
             'report_contents.*.description' => ['nullable', 'string'],
             'report_contents.*.is_complaint' => ['required', 'boolean'],
             'report_contents.*.is_zaitaku' => ['required', 'boolean'],
+
+            'report_contents.*.required_time' => ['required', 'string'],
+            'report_contents.*.departments' => ['string'],
+
             // type:workのみ
             'report_contents.*.title' => ['required_if:report_contents.*.type,work'],
             // type:salesのみ

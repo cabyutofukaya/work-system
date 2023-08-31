@@ -95,26 +95,23 @@
                   </div>
                 </div>
 
+
+                <span v-if="report_content.departments">
+                  <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
+                  {{ report_content.departments }}
+                </span>
+
+
                 <h4 class="mt-2 mb-1">面談者</h4>
                 {{ report_content.participants }}
 
                 <h4 class="mt-2 mb-1">営業手段</h4>
                 {{ report_content["sales_method"]["name"] }}
 
-                <template v-if="Object.values(report_content['product_evaluation']).find(v => Boolean(v))">
-                  <h4 class="mt-2 mb-1">商材の評価</h4>
-                  <div v-for="(evaluation_id, product_id) in report_content['product_evaluation']" :key="product_id">
-                    <template v-if="evaluation_id">
-                      <EvaluationIcon
-                        :evaluation="evaluations.find(evaluation => evaluation.id === Number(evaluation_id))['grade']">
-                      </EvaluationIcon>
-                      {{ products.find(product => product.id === Number(product_id))["name"] }}
-                    </template>
-                  </div>
-                </template>
+                <h4 class="mt-2 mb-1">商談所要時間</h4>
+                {{ report_content.required_time }}
 
-                <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材の評価備考</h4>
-                {{ report_content["product_description"] }}
+
 
               </template>
             </v-col>
@@ -147,6 +144,22 @@
               <div>
                 <span style="white-space: pre-line;">{{ report_content.description }}</span>
               </div>
+
+              <template v-if="Object.values(report_content['product_evaluation']).find(v => Boolean(v))">
+                <h4 class="mt-2 mb-1">商材の評価</h4>
+                <div v-for="(evaluation_id, product_id) in report_content['product_evaluation']" :key="product_id">
+                  <template v-if="evaluation_id">
+                    <EvaluationIcon
+                      :evaluation="evaluations.find(evaluation => evaluation.id === Number(evaluation_id))['grade']">
+                    </EvaluationIcon>
+                    {{ products.find(product => product.id === Number(product_id))["name"] }}
+                  </template>
+                </div>
+              </template>
+
+              <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材の評価備考</h4>
+              {{ report_content["product_description"] }}
+
               <!-- 
               <div v-if="report_content.file_name">
                 <a :href="`/storage/report/${report_content.file}`" download
@@ -210,11 +223,10 @@
             </a>
 
             <a :href="`/storage/report/${report_file.path}`" download v-if="report_file.type == 'image'">
-            <div class="text-right my-3">
-            <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"
-              ></v-img>
-            </div>
-          </a>
+              <div class="text-right my-3">
+                <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"></v-img>
+              </div>
+            </a>
 
             <v-icon class="ml-5 mb-a" size="x-large" color="error"
               @click="deleteFile(report_file.id)">mdi-delete-outline</v-icon>
@@ -382,6 +394,12 @@
                   name="title" v-model="reportContentForm.title"></v-text-field>
               </v-list-item>
 
+              <!-- 部署名 / 役職名 -->
+              <v-list-item v-if="reportContentForm.type === 'sales'">
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名 / 役職名" maxlength="200"
+                  name="departments" v-model="reportContentForm.departments"></v-text-field>
+              </v-list-item>
+
               <!-- 面談者 -->
               <v-list-item v-if="reportContentForm.type === 'sales'">
                 <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="面談者" required maxlength="200"
@@ -412,6 +430,13 @@
                 </v-select>
               </v-list-item>
 
+              <!-- 商談所要時間 -->
+              <v-list-item v-if="reportContentForm.type === 'sales'">
+
+                <v-select dense filled prepend-inner-icon="mdi-pencil" label="商談所要時間" required :items="required_time"
+                  name="required_time" v-model="reportContentForm.required_time"></v-select>
+              </v-list-item>
+
               <!-- クレーム・トラブル -->
               <v-list-item>
                 <v-switch dense filled class="ma-0 pa-0" color="error" label="クレーム・トラブル" name="is_complaint"
@@ -419,7 +444,7 @@
               </v-list-item>
 
               <!-- 在宅 -->
-              <v-list-item>
+              <v-list-item v-if="reportContentForm.type === 'work'">
                 <v-switch dense filled class="ma-0 pa-0" color="blue" label="在宅" name="is_zaitaku"
                   v-model="reportContentForm.is_zaitaku"></v-switch>
 
@@ -531,10 +556,10 @@ export default {
         report_contents: this.report.report_contents,
         // report_files: this.report.report_files,
         _delete_report_content_ids: [],
-        file:[],
+        file: [],
       }),
 
-      file_form:undefined,
+      file_form: undefined,
       report_files: this.report.report_files,
 
       // 報告作成・編集ダイアログ
@@ -559,6 +584,8 @@ export default {
         is_zaitaku: false,
         product_description: "",
         product_evaluation: {},
+        required_time: undefined,
+        departments: undefined,
       },
 
       // 追加ダイアログフォームデータ
@@ -586,6 +613,9 @@ export default {
 
       loading: {},
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
+
+      required_time: ['15分', '30分', '45分', '60分', '75分', '90分', '120分', '135分', '150分', '175分', '200分'],
+
 
       formReportFile: this.$inertia.form(`ReportsEdit${this.report.id}`, {
         report_file: undefined,
@@ -745,7 +775,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -795,7 +825,7 @@ export default {
 
           // let file_name = this.file_form;
 
-         
+
 
           // 日報コンテンツ情報をディープコピー
           let report_contents = _.cloneDeep(data["report_contents"]);
@@ -855,7 +885,7 @@ export default {
         }
       })
     },
-  
+
   }
 }
 </script>

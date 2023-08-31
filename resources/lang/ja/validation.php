@@ -211,6 +211,8 @@ return [
         'date_end' => '終了日',
         'title_type' => 'スケジュール種別',
 
+        'required_time' => '商談所要時間',
+
         // テーブル名
         'tables' => [
             'users' => 'メンバー',

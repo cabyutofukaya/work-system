@@ -76,7 +76,10 @@
                 <!-- PCビュー -->
                 <template v-if="$vuetify.breakpoint.smAndUp">
                   <v-col sm="2">
-                    {{ report.date }}
+                    <!-- {{ report.date }} -->
+
+                    {{ report.created_at.substr(0,16) }}
+
                   </v-col>
                   <v-col sm="6">
                     <a :href="$route('reports.show', {id: report.id})">
@@ -88,7 +91,10 @@
                 <!-- スマートフォンビュー -->
                 <template v-else>
                   <v-col cols="12">
-                    <div class="mb-1">{{ report.date }}</div>
+                    <div class="mb-1">
+                      {{ report.created_at.substr(0,16) }}
+                      <!-- {{ report.date }} -->
+                    </div>
                     <div>
                       <a :href="$route('reports.show', {id: report.id})"></a><span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span> </a></div>
                   </v-col>

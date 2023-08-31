@@ -17,11 +17,27 @@
         <v-card flat tile>
 
 
-            <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
+            <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar" v-if="$vuetify.breakpoint.smAndUp">
 
             </FullCalendar>
 
+            
+            <FullCalendar class='demo-app-calendar' :options='calendarOptionsSmartphone' ref="fullCalendar" v-if="!$vuetify.breakpoint.smAndUp"></FullCalendar>
+
             <v-divider class="mx-4"></v-divider>
+
+            <v-btn
+                    fab
+                    absolute
+                    bottom
+                    right
+                    color="primary"
+                    v-if="!$vuetify.breakpoint.smAndUp"
+                    @click="this.handleDateClickSmartphone"
+                  >
+                    <!-- プラスのアイコンにします。 -->
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
 
 
         </v-card>
@@ -29,6 +45,14 @@
         <!-- イベント追加ダイアログ -->
         <v-dialog v-model="showDialog" :max-width="$vuetify.breakpoint.smAndUp ? '1000px' : 'unset'">
             <v-card flat tile>
+
+                <div class="text-right">
+                    <v-btn class="black--text" text @click="showDialog = false">Close
+        
+    </v-btn>
+                </div>
+               
+
                 <form @submit.prevent="create">
                     <input type="hidden" name="route">
                     <v-card-text>
@@ -57,7 +81,7 @@
                                 </v-col>
                             </v-row>
 
-                            <v-row v-if="form.rangeEnabled">
+                            <v-row v-if="form.rangeEnabled && $vuetify.breakpoint.smAndUp">
                                 <v-col cols="12" sm="2">曜日設定</v-col>
                                 <v-col>
                                     <v-checkbox label="月曜日" pt="0" v-model="form.monday"></v-checkbox>
@@ -79,6 +103,33 @@
                                 </v-col>
                                 <v-col>
                                     <v-checkbox label="日曜日" pt="0" v-model="form.sunday"></v-checkbox>
+                                </v-col>
+
+                            </v-row>
+
+
+                            <v-row v-if="form.rangeEnabled && !$vuetify.breakpoint.smAndUp">
+                                <v-col cols="12" sm="2">曜日設定</v-col>
+                                <v-col>
+                                    <v-checkbox label="月" pt="0" v-model="form.monday"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="火" pt="0" v-model="form.tuesday"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="水" pt="0" v-model="form.wednesday"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="木" pt="0" v-model="form.thursday"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="金" pt="0" v-model="form.friday"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="土" pt="0" v-model="form.saturday"></v-checkbox>
+                                </v-col>
+                                <v-col>
+                                    <v-checkbox label="日" pt="0" v-model="form.sunday"></v-checkbox>
                                 </v-col>
 
                             </v-row>
@@ -109,6 +160,9 @@
                                 </v-col>
                             </v-row>
 
+                           
+                         
+
 
                             <v-row>
                                 <v-col cols="12" sm="2">タイトル</v-col>
@@ -117,10 +171,18 @@
                                         :items="['営業/外出', '出張', '社内業務', '会議', '来客対応', 'テレワーク', 'その他']"
                                         variant="underlined"></v-select>
                                 </v-col>
-                                <v-col>
+                                <v-col v-if="$vuetify.breakpoint.smAndUp">
                                     <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="title"
                                         v-model="form.title" maxlength="200" :error="Boolean(form.errors.title)"
                                         :error-messages="form.errors.title"></v-text-field>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col v-if="!$vuetify.breakpoint.smAndUp">
+                                    <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="title"
+                                        v-model="edit_form.title" maxlength="200" :error="Boolean(edit_form.errors.title)"
+                                        :error-messages="edit_form.errors.title"></v-text-field>
                                 </v-col>
                             </v-row>
 
@@ -158,6 +220,13 @@
 
 
             <v-card flat tile>
+
+                <div class="text-right">
+                    <v-btn class="black--text" text @click="displaySchedule = false">Close
+        
+    </v-btn>
+                </div>
+
                 <v-card-text mt="10">
                     <form @submit.prevent="update">
 
@@ -216,12 +285,21 @@
                                         :items="['営業/外出', '出張', '社内業務', '会議', '来客対応', 'テレワーク', 'その他']"
                                         variant="underlined"></v-select>
                                 </v-col>
-                                <v-col>
+                                <v-col v-if="$vuetify.breakpoint.smAndUp">
                                     <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="title"
                                         v-model="edit_form.title" maxlength="200" :error="Boolean(edit_form.errors.title)"
                                         :error-messages="edit_form.errors.title"></v-text-field>
                                 </v-col>
                             </v-row>
+
+                            <v-row>
+                                <v-col v-if="!$vuetify.breakpoint.smAndUp">
+                                    <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="title"
+                                        v-model="edit_form.title" maxlength="200" :error="Boolean(edit_form.errors.title)"
+                                        :error-messages="edit_form.errors.title"></v-text-field>
+                                </v-col>
+                            </v-row>
+
 
                             <v-row>
                                 <v-col cols="12" sm="2">内容</v-col>
@@ -368,6 +446,28 @@ export default {
                 eventDidMount: this.handleEventDidMount,
                 eventMouseEnter: this.handleEventMouseEnter,
             },
+
+            calendarOptionsSmartphone: {
+                plugins: [dayGridPlugin,timeGridPlugin, interactionPlugin],
+                initialView: 'dayGridMonth',
+                locales: [jaLocale],
+                locale: "ja",
+                businessHours: "true",
+                height: "auto",
+                firstDay: "1",
+                weekends: "true",
+                // dateClick: this.handleDateClick,
+                events: this.schedule,
+                eventClick: this.handleEventClick,
+                headerToolbar: {
+                    left: '',
+                    center: 'title',
+                    right:'prev,next today',
+                },
+                eventDidMount: this.handleEventDidMount,
+                eventMouseEnter: this.handleEventMouseEnter,
+                stickyHeaderDates:"false",
+            },
             loading: {},
         }
     },
@@ -421,6 +521,14 @@ export default {
             this.displaySchedule = false;
         },
 
+        handleDateClickSmartphone: function () {
+            // alert();
+            if (this.loginUser.id == this.user.id) {
+                this.showDialog = true;
+            }
+
+        },
+
         handleEventMouseEnter(e) {
             console.log(e.event),
                 tippy(e.el, {
@@ -434,6 +542,7 @@ export default {
                 });
         },
 
+     
         handleEventDidMount(e) {
             // tippy(e.el, {
             //     content: `<div style="">

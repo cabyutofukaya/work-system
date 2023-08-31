@@ -37,6 +37,8 @@ class ReportContent extends BaseReportContent implements Auditable
         'product_description',
         'file',
         'file_name',
+        'required_time',
+        'departments',
     ];
 
     /**
@@ -94,7 +96,7 @@ class ReportContent extends BaseReportContent implements Auditable
         // 日報の最後の報告が削除される場合は例外を起こす
         static::deleting(function ($report_content) {
             $report_id = ReportContent::find($report_content["id"])->report_id;
-            
+
             if (ReportContent::where("report_id", $report_id)->count() === 1) {
                 throw new \Exception("日報からすべての報告を削除することはできません");
             }
