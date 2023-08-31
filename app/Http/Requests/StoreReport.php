@@ -46,8 +46,6 @@ class StoreReport extends FormRequest
             'report_contents.*.is_complaint' => ['required', 'boolean'],
             'report_contents.*.is_zaitaku' => ['required', 'boolean'],
 
-           
-
             // type:workのみ
             'report_contents.*.title' => ['required_if:report_contents.*.type,work'],
             // type:salesのみ
@@ -57,7 +55,7 @@ class StoreReport extends FormRequest
             'report_contents.*.sales_method_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('sales_methods', "id")],
 
             'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
-            'report_contents.*.departments' => ['required_if:report_contents.*.type,sales', 'nullable','string'],
+            'report_contents.*.departments' => ['nullable','string'],
 
             // 'report_contents.*.file' => ['nullable','max:2028','mimes:jpg,jpeg,png,gif'],
             'report_contents.*.product_evaluation' => ['nullable', 'array'],
