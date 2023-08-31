@@ -614,7 +614,7 @@ export default {
       loading: {},
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
 
-      required_time: ['15分', '30分', '45分', '60分', '75分', '90分', '120分', '135分', '150分', '175分', '200分'],
+      required_time:['15分','30分','45分','60分','75分','90分','120分','150分','180分','210分','240分'],
 
 
       formReportFile: this.$inertia.form(`ReportsEdit${this.report.id}`, {
@@ -712,6 +712,14 @@ export default {
         return;
       }
 
+      if (this.reportContentForm.type === "sales" && !this.reportContentForm.required_time) {
+        this.reportContentFormError.required_time = "商談所要時間を選択してください";
+        this.$toasted.error('商談所要時間を選択してください');
+
+        return;
+      }
+
+
       // 会社が選択されていれば会社情報を追加
       if (this.reportContentForm.client_id) {
         this.reportContentForm["client"] = this.clients.find(client => client.id === this.reportContentForm.client_id);
@@ -769,6 +777,13 @@ export default {
       if (this.reportContentForm.type === "sales" && !this.reportContentForm.sales_method_id) {
         this.reportContentFormError.sales_method_id = "営業手段を選択してください";
         this.$toasted.error('営業手段を選択してください');
+
+        return;
+      }
+
+      if (this.reportContentForm.type === "sales" && !this.reportContentForm.required_time) {
+        this.reportContentFormError.required_time = "商談所要時間を選択してください";
+        this.$toasted.error('商談所要時間を選択してください');
 
         return;
       }

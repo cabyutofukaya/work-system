@@ -58,9 +58,13 @@ class UpdateReport extends FormRequest
             'report_contents.*.product_evaluation' => ['nullable', 'array'],
             'report_contents.*.product_evaluation.*.product_id' => [Rule::exists('products', "id")],
 
-            'report_contents.*.required_time' => ['required', 'string'],
-            'report_contents.*.departments' => ['string'],
-            
+            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales', 'string'],
+            'report_contents.*.departments' => ['required_if:report_contents.*.type,sales', 'nullable','string'],
+
+
+            // 'report_contents.*.required_time' => ['required', 'string'],
+            // 'report_contents.*.departments' => ['string'],
+
             'report_contents.*.product_evaluation.*.evaluation_id' => [Rule::exists('evaluations', "id")],
             // type:salesにおいて指定された会社IDに所属する営業所IDが指定されているかチェック
             'report_contents.*' => Rule::forEach(function ($value, $attribute, $attribute2) {

@@ -573,7 +573,7 @@ export default {
       // 会社絞り込みフォーム 会社リスト表示
       clientsListEnable: false,
 
-      required_time:['15分','30分','45分','60分','75分','90分','120分','135分','150分','175分','200分'],
+      required_time:['15分','30分','45分','60分','75分','90分','120分','150分','180分','210分','240分'],
       
       loading: {}
     };
@@ -677,6 +677,14 @@ export default {
       if (this.reportContentForm.type === "sales" && !this.reportContentForm.sales_method_id) {
         this.reportContentFormError.sales_method_id = "営業手段を選択してください";
         this.$toasted.error('営業手段を選択してください');
+
+        return;
+      }
+
+
+      if (this.reportContentForm.type === "sales" && !this.reportContentForm.required_time) {
+        this.reportContentFormError.required_time = "商談所要時間を選択してください";
+        this.$toasted.error('商談所要時間を選択してください');
 
         return;
       }
