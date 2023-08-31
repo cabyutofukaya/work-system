@@ -58,7 +58,7 @@ class UpdateReport extends FormRequest
             'report_contents.*.product_evaluation' => ['nullable', 'array'],
             'report_contents.*.product_evaluation.*.product_id' => [Rule::exists('products', "id")],
 
-            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales', 'string'],
+            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
             'report_contents.*.departments' => ['required_if:report_contents.*.type,sales', 'nullable','string'],
 
 

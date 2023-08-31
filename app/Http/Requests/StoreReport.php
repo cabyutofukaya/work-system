@@ -56,7 +56,7 @@ class StoreReport extends FormRequest
             'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
             'report_contents.*.sales_method_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('sales_methods', "id")],
 
-            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales', 'string'],
+            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
             'report_contents.*.departments' => ['required_if:report_contents.*.type,sales', 'nullable','string'],
 
             // 'report_contents.*.file' => ['nullable','max:2028','mimes:jpg,jpeg,png,gif'],
