@@ -266,13 +266,34 @@
       </v-card-text>
 
       <!-- 日報作成ボタン -->
-      <v-card-text class="text-center" v-if="form.report_contents.length">
-        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="update"
+      <v-card-text class="text-center" v-if="form.report_contents.length && report.draft_flg == 0">
+        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="update(0)"
           :loading="loading['update']">
           <v-icon left>
             mdi-content-save-edit-outline
           </v-icon>
           この内容で日報を更新する
+        </Button>
+      </v-card-text>
+
+
+      <v-card-text class="text-center" v-if="form.report_contents.length && report.draft_flg == 1">
+        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="update(0)"
+          :loading="loading['update']">
+          <v-icon left>
+            mdi-content-save-edit-outline
+          </v-icon>
+          この内容で日報を投稿する
+        </Button>
+      </v-card-text>
+
+
+      <v-card-text class="text-right" v-if="form.report_contents.length && report.draft_flg == 1">
+        <Button center :small="$vuetify.breakpoint.xs" @click.native="update2(1)" :loading="loading['update2']">
+          <v-icon left>
+            mdi-content-save-edit-outline
+          </v-icon>
+          この内容で下書きを保存する
         </Button>
       </v-card-text>
 
@@ -614,7 +635,7 @@ export default {
       loading: {},
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
 
-      required_time:['15分','30分','45分','60分','75分','90分','120分','150分','180分','210分','240分'],
+      required_time: ['15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
 
 
       formReportFile: this.$inertia.form(`ReportsEdit${this.report.id}`, {
@@ -827,9 +848,11 @@ export default {
     },
 
     // 日報更新実行
-    update: function () {
+    update: function (draft_flg) {
 
       this.form.file = this.file_form;
+
+      console.log(draft_flg);
 
       this.form
         .transform((data) => {
@@ -866,6 +889,8 @@ export default {
           return {
             ...data,
             report_contents: report_contents,
+            draft_flg: draft_flg,
+            time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(11, 5)
           }
         }
         )
@@ -883,6 +908,60 @@ export default {
           onFinish: () => this.$set(this.loading, "update", false),
         })
     },
+    // 下書き更新
+    update2: function (draft_flg) {
+
+      this.form.file = this.file_form;
+
+      console.log(draft_flg);
+
+      this.form
+        .transform((data) => {
+
+          // 日報コンテンツ情報をディープコピー
+          let report_contents = _.cloneDeep(data["report_contents"]);
+
+          report_contents.forEach((report_content) => {
+            // 評価を配列に変更
+            report_content["product_evaluation"]
+              = Object.entries(report_content["product_evaluation"])
+                .filter(([product_id, evaluation_id]) => {
+                  return !!(evaluation_id)
+                })
+                .map(([product_id, evaluation_id]) => {
+                  return { 'product_id': Number(product_id), 'evaluation_id': Number(evaluation_id) };
+                });
+
+            // 表示にのみ使用している会社情報を送信する内容から削除
+            delete report_content.client;
+            delete report_content.sales_method;
+          });
+
+          console.log(data);
+
+          return {
+            ...data,
+            report_contents: report_contents,
+            draft_flg: draft_flg,
+            time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(11, 5)
+          }
+        }
+        )
+        .post(this.$route('reports.update', { report: this.report.id }), {
+          onStart: () => this.$set(this.loading, "update2", true),
+          onSuccess: () => this.$toasted.show('日報の変更を保存しました'),
+          onError: errors => {
+            // バリデーションエラーをトースト表示する
+            // フロント側チェックを行っているため発生しない前提
+            this.$toasted.error(Object.values(errors).join("\n"), {
+              duration: 1000 * 60 * 10,
+              type: 'error'
+            });
+          },
+          onFinish: () => this.$set(this.loading, "update2", false),
+        })
+    },
+
     deleteFile: function (report_file) {
 
       this.formReportFile.report_file = report_file;

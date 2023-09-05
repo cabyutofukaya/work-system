@@ -40,6 +40,8 @@ class StoreReport extends FormRequest
         return [
             'date' => ['required'],
             'is_private' => ['required', 'boolean'],
+            'time' => ['required'],
+            'draft_flg' => ['int', 'nullable'],
             'report_contents' => ['required', 'array'],
             'report_contents.*.type' => ['required', 'in:' . implode(",", array_keys(config("const.report_content_type")))],
             'report_contents.*.description' => ['nullable', 'string'],

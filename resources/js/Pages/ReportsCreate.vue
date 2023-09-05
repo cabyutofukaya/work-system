@@ -97,14 +97,14 @@
                 </div>
 
                 <span v-if="report_content.departments">
-                <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
-                {{ report_content.departments }}
-              </span>
+                  <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
+                  {{ report_content.departments }}
+                </span>
 
                 <h4 class="mt-2 mb-1">面談者</h4>
                 {{ report_content.participants }}
 
-            
+
 
                 <h4 class="mt-2 mb-1">営業手段</h4>
                 {{ report_content["sales_method"]["name"] }}
@@ -112,9 +112,9 @@
                 <h4 class="mt-2 mb-1">商談所要時間</h4>
                 {{ report_content.required_time }}
 
-        
 
-          
+
+
               </template>
 
 
@@ -158,19 +158,19 @@
               </div> -->
 
               <template v-if="Object.values(report_content['product_evaluation']).find(v => Boolean(v))">
-                  <h4 class="mt-2 mb-1">商材の評価</h4>
-                  <div v-for="(evaluation_id, product_id) in report_content['product_evaluation']" :key="product_id">
-                    <template v-if="evaluation_id">
-                      <EvaluationIcon
-                        :evaluation="evaluations.find(evaluation => evaluation.id === Number(evaluation_id))['grade']">
-                      </EvaluationIcon>
-                      {{ products.find(product => product.id === Number(product_id))["name"] }}
-                    </template>
-                  </div>
-                </template>
+                <h4 class="mt-2 mb-1">商材の評価</h4>
+                <div v-for="(evaluation_id, product_id) in report_content['product_evaluation']" :key="product_id">
+                  <template v-if="evaluation_id">
+                    <EvaluationIcon
+                      :evaluation="evaluations.find(evaluation => evaluation.id === Number(evaluation_id))['grade']">
+                    </EvaluationIcon>
+                    {{ products.find(product => product.id === Number(product_id))["name"] }}
+                  </template>
+                </div>
+              </template>
 
-                <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
-                {{ report_content["product_description"] }}
+              <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
+              {{ report_content["product_description"] }}
 
             </v-col>
           </v-row>
@@ -199,35 +199,47 @@
 
       <v-divider class="mx-4 my-4"></v-divider>
 
-      <!-- 追加ボタン -->
-      <v-card-text class="text-center">
-        <div>
-          <Button center :small="$vuetify.breakpoint.xs" @click.native="openReportContentForm('sales')">
-            <v-icon left>
-              mdi-plus
-            </v-icon>
-            営業日報を追加する
-          </Button>
-        </div>
+      <v-row>
+        <!-- 追加ボタン -->
+        <v-card-text class="text-center">
+          <div>
+            <Button center :small="$vuetify.breakpoint.xs" @click.native="openReportContentForm('sales')">
+              <v-icon left>
+                mdi-plus
+              </v-icon>
+              営業日報を追加する
+            </Button>
+          </div>
 
-        <div class="mt-2">
-          <Button center :small="$vuetify.breakpoint.xs" @click.native="openReportContentForm('work')">
-            <v-icon left>
-              mdi-plus
-            </v-icon>
-            業務日報を追加する
-          </Button>
-        </div>
-      </v-card-text>
+          <div class="mt-2">
+            <Button center :small="$vuetify.breakpoint.xs" @click.native="openReportContentForm('work')">
+              <v-icon left>
+                mdi-plus
+              </v-icon>
+              業務日報を追加する
+            </Button>
+          </div>
+        </v-card-text>
+
+      </v-row>
 
       <!-- 日報作成ボタン -->
       <v-card-text class="text-center" v-if="form.report_contents.length">
-        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="create"
+        <Button center color="primary" :small="$vuetify.breakpoint.xs" @click.native="create(0)"
           :loading="loading['create']">
           <v-icon left>
             mdi-content-save-outline
           </v-icon>
           この内容で日報を作成する
+        </Button>
+      </v-card-text>
+
+      <v-card-text class="text-right" v-if="form.report_contents.length">
+        <Button center :small="$vuetify.breakpoint.xs" @click.native="create2(1)" :loading="loading['create2']">
+          <v-icon left>
+            mdi-content-save-outline
+          </v-icon>
+          下書きとして保存する
         </Button>
       </v-card-text>
 
@@ -367,8 +379,8 @@
                   name="participants" v-model="reportContentForm.participants"></v-text-field>
               </v-list-item>
 
-                <!-- 部署名 / 役職名 -->
-                <v-list-item v-if="reportContentForm.type === 'sales'">
+              <!-- 部署名 / 役職名 -->
+              <v-list-item v-if="reportContentForm.type === 'sales'">
                 <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名 / 役職名" maxlength="200"
                   name="departments" v-model="reportContentForm.departments"></v-text-field>
               </v-list-item>
@@ -398,11 +410,11 @@
               </v-list-item>
 
 
-             <!-- 商談所要時間 -->
-             <v-list-item v-if="reportContentForm.type === 'sales'">
+              <!-- 商談所要時間 -->
+              <v-list-item v-if="reportContentForm.type === 'sales'">
 
-                <v-select dense filled label="商談所要時間" required :items="required_time"
-                  name="required_time"  clearable v-model="reportContentForm.required_time"></v-select>
+                <v-select dense filled label="商談所要時間" required :items="required_time" name="required_time" clearable
+                  v-model="reportContentForm.required_time"></v-select>
               </v-list-item>
 
               <!-- クレーム・トラブル -->
@@ -461,7 +473,7 @@
                 <v-file-input dense filled prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_name" id="file_name" label="ファイルを選択する" v-model="reportContentForm.file_name" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
               </v-list-item> -->
 
-              <v-divider class="my-4"></v-divider>
+              <v-divider class="my-4" v-if="reportContentForm.type === 'sales'"></v-divider>
 
               <!-- 注釈 -->
               <v-list-item v-if="reportContentForm.type === 'sales'">
@@ -547,7 +559,7 @@ export default {
         // file_name: {},
         product_evaluation: {},
         required_time: undefined,
-        departments:undefined,
+        departments: undefined,
       },
 
       // 追加ダイアログフォームデータ
@@ -573,8 +585,8 @@ export default {
       // 会社絞り込みフォーム 会社リスト表示
       clientsListEnable: false,
 
-      required_time:['15分','30分','45分','60分','75分','90分','120分','150分','180分','210分','240分'],
-      
+      required_time: ['15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
+
       loading: {}
     };
   },
@@ -762,7 +774,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation","required_time","departments"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -796,9 +808,10 @@ export default {
     },
 
     // 日報作成実行
-    create: function () {
+    create: function (draft_flg) {
 
       console.log(this.form.file_name);
+      console.log(draft_flg);
 
       this.form
         .transform((data) => {
@@ -826,11 +839,14 @@ export default {
           return {
             ...data,
             report_contents: report_contents,
+            draft_flg: draft_flg,
+            time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(11, 5)
           }
 
         }
         )
         .post(this.$route('reports.store'), {
+
           onStart: () => this.$set(this.loading, "create", true),
           onSuccess: () => this.$toasted.show('日報を作成しました'),
           onError: errors => {
@@ -842,6 +858,56 @@ export default {
             });
           },
           onFinish: () => this.$set(this.loading, "create", false),
+        })
+    },
+    // 下書き登録
+    create2: function (draft_flg) {
+
+      this.form
+        .transform((data) => {
+          // 日報コンテンツ情報をディープコピー
+          let report_contents = _.cloneDeep(data["report_contents"]);
+
+          report_contents.forEach((report_content) => {
+            // 評価を配列に変更
+            report_content["product_evaluation"]
+              = Object.entries(report_content["product_evaluation"])
+                .filter(([product_id, evaluation_id]) => {
+                  return !!(evaluation_id)
+                })
+                .map(([product_id, evaluation_id]) => {
+                  return { 'product_id': Number(product_id), 'evaluation_id': Number(evaluation_id) };
+                });
+
+            // 表示にのみ使用している会社情報を送信する内容から削除
+            delete report_content.client;
+            delete report_content.sales_method;
+          });
+
+          console.log(data);
+
+          return {
+            ...data,
+            report_contents: report_contents,
+            draft_flg: draft_flg,
+            time: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(11, 5)
+          }
+
+        }
+        )
+        .post(this.$route('reports.store'), {
+
+          onStart: () => this.$set(this.loading, "create2", true),
+          onSuccess: () => this.$toasted.show('日報を作成しました'),
+          onError: errors => {
+            // バリデーションエラーをトースト表示する
+            // フロント側チェックを行っているため発生しない前提
+            this.$toasted.error(Object.values(errors).join("\n"), {
+              duration: 1000 * 60 * 10,
+              type: 'error'
+            });
+          },
+          onFinish: () => this.$set(this.loading, "create2", false),
         })
     }
   }

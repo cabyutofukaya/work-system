@@ -65,12 +65,15 @@ class ReportController extends Controller
         // 非公開の日報を除外
         $reports->exceptPrivate();
 
+        // 下書きの日報を除外
+        $reports->exceptDraftFlg();
+
         session(['report_url' => $request->getRequestUri()]);
         $report_url = session()->get('report_url');
 
-        if($isPhone){
+        if ($isPhone) {
             $reports = $reports->paginate(10)->withQueryString();
-        }else{
+        } else {
             $reports = $reports->paginate()->withQueryString();
         }
 
@@ -91,7 +94,8 @@ class ReportController extends Controller
                 'is_readed' => $request->input('is_readed'),
                 'is_zaitaku' => $request->input('is_zaitaku'),
                 'start_date' => $request->input('start_date'),
-                'end_date' => $request->input('end_date'), 
+                'end_date' => $request->input('end_date'),
+                'department' => $request->input('department'),
             ],
 
             // 会社ID検索時の対象
@@ -256,6 +260,15 @@ class ReportController extends Controller
             $reports->where('date', '<=', $request->end_date);
         }
 
+        // 期間設定
+        if ($request->department) {
+            // $department_list = $request->department;
+
+            $reports->whereHas('user', function ($query) use ($request) {
+                $query->whereIn('department', $request->department);
+                // $query->whereIn('department', ['CCD']);
+            });
+        }
 
 
 
@@ -419,6 +432,7 @@ class ReportController extends Controller
             }
         });
 
+
         // バックボタンの戻り先ページを設定
         $request->session()->flash('backButton', [
             "url" => route('reports.mine'),
@@ -435,10 +449,10 @@ class ReportController extends Controller
      */
     public function show(Report $report): Response|ResponseFactory
     {
-        
-         //スマホ確認
-         $agent = new Agent();
-         $isPhone = $agent->isPhone();
+
+        //スマホ確認
+        $agent = new Agent();
+        $isPhone = $agent->isPhone();
 
         $report->load([
             'user:id,name,deleted_at',
@@ -500,7 +514,7 @@ class ReportController extends Controller
             'users' => $users,
             // 社内担当者リスト
             'mentions' => User::whereNull('deleted_at')->get(["id", "name"]),
-            'user' => User::where('id',$report->user_id)->first(),
+            'user' => User::where('id', $report->user_id)->first(),
             'report_url' => $report_url,
             'is_phone' => $isPhone,
         ]);
@@ -623,6 +637,13 @@ class ReportController extends Controller
             // 日報情報を保存
             $report->fill($request->safe()->merge(['user_id' => Auth::id()])->all())->save();
 
+            if ($report->draft_flg == 1 && $request->draft_flg == 0) {
+                $report->where('id', $report->id)->update([
+                    'created_at' => date('Y-m-d G:i'),
+                    'draft_flg' => 0,
+                ]);
+            }
+
             //写真情報登録
             $fileName = NULL;
             $originalName = NULL;
@@ -713,6 +734,9 @@ class ReportController extends Controller
             }
         });
 
+
+
+
         // バックボタンの戻り先ページを設定
         $request->session()->flash('backButton', [
             "url" => route('reports.mine'),
@@ -746,8 +770,5 @@ class ReportController extends Controller
         $reports = $reports->paginate(10)->withQueryString();
 
         echo json_encode($reports);
-       
     }
-
-    
 }

@@ -271,6 +271,15 @@ a.Link_item {
               </v-list-item>
 
 
+              <v-list-item class="mt-4">
+                <v-select dense filled clearable multiple label="所属部署" hint="表示する所属部署を選択してください" persistent-hint
+                      :items="department_list" name="department"
+                      v-model="form.department">
+                    </v-select>
+
+              </v-list-item>
+
+
               <v-list-item class="mt-4"
                 v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
                 <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="開始表示期間" class="mx-5"
@@ -351,6 +360,7 @@ export default {
 
   props: ['reports', 'form_params', 'client', 'user', 'report_url','is_phone'],
 
+  
 
   data() {
 
@@ -374,6 +384,8 @@ export default {
         }).length,
 
       count: 0,
+      department_list: ['CCD', 'TCD', 'ICTS', '経理', 'WSD', 'MGT','BPD'],
+
 
     };
   },

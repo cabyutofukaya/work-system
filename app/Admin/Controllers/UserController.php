@@ -159,8 +159,19 @@ class UserController extends BaseController
             ->rules(["nullable", 'regex:/^[0-9][-0-9]+[0-9]$/'])
             ->help("半角数字とハイフンのみで入力してください");
 
-        $form->text('department', $this->trans('department', 'users'))
-            ->rules(['nullable' ,"string"]);
+        // $form->text('department', $this->trans('department', 'users'))
+        //     ->rules(['nullable' ,"string"]);
+
+            $form->select('department', $this->trans('department', 'users'))
+            ->options([
+                'CCD' => 'CCD',
+                'TCD' => 'TCD',
+                'ICTS' => 'ICTS',
+                '経理' => '経理',
+                'WSD' => 'WSD',
+                'MGT' => 'MGT',
+                'BPD' => 'BPD',
+            ]);
 
         $form->checkbox('products', $this->trans('products', 'users'))->options(Product::all()->pluck('name', 'id'));
 

@@ -30,7 +30,9 @@ class Report extends BaseReport implements Auditable
         'user_id',
         'is_private',
         'comment_updated_at',
-        'created_at'
+        'created_at',
+        'time',
+        'draft_flg',
     ];
 
     /**
@@ -53,6 +55,7 @@ class Report extends BaseReport implements Auditable
         'is_private' => 'bool',
         // 親クラスの値に追加
         'date' => 'date:Y-m-d',
+        'time' => 'string',
     ];
 
     /**
@@ -152,6 +155,18 @@ class Report extends BaseReport implements Auditable
     {
         return $query->where('is_private', false);
     }
+
+     /**
+     * クエリスコープ 下書きの項目を除外する
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeExceptDraftFlg(Builder $query): Builder
+    {
+        return $query->where('draft_flg', 0);
+    }
+
 
     /**
      * 削除済みのメンバーを含む会社情報を得する会社するリレーション

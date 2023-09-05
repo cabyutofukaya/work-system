@@ -52,8 +52,8 @@
             <v-col cols="12" sm="" class="text-h6">
               <div style="display: flex;">
 
-
-                {{ report.created_at.substr(0, 16) }}
+                {{ report.created_at.substr(0,16) }}
+                <!-- {{ report.date }}   {{ report.time }} -->
                 <!-- <span class="ml-2">{{ report.created_at.substr(11,5) }}</span> -->
 
                 <template v-if="!report.user.deleted_at">
@@ -121,8 +121,7 @@
 
         </v-card-text>
 
-        <v-card-text class="text-right" v-if="!is_phone">
-          <!-- <BackButton></BackButton> -->
+        <!-- <v-card-text class="text-right" v-if="!is_phone">
           <a :href=report_url>
             <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
               <v-icon left>
@@ -131,7 +130,7 @@
               戻る
             </v-btn>
           </a>
-        </v-card-text>
+        </v-card-text> -->
 
         <div v-for="report_content in report['report_contents']" :key="report_content.id">
           <template v-if="report_content.type === 'work'">
@@ -399,7 +398,7 @@
               <v-col cols="12" sm="3">
                 <div class="mb-2">
                   <h4>{{ report_comment.user.name }}</h4>
-                  {{ report_comment['created_at'] }}
+                  {{ report_comment['date'] }} {{ report_comment['time'] }}
                 </div>
               </v-col>
 

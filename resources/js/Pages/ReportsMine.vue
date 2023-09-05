@@ -84,6 +84,7 @@
                   <v-col sm="6">
                     <a :href="$route('reports.show', {id: report.id})">
                     <span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span>
+                    <span v-if="report.draft_flg == 1">(下書き)</span>
                   </a>
                   </v-col>
                 </template>
@@ -96,7 +97,8 @@
                       <!-- {{ report.date }} -->
                     </div>
                     <div>
-                      <a :href="$route('reports.show', {id: report.id})"></a><span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span> </a></div>
+                      <a :href="$route('reports.show', {id: report.id})"></a><span v-if="report['report_contents_sales_exists']">営業日報</span><span v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span v-if="report['report_contents_work_exists']">業務日報</span> 
+                      <span v-if="report.draft_flg == 1">(下書き)</span></a></div>
                   </v-col>
                 </template>
 
