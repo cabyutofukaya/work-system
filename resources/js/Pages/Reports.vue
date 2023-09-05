@@ -391,7 +391,38 @@ export default {
   },
 
   mounted(){
-    window.moveTo(0,-200);
+    // window.moveTo(0,-200);
+
+   
+    // this.$nextTick(() => {
+
+    //   let entries = performance.getEntriesByType("navigation");
+    
+    //   if (sessionStorage.getItem("scrollY") != null) {
+    //     alert(sessionStorage.getItem("scrollY"));
+    //       window.scrollTo(0, sessionStorage.getItem("scrollY"));
+    //   }
+    // })();
+    
+    // window.addEventListener("beforeunload", () => {
+    //   sessionStorage.setItem("scrollY", window.scrollY);
+    // });
+
+    
+    // window.onload = ()=>{
+    //     // alert('ページが読み込まれました！')
+    //     // window.moveBy(0,-1000);
+
+    //   // window.scrollBy(0, window.innerHeight);
+    //   window.setTimeout(alert(), 50000);
+      
+    //   // const scrollY = window.scrollY || window.pageYOffset
+    //   // window.scrollTo({
+    //   //   top: scrollY - 1000,
+    //   //   behavior: 'smooth'
+    //   // });
+    //   alert('ページが読み込まれました！');
+    // }
     // console.log(this.reports);
     // console.log(this.report_url);
 

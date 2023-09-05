@@ -506,7 +506,35 @@ class ReportController extends Controller
             ->makeHidden("email");
 
         $report_url = session()->get('report_url');
-        $report_url = $report_url . '#report_' . $report->id;
+
+
+      
+
+        $newReportData = DB::table('reports')
+        ->select('id')
+        ->where('reports.id', '>', $report->id)
+        ->where('reports.draft_flg', 0)
+        ->where('reports.is_private', 0)
+        ->orderBy('reports.id')
+        ->get();
+
+        $report_visitors = [];
+        $tmp_id = 0;
+
+        foreach($newReportData as $reportData){
+            $report_visitors = DB::table('report_visitors')
+            ->where('report_id',$reportData->id)
+            ->where('user_id',Auth::id())
+            ->first();
+
+            if(!$report_visitors){
+                $tmp_id = $reportData->id;
+                break;
+            }
+         
+        }
+        
+        $report_url = $report_url . '#report_' . $tmp_id;
 
         return inertia('ReportsShow', [
             'report' => $report,
