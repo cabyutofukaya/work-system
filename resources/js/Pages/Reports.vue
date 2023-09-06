@@ -391,6 +391,18 @@ export default {
   },
 
   mounted(){
+
+    this.$nextTick(function() {
+      // nextTickを使用してコンソールにログを出力します。
+      setTimeout(function(){
+        window.scrollBy(0, -100);
+        console.log('uuuu');
+      },500);
+     
+     
+     
+    });
+
     // window.moveTo(0,-200);
 
    

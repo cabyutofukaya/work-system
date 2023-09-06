@@ -39,6 +39,7 @@ class ReportContent extends BaseReportContent implements Auditable
         'file_name',
         'required_time',
         'departments',
+        'position',
     ];
 
     /**

@@ -96,9 +96,9 @@
                 </div>
 
 
-                <span v-if="report_content.departments">
+                <span v-if="report_content.departments || report_contents.position">
                   <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
-                  {{ report_content.departments }}
+                  <span v-if="report_content.departments">{{ report_content.departments }}</span><span v-if="report_content.position"> {{ report_content.position  }}</span>
                 </span>
 
 
@@ -417,9 +417,17 @@
 
               <!-- 部署名 / 役職名 -->
               <v-list-item v-if="reportContentForm.type === 'sales'">
-                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名 / 役職名" maxlength="200"
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名" maxlength="200"
                   name="departments" v-model="reportContentForm.departments"></v-text-field>
               </v-list-item>
+
+                 <!-- 部署名 / 役職名 -->
+                 <v-list-item v-if="reportContentForm.type === 'sales'">
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="役職名" maxlength="200"
+                  name="position" v-model="reportContentForm.position"></v-text-field>
+              </v-list-item>
+
+              
 
               <!-- 面談者 -->
               <v-list-item v-if="reportContentForm.type === 'sales'">
@@ -607,6 +615,7 @@ export default {
         product_evaluation: {},
         required_time: undefined,
         departments: undefined,
+        position:undefined,
       },
 
       // 追加ダイアログフォームデータ
@@ -811,7 +820,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments","position"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 

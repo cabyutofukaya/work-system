@@ -418,6 +418,7 @@ class ReportController extends Controller
                     'product_description' => $report_content['product_description'] ?? null,
                     'required_time' => $report_content['required_time'] ?? null,
                     'departments' => $report_content['departments'] ?? null,
+                    'position' => $report_content['position'] ?? null,
                 ]);
 
                 // 商材評価情報を保存
@@ -566,7 +567,7 @@ class ReportController extends Controller
 
         $report->load([
             'user:id,name,deleted_at',
-            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description,required_time,departments',
+            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description,required_time,departments,position',
             'report_contents.client',
             'report_contents.branch',
             'report_contents.sales_method',
@@ -720,6 +721,8 @@ class ReportController extends Controller
                             'product_description' => $report_content['product_description'] ?? null,
                             'required_time' => $report_content['required_time'] ?? null,
                             'departments' => $report_content['departments'] ?? null,
+                            'position' => $report_content['position'] ?? null,
+                            
                         ],
                     );
                 } else {
@@ -736,6 +739,8 @@ class ReportController extends Controller
                         'product_description' => $report_content['product_description'] ?? null,
                         'required_time' => $report_content['required_time'] ?? null,
                         'departments' => $report_content['departments'] ?? null,
+                        'position' => $report_content['position'] ?? null,
+                        
                     ]);
                 }
 

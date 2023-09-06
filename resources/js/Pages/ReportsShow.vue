@@ -52,7 +52,9 @@
             <v-col cols="12" sm="" class="text-h6">
               <div style="display: flex;">
 
-                {{ report.created_at.substr(0,16) }}
+                <span v-if="report.draft_flg == 0">{{ report.created_at.substr(0,16) }}</span>
+                <span v-if="report.draft_flg == 1">{{ report.created_at.substr(0,10) }}</span>
+                <span v-if="report.draft_flg == 1" style="font-size: xx-small;vertical-align:bottom;">  (下書き)</span>
                 <!-- {{ report.date }}   {{ report.time }} -->
                 <!-- <span class="ml-2">{{ report.created_at.substr(11,5) }}</span> -->
 
@@ -231,9 +233,9 @@
                       </div>
                     </div>
 
-                    <span v-if="report_content.departments">
+                    <span v-if="report_content.departments || report_content.position">
                 <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
-                {{ report_content.departments }}
+                {{ report_content.departments }} {{ report_content.position }}
               </span>
 
 

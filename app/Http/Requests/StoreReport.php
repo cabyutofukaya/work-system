@@ -58,6 +58,8 @@ class StoreReport extends FormRequest
 
             'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
             'report_contents.*.departments' => ['nullable','string'],
+            'report_contents.*.position' => ['nullable','string'],
+            
 
             // 'report_contents.*.file' => ['nullable','max:2028','mimes:jpg,jpeg,png,gif'],
             'report_contents.*.product_evaluation' => ['nullable', 'array'],
