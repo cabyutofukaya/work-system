@@ -98,7 +98,8 @@
 
                 <span v-if="report_content.departments || report_content.position">
                   <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
-                  <span v-if="report_content.departments">{{ report_content.departments }}</span><span v-if="report_content.position"> {{ report_content.position  }}</span>
+                  <span v-if="report_content.departments">{{ report_content.departments }}</span><span
+                    v-if="report_content.position"> {{ report_content.position }}</span>
                 </span>
 
                 <h4 class="mt-2 mb-1">面談者</h4>
@@ -345,6 +346,8 @@
                   </v-select>
                 </v-list-item>
 
+
+
                 <!-- 営業所リスト -->
                 <v-list-item>
                   <v-select v-if="!reportContentForm.client_id" dense filled clearable label="営業所" disabled>
@@ -363,6 +366,26 @@
                     </template>
                   </v-select>
                 </v-list-item>
+
+                <!-- <v-list-item>
+
+
+                  <span class="ml-auto" v-if="reportContentForm.client_id">
+
+
+                    <a :href="'/clients/' + reportContentForm.client_id + '/branches/create'" target="_blank">
+                      <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs">
+                        営業所を新規追加
+                      </v-btn>
+                    </a>
+
+                    <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs"
+                      @click="getClients(reportContentForm.client_id)"> <v-icon>
+                        mdi-reload
+                      </v-icon></v-btn>
+
+                  </span>
+                </v-list-item> -->
 
                 <v-divider class="my-4"></v-divider>
               </template>

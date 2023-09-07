@@ -184,6 +184,12 @@ class UserController extends BaseController
             }
         });
 
+        $form->select('admin_report', '日報管理者')
+        ->options([
+            '0' => '0',
+            '1' => '1',
+        ]);
+
         return $form;
     }
 }

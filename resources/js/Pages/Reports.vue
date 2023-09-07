@@ -264,7 +264,7 @@ a.Link_item {
 
 
               <v-list-item class="mt-4"
-                v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
+                v-if="user.admin_report == 1">
                 <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅" persistent-hint name="is_zaitaku"
                   v-model="form.is_zaitaku" true-value="1" false-value="" :error="Boolean(form.errors.is_zaitaku)"
                   :error-messages="form.errors.is_zaitaku"></v-switch>
@@ -281,7 +281,7 @@ a.Link_item {
 
 
               <v-list-item class="mt-4"
-                v-if="$page.props.auth.user.id == 7 || $page.props.auth.user.id == 33 || $page.props.auth.user.id == 41 || $page.props.auth.user.id == 88 || $page.props.auth.user.id == 9">
+              v-if="user.admin_report == 1">
                 <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="開始表示期間" class="mx-5"
                   hint="表示を絞り込む開始期間を記載してください" persistent-hint type="date" name="start_date" v-model="form.start_date"
                   maxlength="200" :error="Boolean(form.errors.start_date)" :error-messages="form.errors.start_date"

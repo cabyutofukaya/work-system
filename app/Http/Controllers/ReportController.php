@@ -103,6 +103,7 @@ class ReportController extends Controller
 
             'report_url' => $report_url,
             'is_phone' => $isPhone,
+            'user' => Auth::user(),
         ]);
     }
 
