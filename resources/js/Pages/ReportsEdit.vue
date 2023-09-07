@@ -96,10 +96,12 @@
                 </div>
 
 
-                <span v-if="report_content.departments || report_contents.position">
-                  <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
-                  <span v-if="report_content.departments">{{ report_content.departments }}</span><span v-if="report_content.position"> {{ report_content.position  }}</span>
-                </span>
+                <!-- <span v-if="report_content.departments || report_contents.position"> -->
+                <div style="display: flex;">
+                  <h4 class="mt-2 mb-1"  v-if="report_content.departments">部署名</h4><h4 class="mt-2 mb-1" v-if="report_content.position"> &nbsp;役職名</h4>
+                </div>
+                <span v-if="report_content.departments">{{ report_content.departments }}</span><span v-if="report_content.position"> &nbsp;{{ report_content.position  }}</span>
+                <!-- </span> -->
 
 
                 <h4 class="mt-2 mb-1">面談者</h4>
@@ -614,8 +616,8 @@ export default {
         product_description: "",
         product_evaluation: {},
         required_time: undefined,
-        departments: undefined,
-        position:undefined,
+        departments: "",
+        position:"",
       },
 
       // 追加ダイアログフォームデータ

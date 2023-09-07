@@ -535,7 +535,10 @@ class ReportController extends Controller
          
         }
         
-        $report_url = $report_url . '#report_' . $tmp_id;
+        if($tmp_id != 0){
+            $report_url = $report_url . '#report_' . $tmp_id;
+        }
+     
 
         return inertia('ReportsShow', [
             'report' => $report,

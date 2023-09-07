@@ -31,7 +31,6 @@ class Report extends BaseReport implements Auditable
         'is_private',
         'comment_updated_at',
         'created_at',
-        'time',
         'draft_flg',
     ];
 
