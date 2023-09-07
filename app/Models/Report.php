@@ -102,7 +102,7 @@ class Report extends BaseReport implements Auditable
         // 更新日時逆に並べる
         static::addGlobalScope('order', function (Builder $builder) {
             // $builder->orderByDesc('updated_at')->orderByDesc('id');
-            $builder->orderByDesc('updated_at')->orderByDesc('id');
+            $builder->orderByDesc('created_at')->orderByDesc('id');
         });
 
         // 最新の評価の更新 日付・非公開情報が変更された場合に再生成する
