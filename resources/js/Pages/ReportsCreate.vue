@@ -328,20 +328,23 @@
                   <v-select v-if="!clientsListEnable" dense filled clearable label="会社" disabled>
                   </v-select>
                   <v-select v-if="clientsListEnable" dense filled clearable label="会社" :items="clients" item-value="id"
-                    name="client_id" v-model="reportContentForm.client_id"
+                    name="client_id" v-model="reportContentForm.client_id" 
                     :error="Boolean(reportContentFormError.client_id)" :error-messages="reportContentFormError.client_id"
                     @change="reportContentFormError.client_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
                       <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
                         :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }} 
+                      {{ item.name }}   <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{ item.prefecture }})</span>
+                      
+                      
+                      <!-- <span v-if="item.prefecture" class="font-weight-thin text-body-2">{{ item.prefecture }}</span> <span v-if="item.address" class="font-weight-thin">{{ item.address }}</span> -->
                     </template>
                     <!-- カスタム選択肢表示 -->
                     <template v-slot:item="{ item }">
                       <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
                         :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }} <span v-if="item.prefecture" class="font-weight-thin">{{ item.prefecture }}</span> <span v-if="item.address" size="x-small">{{ item.address }}</span>
+                      {{ item.name }} <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{ item.prefecture }})</span>
                     </template>
                   </v-select>
                 </v-list-item>
