@@ -76,7 +76,8 @@ class ReportController extends Controller
         } else {
             $reports = $reports->paginate()->withQueryString();
         }
-
+        
+ 
         return inertia('Reports', [
 
             'reports' => $reports,
@@ -173,7 +174,7 @@ class ReportController extends Controller
                     $query->where('is_readed', 0);
                 },
                 'report_contents as is_zaitaku' => function ($query) {
-                    $query->where('is_zaitaku', 0);
+                    $query->where('is_zaitaku', 1);
                 },
             ])
             ->withCount([

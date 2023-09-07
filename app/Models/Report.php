@@ -203,6 +203,17 @@ class Report extends BaseReport implements Auditable
         return $this->report_contents()->ofType('work');
     }
 
+
+      /**
+     * 在宅のみを取得するリレーション
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function report_contents_is_zaitaku(): HasMany
+    {
+        return $this->report_contents()->of_is_zaitaku(1);
+    }
+
     /**
      * いいね情報を取得するリレーション
      *

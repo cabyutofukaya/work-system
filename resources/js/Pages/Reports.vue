@@ -135,7 +135,7 @@ a.Link_item {
                     </a>
 
     
-                    <span v-if="!report['is_zaitaku']">(在宅)</span>
+                    <span v-if="report['is_zaitaku']">(在宅)</span>
                   </v-col>
 
 
@@ -153,8 +153,8 @@ a.Link_item {
                       <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
                         <span v-if="report['report_contents_sales_exists']">営業日報</span><span
                           v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                          v-if="report['report_contents_work_exists']">業務日報</span></a> <span
-                        v-if="!report['is_zaitaku']">(在宅)</span>
+                          v-if="report['report_contents_work_exists']">業務日報</span></a> 
+                          <span v-if="report['is_zaitaku']">(在宅)</span>
                     </div>
 
                   </v-col>
@@ -361,8 +361,11 @@ export default {
   props: ['reports', 'form_params', 'client', 'user', 'report_url','is_phone'],
 
   
+ 
 
   data() {
+
+    console.log(this.reports['data']);
 
     return {
       // ページ情報の初期値
