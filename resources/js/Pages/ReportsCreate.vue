@@ -335,13 +335,13 @@
                     <template v-slot:selection="{ item }">
                       <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
                         :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }}
+                      {{ item.name }} 
                     </template>
                     <!-- カスタム選択肢表示 -->
                     <template v-slot:item="{ item }">
                       <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
                         :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }}
+                      {{ item.name }} <span v-if="item.prefecture" class="font-weight-thin">{{ item.prefecture }}</span> <span v-if="item.address" size="x-small">{{ item.address }}</span>
                     </template>
                   </v-select>
                 </v-list-item>
@@ -367,7 +367,7 @@
                   </v-select>
                 </v-list-item>
 
-                <!-- <v-list-item>
+                <v-list-item>
 
 
                   <span class="ml-auto" v-if="reportContentForm.client_id">
@@ -385,7 +385,7 @@
                       </v-icon></v-btn>
 
                   </span>
-                </v-list-item> -->
+                </v-list-item>
 
                 <v-divider class="my-4"></v-divider>
               </template>

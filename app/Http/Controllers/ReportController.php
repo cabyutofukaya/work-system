@@ -182,6 +182,7 @@ class ReportController extends Controller
                 'report_comments',
             ]);
 
+
         // 会社検索
         if ($request->filled('client_id')) {
             $reports->whereHas('report_contents', function ($query) use ($validator) {
@@ -351,7 +352,7 @@ class ReportController extends Controller
             'genres' => fn () => Genre::get(),
             'clients_total_count' => fn () => Client::count(),
             'clients_count' => Inertia::lazy(fn () => $clients->count()),
-            'clients' => Inertia::lazy(fn () => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
+            'clients' => Inertia::lazy(fn () => $clients->get(["id", "client_type_id", "name", "name_kana", "image","prefecture","address"])),
             'products' => fn () => Product::get(),
             'evaluations' => fn () => Evaluation::get(),
             'sales_methods' => fn () => SalesMethod::get(),

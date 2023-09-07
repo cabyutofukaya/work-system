@@ -378,7 +378,7 @@
                     <template v-slot:selection="{ item }">
                       <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
                         :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }}
+                      {{ item.name }} <span v-if="item.prefecture" class="">{{ item.prefecture }}</span> <span v-if="item.address">{{ item.address }}</span>
                     </template>
                     <!-- カスタム選択肢表示 -->
                     <template v-slot:item="{ item }">
@@ -399,7 +399,7 @@
                     @change=" reportContentFormError.branch_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
-                      {{ item.name }}
+                      {{ item.name }} 
                     </template>
                     <!-- カスタム選択肢表示 -->
                     <template v-slot:item="{ item }">
@@ -407,6 +407,26 @@
                     </template>
                   </v-select>
                 </v-list-item>
+
+                <v-list-item>
+
+
+<span class="ml-auto" v-if="reportContentForm.client_id">
+
+
+  <a :href="'/clients/' + reportContentForm.client_id + '/branches/create'" target="_blank">
+    <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs">
+      営業所を新規追加
+    </v-btn>
+  </a>
+
+  <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs"
+    @click="getClients(reportContentForm.client_id)"> <v-icon>
+      mdi-reload
+    </v-icon></v-btn>
+
+</span>
+</v-list-item>
 
                 <v-divider class="my-4"></v-divider>
               </template>
