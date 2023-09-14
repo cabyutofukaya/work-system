@@ -79,9 +79,12 @@ class ClientController extends Controller
             $clients
                 ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%')
                 // 営業所の所在地からも検索
-                ->orWhereHas('branches', function ($query) use ($validated) {
+                ->whereHas('branches', function ($query) use ($validated) {
                     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
                 });
+                // ->orWhereHas('branches', function ($query) use ($validated) {
+                //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+                // });
         }
 
         // 営業エリア検索
