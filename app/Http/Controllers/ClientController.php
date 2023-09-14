@@ -134,7 +134,7 @@ class ClientController extends Controller
             });
         }
 
-        dd($clients->toSql(), $clients->getBindings());
+        // dd($clients->toSql(), $clients->getBindings());
 
 
         return inertia('Clients', [
