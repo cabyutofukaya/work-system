@@ -123,7 +123,7 @@
 
         </v-card-text>
 
-        <!-- <v-card-text class="text-right" v-if="!is_phone">
+        <v-card-text class="text-right" v-if="!is_phone">
           <a :href=report_url>
             <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
               <v-icon left>
@@ -132,7 +132,7 @@
               戻る
             </v-btn>
           </a>
-        </v-card-text> -->
+        </v-card-text>
 
         <div v-for="report_content in report['report_contents']" :key="report_content.id">
           <template v-if="report_content.type === 'work'">

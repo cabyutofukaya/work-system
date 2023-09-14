@@ -23,6 +23,7 @@
           <v-row>
             <v-col cols="12" sm="4" class="align-self-center">
               <h4>公開/非公開</h4>
+              <span>※デフォルトは公開</span>
             </v-col>
 
             <v-col>

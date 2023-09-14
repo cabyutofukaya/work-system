@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <v-table>
+    <v-table border="1">
       <thead>
         <tr>
           <th class="text-left">Name</th>
@@ -8,14 +8,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in desserts" :key="item.name">
-          <td>{{ item.name }}</td>
-          <td>{{ item.calories }}</td>
+        <tr v-for="(item, index) in desserts" :key="item.name">
+          <td>{{ index }}</td>
+          <td>{{ index }}</td>
         </tr>
       </tbody>
     </v-table>
   </Layout>
 </template>
+
+<script src="https://unpkg.com/vue@3.2.26/dist/vue.global.js"></script>
 
 <script>
 import Layout from "./Layout";
