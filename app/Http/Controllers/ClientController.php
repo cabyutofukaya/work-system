@@ -79,9 +79,9 @@ class ClientController extends Controller
             $clients
                 ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
 
-                $clients->orWhereHas('branches', function ($query) use ($validated) {
-                    $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
-                });
+                // $clients->orWhereHas('branches', function ($query) use ($validated) {
+                //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+                // });
 
                 // 営業所の所在地からも検索
                 // ->whereHas('branches', function ($query) use ($validated) {
@@ -133,6 +133,9 @@ class ClientController extends Controller
                 $query->orWhereLike('description', $validated["vehicle"]);
             });
         }
+
+        dd($clients->toSql(), $clients->getBindings());
+
 
         return inertia('Clients', [
             // 会社タイプ情報
