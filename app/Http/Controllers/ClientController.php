@@ -77,14 +77,19 @@ class ClientController extends Controller
         // 所在地検索
         if ($request->filled('address')) {
             $clients
-                ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%')
+                ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+
+                $clients->orWhereHas('branches', function ($query) use ($validated) {
+                    $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+                });
+
                 // 営業所の所在地からも検索
                 // ->whereHas('branches', function ($query) use ($validated) {
                 //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
                 // });
-                ->orWhereHas('branches', function ($query) use ($validated) {
-                    $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
-                });
+                // ->orWhereHas('branches', function ($query) use ($validated) {
+                //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+                // });
         }
 
         // 営業エリア検索
