@@ -540,13 +540,11 @@ class ReportController extends Controller
         
         if($tmp_id != 0){
             $report_url = $report_url . '#report_' . $tmp_id;
-        }
-
-        if($isPhone){
+        }else{
             $report_url = $report_url . '#report_' . $report->id;
         }
-     
 
+    
         return inertia('ReportsShow', [
             'report' => $report,
             'report_comment' => $report,
