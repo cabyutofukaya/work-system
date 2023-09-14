@@ -79,17 +79,35 @@ class ClientController extends Controller
             $clients
                 ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
 
-                // $clients->orWhereHas('branches', function ($query) use ($validated) {
-                //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
-                // });
+            // $clients->orWhereHas('branches', function ($query) use ($validated) {
+            //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+            // });
 
-                // 営業所の所在地からも検索
-                // ->whereHas('branches', function ($query) use ($validated) {
-                //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
-                // });
-                // ->orWhereHas('branches', function ($query) use ($validated) {
-                //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
-                // });
+            // 営業所の所在地からも検索
+            // ->whereHas('branches', function ($query) use ($validated) {
+            //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+            // });
+            // ->orWhereHas('branches', function ($query) use ($validated) {
+            //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["address"], '%_\\') . '%');
+            // });
+        }
+
+        // 営業所検索
+        if ($request->filled('branch')) {
+
+            $clients->where(function($query) use($validated){
+                $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%')
+                      ->orWhereHas('branches', function ($query) use ($validated) {
+                        $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
+                    });
+            });
+
+            // $clients
+            // ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
+
+            // $clients->whereHas('branches', function ($query) use ($validated) {
+            //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
+            // });
         }
 
         // 営業エリア検索
@@ -154,6 +172,7 @@ class ClientController extends Controller
             'form_params' => [
                 'word' => $validated["word"] ?? null,
                 'address' => $validated["address"] ?? null,
+                'branch' => $validated["branch"] ?? null,
                 'business_district' => $validated["business_district"] ?? null,
                 'category' => $validated["category"] ?? null,
                 'genre_id' => array_key_exists("genre_id", $validated) ? (int)$validated["genre_id"] : null,
@@ -196,8 +215,8 @@ class ClientController extends Controller
             if ($client->lat && $client->lng) {
                 $markers[] = [
                     "position" => [
-                        "lat" => (double)$client->lat,
-                        "lng" => (double)$client->lng,
+                        "lat" => (float)$client->lat,
+                        "lng" => (float)$client->lng,
                     ],
                     "content" => $client->only(["id", "name", "prefecture", "address", "icon_image_url"])
                 ];
@@ -254,7 +273,7 @@ class ClientController extends Controller
             $form_columns["client_type_" . $client_type_id][$column] = null;
         }
 
-      
+
 
         return inertia('ClientsCreate', [
             // 都道府県
@@ -271,9 +290,9 @@ class ClientController extends Controller
             'client_type_column_names' => Lang::get('validation.attributes.client_type_' . $client_type_id),
             // 位置情報初期値
             'location_default' => config("const.location_default"),
-             // 社内担当者リスト
-             'charges' => User::ofClientType($client_type_id)->get(["id", "name"]),
-         
+            // 社内担当者リスト
+            'charges' => User::ofClientType($client_type_id)->get(["id", "name"]),
+
         ]);
     }
 
@@ -470,8 +489,8 @@ class ClientController extends Controller
             'location_default' => config("const.location_default"),
             // 社内担当者リスト
             'charges' => User::ofClientType($client->client_type_id)->get(["id", "name"]),
-             // 社内担当者リスト情報
-             'charge_ids' => $client->charges()->get()->pluck("id"),
+            // 社内担当者リスト情報
+            'charge_ids' => $client->charges()->get()->pluck("id"),
         ]);
     }
 
@@ -484,7 +503,7 @@ class ClientController extends Controller
      */
     public function update(UpdateClient $request, Client $client): RedirectResponse
     {
-        
+
         // 会社情報
         $client->fill($request->validated());
 
@@ -544,7 +563,7 @@ class ClientController extends Controller
     }
 
 
-     /**
+    /**
      * Show the form for creating a new resource.
      *
      * @param $client_type_id

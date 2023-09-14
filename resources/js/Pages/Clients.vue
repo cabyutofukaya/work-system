@@ -134,8 +134,14 @@
 
               <v-list-item>
                 <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" name="address" label="所在地検索"
-                  hint="本部または営業所の所在地に指定したワードを含む項目に絞り込みます" persistent-hint maxlength="200"
+                  hint="本社登録をした所在地に指定したワードを含む項目に絞り込みます" persistent-hint maxlength="200"
                   v-model="form['address']"></v-text-field>
+              </v-list-item>
+
+              <v-list-item>
+                <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" name="branch" label="営業所検索"
+                  hint="営業所に指定したワードを含む項目に絞り込みます" persistent-hint maxlength="200"
+                  v-model="form['branch']"></v-text-field>
               </v-list-item>
 
               <v-list-item v-if="client_type.id === 'taxibus'">

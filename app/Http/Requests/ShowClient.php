@@ -39,6 +39,7 @@ class ShowClient extends FormRequest
         return [
             'word' => ['nullable', 'max:255'],
             'address' => ['nullable', 'max:255'],
+            'branch' => ['nullable', 'max:255'],
             'business_district' => ['nullable', 'max:255'],
             'category' => ['nullable', 'in:' . implode(",", array_keys(config("const.client_types.taxibus.categories")))],
             'genre_id' => ['nullable', Rule::exists('genres', "id")],
