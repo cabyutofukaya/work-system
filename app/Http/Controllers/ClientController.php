@@ -156,8 +156,6 @@ class ClientController extends Controller
             });
         }
 
-        dd($clients->toSql(), $clients->getBindings());
-
 
         return inertia('Clients', [
             // 会社タイプ情報
