@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreNotice;
 use App\Http\Requests\UpdateNotice;
 use App\Models\Notice;
+use App\Models\NoticeFile;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
@@ -33,7 +34,7 @@ class NoticeController extends Controller
             ::with(['user:id,name,deleted_at'])
             ->paginate();
 
-            // dd($notices);
+        // dd($notices);
 
         return inertia('Notices', [
             'notices' => $notices,
@@ -49,9 +50,42 @@ class NoticeController extends Controller
     public function store(StoreNotice $request): \Illuminate\Http\RedirectResponse
     {
 
-        (new Notice())
-            ->fill($request->safe()->merge(['user_id' => Auth::id()])->all())
+        $notice = new Notice();
+     
+        $notice->fill($request->safe()->merge(['user_id' => Auth::id()])->all())
             ->save();
+
+        //写真情報登録
+        $fileName = NULL;
+        $originalName = NULL;
+        $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
+
+        if (isset($request->file_name)) {
+
+            $notice_id = $notice->id;
+
+            foreach ($request->file_name as $file) {
+
+                $originalName = $file->getClientOriginalName();
+
+                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
+                $file->storeAs('', '/public/notice/' . $fileName);
+
+                $type = 'image';
+                if (in_array($extension, $extension_list)) {
+                    $type = 'file';
+                }
+
+                $notice_file = new NoticeFile();
+                $notice_file->create([
+                    'type' => $type,
+                    'name' => $originalName,
+                    'path' => $fileName,
+                    'notice_id' => $notice_id,
+                ]);
+            }
+        }
 
         // バックボタンの戻り先ページを設定
         $request->session()->flash('backButton', [
@@ -69,12 +103,15 @@ class NoticeController extends Controller
      */
     public function show(Notice $notice): Response|ResponseFactory
     {
-    
-        $notice->load(['user:id,name,deleted_at']);
+
+        $notice->load([
+            'user:id,name,deleted_at',
+            'notice_files',
+        ]);
 
         return inertia('NoticesShow', [
             'notice' => $notice,
-            'user' => User::where('id',$notice->user_id)->first(),
+            'user' => User::where('id', $notice->user_id)->first(),
         ]);
     }
 
@@ -88,6 +125,38 @@ class NoticeController extends Controller
     public function update(UpdateNotice $request, Notice $notice): \Illuminate\Http\RedirectResponse
     {
         $notice->fill($request->validated())->save();
+
+          //写真情報登録
+          $fileName = NULL;
+          $originalName = NULL;
+          $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
+  
+          if (isset($request->file_name)) {
+  
+              $notice_id = $notice->id;
+  
+              foreach ($request->file_name as $file) {
+  
+                  $originalName = $file->getClientOriginalName();
+  
+                  $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                  $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
+                  $file->storeAs('', '/public/notice/' . $fileName);
+  
+                  $type = 'image';
+                  if (in_array($extension, $extension_list)) {
+                      $type = 'file';
+                  }
+  
+                  $notice_file = new NoticeFile();
+                  $notice_file->create([
+                      'type' => $type,
+                      'name' => $originalName,
+                      'path' => $fileName,
+                      'notice_id' => $notice_id,
+                  ]);
+              }
+          }
 
         return redirect()->route('notices.show', ['notice' => $notice->id]);
     }

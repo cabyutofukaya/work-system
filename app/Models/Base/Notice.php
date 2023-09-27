@@ -7,6 +7,7 @@
 namespace App\Models\Base;
 
 use App\Models\User;
+use App\Models\NoticeFile;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,5 +39,10 @@ class Notice extends Model
 	public function user()
 	{
 		return $this->belongsTo(User::class);
+	}
+
+	public function notice_files()
+	{
+		return $this->hasMany(NoticeFile::class);
 	}
 }

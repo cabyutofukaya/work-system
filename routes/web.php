@@ -25,6 +25,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ReportFileController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserScheduleController;
+use App\Http\Controllers\NoticeFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -158,6 +159,11 @@ Route::group(['middleware' => 'auth'], function () {
     // 日報一覧取得
     Route::get('/api/reports', [ReportController::class, "api_data"]);
 
+    // お知らせのファイル削除
+    Route::post('notices/file/delete', [NoticeFileController::class, "destroy"])->name('notices-file.delete');
+
+    // お知らせのファイル追加
+    Route::post('notices/file/add', [NoticeFileController::class, "update"])->name('notices.update_file');
 
 });
 

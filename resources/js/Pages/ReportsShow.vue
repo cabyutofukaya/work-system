@@ -343,8 +343,6 @@
                   </div>
                 </a>
 
-                <!-- <v-img :width="200" :height="150" cover :src="`/storage/report/${report_file.path}`"
-                  v-if="report_file.type == 'image'"></v-img> -->
               </v-row>
             </div>
           </v-card-text>

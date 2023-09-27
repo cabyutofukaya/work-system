@@ -74,6 +74,12 @@
           <v-textarea dense filled prepend-inner-icon="mdi-pencil" label="本文" name="description"
             v-model="form.description" :error="Boolean(form.errors.description)"
             :error-messages="form.errors.description"></v-textarea>
+
+
+            <v-file-input chips prepend-icon="" multiple prepend-inner-icon="mdi-paperclip" name="file_name"
+                id="file_name" label="ファイルを選択する" v-model="form.file_name"
+                accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"></v-file-input>
+
         </v-card-text>
 
         <v-card-text class="text-center">
@@ -120,6 +126,7 @@ export default {
       form: this.$inertia.form({
         title: null,
         description: null,
+        file_name: undefined,
       }),
 
       loading: {},

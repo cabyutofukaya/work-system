@@ -70,6 +70,44 @@
         <span style="white-space: pre-line;">{{ notice["description"] }}</span>
       </v-card-text>
 
+      <v-card-text>
+        <div v-for="(notice_file) in notice['notice_files']" :key="notice_file.id">
+
+          <v-card-text>
+            <div class="notice-description-list">
+
+              <v-row class="lighten-3 px-6">
+                <a :href="`/storage/notice/${notice_file.path}`" :download="`${notice_file.name}`"
+                  v-if="notice_file.type == 'file'">
+                  <div class="text-right mt-2">
+                    {{ notice_file.name }}
+                  </div>
+                </a>
+
+                <a :href="`/storage/notice/${notice_file.path}`" :download="`${notice_file.name}`"
+                  v-if="notice_file.type == 'image'">
+                  <div class="text-right my-3">
+                    <v-img :width="150" :height="120" cover :src="`/storage/notice/${notice_file.path}`"></v-img>
+                  </div>
+                </a>
+
+
+                <v-icon class="ml-5 mb-a" size="x-large" color="error"
+                  @click="deleteFile(notice_file.id)">mdi-delete-outline</v-icon>
+
+              </v-row>
+            </div>
+          </v-card-text>
+        </div>
+      </v-card-text>
+
+      <Button :small="$vuetify.breakpoint.xs" class="ml-2" @click.native="showDialogFile = true">
+        <v-icon left>
+          mdi-pencil
+        </v-icon>
+        ファイル追加
+      </Button>
+
       <v-divider></v-divider>
 
       <v-card-text class="text-right">
@@ -115,6 +153,42 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <!-- お知らせ追加ダイアログ -->
+    <v-dialog v-model="showDialogFile" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'">
+      <v-card flat tile>
+        <v-card-title>
+          ファイルの追加
+        </v-card-title>
+
+        <v-card-text>
+          <v-list>
+            <v-file-input chips prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_form" multiple
+              id="file_form" label="ファイルを選択する" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"
+              v-model="formNoticeFileAdd.file"></v-file-input>
+          </v-list>
+        </v-card-text>
+
+        <v-card-text class="text-center">
+          <Button :small="$vuetify.breakpoint.xs" color="primary" @click.native="updateNoticeFile"
+            :loading="loading['update_file']">
+            ファイルを追加する
+          </Button>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-text class="text-right">
+          <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="showDialogFile = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+            閉じる
+          </Button>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
   </Layout>
 </template>
 
@@ -131,14 +205,26 @@ export default {
     return {
       notice: this.$page['props']['notice'],
       showDialog: false,
+      showDialogFile: false,
       updateForm: this.$inertia.form(JSON.parse(JSON.stringify(this.$page['props']['notice']))),
-      loading: {}
+      loading: {},
+      formNoticeFile: this.$inertia.form(`NoticesEdit`, {
+        file: [],
+      }),
+
+      formNoticeFileAdd: this.$inertia.form(`NoticesFileAdd`, {
+        file: [],
+        id:this.$page['props']['notice'].id,
+      }),
+
+      file_form: undefined,
     }
   },
 
   methods: {
     // お知らせ情報更新
     updateNotice: function () {
+
       this.updateForm.put(this.$route('notices.update', { notice: this.notice.id }), {
         preserveState: (page) => Object.keys(page.props.errors).length,
         onStart: () => this.$set(this.loading, "update", true),
@@ -159,6 +245,39 @@ export default {
         }
       })
     },
+
+    deleteFile: function (notice_file) {
+
+ 
+
+      this.$confirm('このファイルを削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
+        if (isAccept) {
+          //削除処理
+          this.formNoticeFile.post(this.$route('notices-file.delete', { notice: this.notice.id, notice_file: notice_file }), {
+            preserveState: (page) => Object.keys(page.props.errors).length,
+            onStart: () => this.$set(this.loading, "delete", true),
+            onSuccess: () => this.$toasted.show('ファイルを削除しました'),
+            onFinish: () => this.$set(this.loading, "delete", false),
+
+          })
+        }
+      })
+    },
+
+    // ファイル更新
+    updateNoticeFile: function () {
+
+
+      this.formNoticeFileAdd.post(this.$route('notices.update_file'), {
+          preserveState: (page) => Object.keys(page.props.errors).length,
+          onStart: () => this.$set(this.loading, "update_file", true),
+          onSuccess: () => this.$toasted.show('ファイルを更新しました'),
+          onFinish: () => this.$set(this.loading, "update_file", false),
+        })
+    },
+
+
+
   }
 }
 </script>

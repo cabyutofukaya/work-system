@@ -445,6 +445,7 @@ export default {
                 },
                 eventDidMount: this.handleEventDidMount,
                 eventMouseEnter: this.handleEventMouseEnter,
+                eventTimeFormat: { hour: 'numeric', minute: '2-digit' }
             },
 
             calendarOptionsSmartphone: {
