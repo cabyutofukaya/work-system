@@ -95,19 +95,19 @@ class ClientController extends Controller
         // 営業所検索
         if ($request->filled('branch')) {
 
-            // $clients->where(function($query) use($validated){
-            //     $query->orWhere(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%')
-            //           ->orWhereHas('branches', function ($query) use ($validated) {
-            //             $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
-            //         });
-            // });
+            $clients->where(function($query) use($validated){
+                $query->orWhere(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%')
+                      ->orWhereHas('branches', function ($query) use ($validated) {
+                        $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
+                    });
+            });
 
             // $clients
             // ->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
 
-            $clients->whereHas('branches', function ($query) use ($validated) {
-                $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
-            });
+            // $clients->whereHas('branches', function ($query) use ($validated) {
+            //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
+            // });
 
             // $clients->whereHas('branches', function ($query) use ($validated) {
             //     $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
