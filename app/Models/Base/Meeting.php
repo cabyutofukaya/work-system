@@ -9,6 +9,7 @@ namespace App\Models\Base;
 use App\Models\MeetingComment;
 use App\Models\MeetingLike;
 use App\Models\MeetingVisitor;
+use App\Models\MeetingFile;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -63,5 +64,10 @@ class Meeting extends Model
 	public function meeting_visitors()
 	{
 		return $this->hasMany(MeetingVisitor::class);
+	}
+
+	public function meeting_files()
+	{
+		return $this->hasMany(MeetingFile::class);
 	}
 }

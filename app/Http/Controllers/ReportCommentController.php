@@ -65,6 +65,14 @@ class ReportCommentController extends Controller
 
         $reportComment->delete();
 
+        $report_comment = ReportComment::where('report_id',$report_id)->get();
+
+        if($report_comment->isEmpty()){
+            Report::where('id',$report_id)->update([
+                'comment_updated_at' => NULL,
+            ]);
+        }
+
         return redirect()->route('reports.show', ['report' => $report_id]);
     }
 

@@ -187,7 +187,7 @@ class SalesTodoController extends Controller
             'clients_total_count' => fn() => Client::count(),
             'clients_count' => Inertia::lazy(fn() => $clients->count()),
             'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
-            'users' => User::where('id', '!=', Auth::id())->get(["id", "name"]),
+            'users' => User::get(["id", "name"]),
         ]);
     }
 
@@ -308,7 +308,7 @@ class SalesTodoController extends Controller
             'clients_total_count' => fn() => Client::count(),
             'clients_count' => Inertia::lazy(fn() => $clients->count()),
             'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image"])),
-            'users' => User::where('id', '!=', Auth::id())->get(["id", "name"]),
+            'users' => User::get(["id", "name"]),
             'sales_todo' => $salesTodo,
         ]);
     }

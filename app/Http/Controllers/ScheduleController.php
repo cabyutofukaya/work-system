@@ -81,13 +81,13 @@ class ScheduleController extends Controller
                 $tmp = [];
                 $tmp['id'] = $sales_todo->id;
                 // $tmp['title'] =  '[営業]';
-                $tmp['title'] =  '[営業] ' . $tmp_clients->name;
+                $tmp['title'] =  '[営業]' . $tmp_clients->name;
                 $tmp['title'] = mb_substr($tmp['title'] , 0 ,14);
-                $tmp['color'] = '#fa3c3c'; 
-                $tmp['start'] = date('Y-m-d G:i',strtotime($sales_todo->scheduled_at));
+                $tmp['color'] = '#fc1814'; 
+                $tmp['start'] = date('Y-m-d H:i',strtotime($sales_todo->scheduled_at));
                 $tmp['content'] = $sales_todo->description;
 
-                $tmp['pops_tile'] = '[営業 ]' . $tmp_clients->name;
+                $tmp['pops_tile'] = '[営業]' . $tmp_clients->name;
                 $tmp['pops_time'] = date('G:i',strtotime($sales_todo->scheduled_at));
 
                 // $tmp['url'] = '/sales-todos/' . $sales_todo->id  . '/edit';
@@ -106,12 +106,12 @@ class ScheduleController extends Controller
 
                 $tmp = [];
                 $tmp['id'] = $office_todo->id;
-                $tmp['title'] = $office_todo->title;
-                $tmp['color'] = '#0c44fa';
-                $tmp['start'] = date('Y-m-d G:i',strtotime($office_todo->scheduled_at));
+                $tmp['title'] = '[' .  'ToDo' . ']' . $office_todo->title;
+                $tmp['color'] = '#d9d618';
+                $tmp['start'] = date('Y-m-d H:i',strtotime($office_todo->scheduled_at));
                 $tmp['content'] = $office_todo->description;
 
-                $tmp['pops_tile'] = ' (' .  '社内' . ') ' . $office_todo->title;
+                $tmp['pops_tile'] = '[' .  'ToDo' . ']' . "\n" . $office_todo->title;
                 $tmp['pops_time'] = date('G:i',strtotime($office_todo->scheduled_at));
                 $tmp['class'] = 'sales-todos';
                 // $tmp['url'] = '/office-todos/' . $office_todo->id  . '/edit';

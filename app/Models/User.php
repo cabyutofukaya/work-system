@@ -67,7 +67,7 @@ class User extends Authenticatable implements Auditable
      *
      * @var int
      */
-    protected $perPage = 100;
+    protected $perPage = 20;
 
     /**
      * コンストラクタ
@@ -115,6 +115,11 @@ class User extends Authenticatable implements Auditable
     public function meeting_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(MeetingVisitor::class);
+    }
+
+    public function notice_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(NoticeVisitor::class);
     }
 
     public function products(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

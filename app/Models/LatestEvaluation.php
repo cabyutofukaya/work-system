@@ -14,7 +14,9 @@ class LatestEvaluation extends BaseLatestEvaluation
         'client_id',
         'product_id',
         'evaluation_id',
-        'report_content_id'
+        'report_content_id',
+        'user_id',
+        'bikou',
     ];
 
     /**
@@ -22,7 +24,7 @@ class LatestEvaluation extends BaseLatestEvaluation
      *
      * @var array
      */
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['updated_at'];
 
     /**
      * モデルの「起動」メソッド

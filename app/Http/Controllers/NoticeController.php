@@ -51,7 +51,7 @@ class NoticeController extends Controller
     {
 
         $notice = new Notice();
-     
+
         $notice->fill($request->safe()->merge(['user_id' => Auth::id()])->all())
             ->save();
 
@@ -107,11 +107,55 @@ class NoticeController extends Controller
         $notice->load([
             'user:id,name,deleted_at',
             'notice_files',
+            'notice_visitors',
         ]);
+
+        // 閲覧者IDを保存
+        $notice->notice_visitors()->updateOrCreate([
+            'user_id' => auth()->id(),
+        ]);
+
+        // 閲覧数の保存後に閲覧者情報を取得
+        $notice->loadCount(['notice_visitors']);
+
+        //ファイル管理
+        $images_list = [];
+        $files_list = [];
+
+        if ($notice['notice_files']) {
+            foreach ($notice['notice_files'] as $file) {
+                if ($file->type == 'image') {
+                    $images_list[$file->id] = $file->path;
+                }
+                if ($file->type == 'file') {
+                    $tmp = [];
+                    $tmp['tmp_name'] = $file->name;
+                    $tmp['name'] = $file->path;
+
+                    $files_list[$file->id] = $tmp;
+                }
+            }
+        }
+
+        // 閲覧者一覧表示のため全ユーザリストを取得
+        $users = User
+            ::withExists(['notice_visitors' => function ($query) use ($notice) {
+                $query->where('notice_id', $notice->id);
+            }])
+            // 閲覧者自身を除外
+            // ->whereNot('id', Auth::id())
+            ->get()
+            ->makeHidden("email");
+
+
+
 
         return inertia('NoticesShow', [
             'notice' => $notice,
             'user' => User::where('id', $notice->user_id)->first(),
+            'files_list' => $files_list,
+            'images_list' => $images_list,
+            'users' => $users,
         ]);
     }
 
@@ -126,37 +170,37 @@ class NoticeController extends Controller
     {
         $notice->fill($request->validated())->save();
 
-          //写真情報登録
-          $fileName = NULL;
-          $originalName = NULL;
-          $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
-  
-          if (isset($request->file_name)) {
-  
-              $notice_id = $notice->id;
-  
-              foreach ($request->file_name as $file) {
-  
-                  $originalName = $file->getClientOriginalName();
-  
-                  $extension = pathinfo($originalName, PATHINFO_EXTENSION);
-                  $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
-                  $file->storeAs('', '/public/notice/' . $fileName);
-  
-                  $type = 'image';
-                  if (in_array($extension, $extension_list)) {
-                      $type = 'file';
-                  }
-  
-                  $notice_file = new NoticeFile();
-                  $notice_file->create([
-                      'type' => $type,
-                      'name' => $originalName,
-                      'path' => $fileName,
-                      'notice_id' => $notice_id,
-                  ]);
-              }
-          }
+        //写真情報登録
+        $fileName = NULL;
+        $originalName = NULL;
+        $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
+
+        if (isset($request->file_name)) {
+
+            $notice_id = $notice->id;
+
+            foreach ($request->file_name as $file) {
+
+                $originalName = $file->getClientOriginalName();
+
+                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
+                $file->storeAs('', '/public/notice/' . $fileName);
+
+                $type = 'image';
+                if (in_array($extension, $extension_list)) {
+                    $type = 'file';
+                }
+
+                $notice_file = new NoticeFile();
+                $notice_file->create([
+                    'type' => $type,
+                    'name' => $originalName,
+                    'path' => $fileName,
+                    'notice_id' => $notice_id,
+                ]);
+            }
+        }
 
         return redirect()->route('notices.show', ['notice' => $notice->id]);
     }

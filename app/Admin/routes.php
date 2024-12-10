@@ -95,6 +95,15 @@ Route::group([
 
     // お知らせ
     $router->resource('notices', 'NoticeController');
+
+    // 日報閲覧状況
+    $router->get('report-visitors', 'ReportVisitorController@index');
+
+    // 日報閲覧状況詳細
+    $router->get('report-visitors/{user}', 'ReportVisitorController@detail');
+
+    // 日報閲覧状況詳細
+    $router->get('report-visitors/show/{user}', 'ReportVisitorController@all_detail');
 });
 
 Route::group([

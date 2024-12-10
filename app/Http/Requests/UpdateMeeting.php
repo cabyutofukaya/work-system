@@ -40,6 +40,7 @@ class UpdateMeeting extends FormRequest
             'started_at' => ['required', 'date'],
             'participants' => ['nullable'],
             'content' => ['nullable'],
+            'files' => ['array','nullable'],
         ];
     }
 }

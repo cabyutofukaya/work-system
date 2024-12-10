@@ -86,6 +86,7 @@ class UserController extends BaseController
         $show->field('id', $this->trans('Id', 'users'));
         $show->field('username', $this->trans('username', 'users'));
         $show->field('name', $this->trans('Name', 'users'));
+        $show->field('name_kana', '氏名(カナ)');
         $show->field('email', $this->trans('Email', 'users'));
         $show->field('tel', $this->trans('tel', 'users'));
         $show->field('department', $this->trans('department', 'users'));
@@ -132,6 +133,9 @@ class UserController extends BaseController
         $form->text('name', $this->trans('name', 'users'))
             ->rules('required');
 
+            $form->text('name_kana', '氏名(カナ)')
+            ->rules('required');
+
         // 論理削除済みユーザのメールアドレスを設定可能にする
         $form->email('email', $this->trans('email', 'users'))
             ->creationRules([
@@ -171,6 +175,7 @@ class UserController extends BaseController
                 'WSD' => 'WSD',
                 'MGT' => 'MGT',
                 'BPD' => 'BPD',
+                'LOD' => 'LOD',
             ]);
 
         $form->checkbox('products', $this->trans('products', 'users'))->options(Product::all()->pluck('name', 'id'));

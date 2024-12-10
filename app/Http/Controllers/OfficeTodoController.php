@@ -46,6 +46,16 @@ class OfficeTodoController extends Controller
         }
         $validated = $validator->validated();
 
+             //TODO既読
+            //  OfficeTodo::where([
+            //     'user_id' => Auth::id(),
+            //     'is_completed' => 0,
+            // ])
+            //     ->update([
+            //         'is_readed' => date('Y-m-d H:i'),
+            //     ]);
+    
+
         return inertia('OfficeTodos', [
             'office_todos' => function () use ($validated, $request) {
                 $office_todos = OfficeTodo
@@ -99,7 +109,7 @@ class OfficeTodoController extends Controller
     public function create(): Response|ResponseFactory
     {
         return inertia('OfficeTodosCreate', [
-            'users' => User::where('id', '!=', Auth::id())->get(["id", "name"]),
+            'users' => User::get(["id", "name"]),
         ]);
     }
 
@@ -147,7 +157,7 @@ class OfficeTodoController extends Controller
         ]);
 
         return inertia('OfficeTodosEdit', [
-            'users' => User::where('id', '!=', Auth::id())->get(["id", "name"]),
+            'users' => User::get(["id", "name"]),
             'office_todo' => $officeTodo,
         ]);
     }

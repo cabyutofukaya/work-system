@@ -6,6 +6,7 @@ use App\Http\Requests\ShowMeeting;
 use App\Http\Requests\StoreMeeting;
 use App\Http\Requests\UpdateMeeting;
 use App\Models\Meeting;
+use App\Models\MeetingFile;
 use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use Log;
+use Storage;
 
 class MeetingController extends Controller
 {
@@ -201,7 +204,8 @@ class MeetingController extends Controller
             ->load([
                 'user:id,name,deleted_at',
                 'meeting_comments.user',
-                'meeting_visitors'
+                'meeting_visitors',
+                'meeting_files',
             ])
             // いいね数を取得
             ->loadCount('meeting_likes as likes_count')
@@ -230,11 +234,31 @@ class MeetingController extends Controller
             ->get()
             ->makeHidden("email");
 
+        //ファイル管理
+        $images_list = [];
+        $files_list = [];
+
+        if ($meeting['meeting_files']) {
+            foreach ($meeting['meeting_files'] as $file) {
+                if ($file->type == 'image') {
+                    $images_list[$file->id] = $file->name;
+                }
+                if ($file->type == 'file') {
+                    $tmp = [];
+                    $tmp['tmp_name'] = $file->tmp_name;
+                    $tmp['name'] = $file->name;
+
+                    $files_list[$file->id] = $tmp;
+                }
+            }
+        }
+
         return inertia('MeetingsShow', [
             'meeting' => $meeting,
             'users' => $users,
-            'user' => User::where('id',$meeting->user_id)->first(),
-
+            'user' => User::where('id', $meeting->user_id)->first(),
+            'images_list' => $images_list,
+            'files_list' => $files_list,
         ]);
     }
 
@@ -248,7 +272,9 @@ class MeetingController extends Controller
     {
         $meeting->load([
             'user:id,name,deleted_at',
+            'meeting_files',
         ]);
+
 
         return inertia('MeetingsEdit', [
             'meeting' => $meeting,
@@ -312,4 +338,70 @@ class MeetingController extends Controller
 
         return redirect()->route('meetings.show', ['meeting' => $meeting->id]);
     }
+
+    public function upload(Request $request)
+    {
+        $file = $request->file;
+ 
+        $tmp_name = $file->getClientOriginalName();
+
+
+        //拡張子情報
+        // $type = exif_imagetype($request->file);
+
+        $originalName = $file->getClientOriginalName();
+        $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+
+        $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
+        $type = 'image';
+        if (in_array($extension, $extension_list)) {
+            $type = 'file';
+        }
+  
+
+        $fileName = sha1(uniqid(mt_rand(), true)) . date('YmdGis') . "." . $extension;
+
+        $tmpPath = storage_path('app/tmp/') . $fileName;
+
+        //保存(URL取得)
+
+        $path = Storage::putFileAs('public/meeting/', $file, $fileName);
+
+
+        // 一時ファイルを削除
+        \Storage::disk('local')->delete('tmp/' . $fileName);
+
+        // \Storage::disk('s3')->putFile('/content', $request->image, 'public');
+
+        return response()->json(['name' => $fileName,'type' => $type,'tmp_name' => $tmp_name], 200);
+    }
+
+    public function file_update(Request $request)
+    {
+        // $name = $request->name;
+
+        if($request->name != ''){
+            MeetingFile::create([
+                'name' => $request->name,
+                'meeting_id' => $request->id,
+                'type' => $request->type,
+                'tmp_name' => $request->tmp_name ?? null,
+            ]);     
+        }
+   
+
+        return redirect()->route('meetings.show', ['meeting' => $request->id]);
+    }
+
+
+    public function file_delete(Request $request)
+    {
+        $meeting_file = new MeetingFile();
+        $meeting_file->where('id', $request->meeting_file)
+            ->update([
+                'deleted_at' => date('Y-m-d H:i'),
+            ]);
+   
+
+            return redirect()->route('meetings.show', ['meeting' => $request->meeting]);    }
 }

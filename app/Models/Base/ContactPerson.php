@@ -42,4 +42,10 @@ class ContactPerson extends Model
 	{
 		return $this->belongsTo(Client::class);
 	}
+
+
+	public function contact_person_images()
+	{
+		return $this->hasMany(ContactPersonImage::class);
+	}
 }

@@ -17,7 +17,8 @@ class ReportContentProduct extends Pivot
     protected $fillable = [
         'report_content_id',
         'product_id',
-        'evaluation_id'
+        'evaluation_id',
+        'product_description',
     ];
 
     protected $casts = [

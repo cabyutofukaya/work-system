@@ -76,7 +76,17 @@ class ReportController extends Controller
         } else {
             $reports = $reports->paginate()->withQueryString();
         }
-        
+
+        $start_date = $request->input('start_date');
+
+        if(!$request->input('start_date')){
+            if($request->filled('client_id')){
+                $start_date = date('Y-m-d',strtotime('-1 year'));
+            }else{
+                $start_date = date('Y-m-d',strtotime('-1 month'));
+            }
+        }
+       
  
         return inertia('Reports', [
 
@@ -94,7 +104,9 @@ class ReportController extends Controller
                 'is_visited' => $request->input('is_visited'),
                 'is_readed' => $request->input('is_readed'),
                 'is_zaitaku' => $request->input('is_zaitaku'),
-                'start_date' => $request->input('start_date'),
+                // 'start_date' => $request->input('start_date'),
+                'start_date' => $start_date,
+                // 'end_date' => $end_date,
                 'end_date' => $request->input('end_date'),
                 'department' => $request->input('department'),
             ],
@@ -258,8 +270,17 @@ class ReportController extends Controller
 
 
         // 期間設定
-        if ($request->start_date && $request->end_date) {
+        if ($request->start_date) {
             $reports->where('date', '>=', $request->start_date);
+        }else{
+            if($request->filled('client_id')){
+                $reports->where('date', '>=', date('Y-m-d',strtotime('-1 year')));
+            }else{
+                $reports->where('date', '>=', date('Y-m-d',strtotime('-1 month')));
+            }
+        }
+
+        if($request->end_date){
             $reports->where('date', '<=', $request->end_date);
         }
 
@@ -272,6 +293,11 @@ class ReportController extends Controller
                 // $query->whereIn('department', ['CCD']);
             });
         }
+
+
+        // if(!$request->filled('client_id') && !$request->filled('word') && !$request->filled('only_complaint') && !$request->is_zaitaku && !$request->is_visited && !$request->is_readed && !$request->department && !$request->start_date && !$request->end_date){
+        //     $reports->where('created_at', '>=', date('Y-m-d',strtotime('-1 month')));
+        // }
 
 
 
@@ -544,6 +570,10 @@ class ReportController extends Controller
             $report_url = $report_url . '#report_' . $report->id;
         }
 
+        $report_m = new Report();
+        $link_list = [];
+        $link_list['pre'] = $report_m->get_pre_id($report);
+        $link_list['next'] = $report_m->get_next_id($report);
     
         return inertia('ReportsShow', [
             'report' => $report,
@@ -554,6 +584,7 @@ class ReportController extends Controller
             'user' => User::where('id', $report->user_id)->first(),
             'report_url' => $report_url,
             'is_phone' => $isPhone,
+            'link_list' => $link_list,
         ]);
     }
 

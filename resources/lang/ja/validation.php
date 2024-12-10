@@ -213,6 +213,11 @@ return [
 
         'required_time' => '商談所要時間',
 
+        'budget' => '予算',
+        'achievements' => '売上',
+        'count' => '件数',
+        'profit' => '利益',
+
         // テーブル名
         'tables' => [
             'users' => 'メンバー',

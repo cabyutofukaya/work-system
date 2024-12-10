@@ -12,6 +12,7 @@ use App\Models\ClientTypeTravel;
 use App\Models\ClientTypeTruck;
 use App\Models\Genre;
 use App\Models\LatestEvaluation;
+use App\Models\Evaluation;
 use App\Models\Product;
 use App\Models\ReportContent;
 use App\Models\SalesTodo;
@@ -53,8 +54,13 @@ class ClientController extends Controller
         }
 
         $clients = Client::where("client_type_id", $client_type_id);
+        $clients->with([
+            'genres',
+            'products',
+        ]);
 
-        // ワード検索
+
+        // ワード検索nr
         if ($request->filled('word')) {
             // ワードを空白文字で分割してAND検索
             foreach (preg_split('/[\p{Z}\p{Cc}]++/u', $validated["word"], -1, PREG_SPLIT_NO_EMPTY) as $word) {
@@ -155,6 +161,8 @@ class ClientController extends Controller
                 $query->orWhereLike('description', $validated["vehicle"]);
             });
         }
+
+
 
 
         return inertia('Clients', [
@@ -363,7 +371,7 @@ class ClientController extends Controller
         $client->load([
             'branches',
             'client_type_' . $client->client_type_id,
-            'contact_persons',
+            'contact_persons.contact_person_images',
             'genres',
             'products',
             'users',
@@ -394,6 +402,8 @@ class ClientController extends Controller
             ->with(["report:id,user_id,date", "report.user:id,name"])
             ->where("type", "sales")
             ->where("client_id", $client->id)
+            ->where("hidden", 0)
+            ->orderBy('created_at','desc')
             ->take(3)
             ->get(['id', 'report_id', 'type', 'description']);
 
@@ -402,6 +412,7 @@ class ClientController extends Controller
             ::with('report')
             ->where("type", "sales")
             ->where('client_id', $client->id)
+            ->where("hidden", 0)
             // 自分自身の日報を取得
             ->whereHas('report', function (Builder $query) {
                 $query->where("user_id", auth()->id());
@@ -423,7 +434,7 @@ class ClientController extends Controller
             ::with([
                 "product:id,name",
                 "evaluation:id,grade,label",
-                "report_content:id,report_id",
+                "report_content:id,report_id,hidden",
                 "report_content.report:id,date,user_id",
                 "report_content.report.user:id,name"
             ])
@@ -446,6 +457,10 @@ class ClientController extends Controller
             'report_contents_count_by_fy' => $report_contents_count_by_fy,
             // 最近の商材評価
             'latest_evaluations' => $latest_evaluations,
+            // 評価一覧
+            'evaluations' => fn () => Evaluation::get(),
+            // 商材一覧
+            'products' => fn () => Product::get(),
         ]);
     }
 

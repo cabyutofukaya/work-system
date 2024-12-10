@@ -32,8 +32,12 @@ class UserController extends Controller
             $productList[$k] = $product->name;
         }
 
+
         return inertia('Users', [
-            'users' => $users->get(),
+            // 'clients' => $clients->paginate()->withQueryString(),
+            'users' => $users->paginate()->withQueryString(),
+
+            'user' => Auth::user(),
 
             'productList' => $productList,
 

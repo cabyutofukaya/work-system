@@ -155,7 +155,7 @@ class Report extends BaseReport implements Auditable
         return $query->where('is_private', false);
     }
 
-     /**
+    /**
      * クエリスコープ 下書きの項目を除外する
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -204,7 +204,7 @@ class Report extends BaseReport implements Auditable
     }
 
 
-      /**
+    /**
      * 在宅のみを取得するリレーション
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -246,8 +246,35 @@ class Report extends BaseReport implements Auditable
 
 
     //既読をつける
-    protected function is_readed(int $report,int $user)
+    protected function is_readed(int $report, int $user) {}
+
+    // //表示一個前のID
+    // public function get_pre_id($report)
+    // {
+    //     // $reports = Report::where('id',$report)->first();
+    //     $pre_report = Report::where('created_at', '<', $report->created_at)->where('is_private', 0)->where('draft_flg', 0)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->first();
+    //     return $pre_report;
+    // }
+
+    // //表示一個後のID
+    // public function get_next_id($report)
+    // {
+    //     $next_report = Report::where('created_at', '>', $report->created_at)->where('is_private', 0)->where('draft_flg', 0)->orderBy('created_at', 'ASC')->orderBy('id', 'ASC')->first();
+    //     return $next_report;
+    // }
+
+    //表示一個前のID
+    public function get_pre_id($report)
     {
-        
+        // $reports = Report::where('id',$report)->first();
+        $pre_report = Report::where('id', '<>', $report->id)->where('created_at', '<', $report->created_at)->where('is_private', 0)->where('draft_flg', 0)->orderBy('created_at', 'DESC')->orderBy('id', 'ASC')->first();
+        return $pre_report;
+    }
+
+    //表示一個後のID
+    public function get_next_id($report)
+    {
+        $next_report = Report::where('id', '<>', $report->id)->where('created_at', '>', $report->created_at)->where('is_private', 0)->where('draft_flg', 0)->orderBy('created_at', 'ASC')->orderBy('id', 'ASC')->first();
+        return $next_report;
     }
 }

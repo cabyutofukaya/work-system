@@ -13,11 +13,37 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use App\Common\TodoCheck;
+use App\Models\ReportVisitor;
 
 class HomeController extends Controller
 {
     public function index(): Response|ResponseFactory
     {
+        $three_month = date('Y-m-d',strtotime('-3 month'));
+
+        $reports = Report::where([
+            'draft_flg' => 0,
+            'is_private' => 0,
+        ])->where('date','>=',$three_month)
+        ->get();
+
+        $report_count = count($reports);
+        
+        $user_id = Auth::user()->id;
+
+
+        $visitor_count = 0;
+        foreach($reports as $report){
+            $report_visitor = ReportVisitor::where('report_id',$report->id)->where('user_id',$user_id)->count();
+            $visitor_count = $visitor_count + $report_visitor;
+        }
+
+        $visitor_rate = 0;
+        if($visitor_count != 0){
+            $visitor_rate = round(($visitor_count / $report_count) * 100,2);
+        }
+
 
        
         // $meeting = Meeting::with(['user:id,name,deleted_at'])
@@ -34,7 +60,26 @@ class HomeController extends Controller
 
         // dd($meeting->where('is_visited',1));
 
-        return Inertia::render('Home', [
+
+        $is_read_meeting = false;
+
+        // 自分自身が閲覧済みかどうか
+        $meetings = Meeting::withExists([
+                'meeting_visitors as is_visited' => function ($query) {
+                    $query->where('user_id', auth()->id());
+                }
+            ])->get();
+
+
+        foreach($meetings as $meeting){
+            if($meeting['is_visited'] == 0){
+                $is_read_meeting = true;
+                break;
+            }
+        }
+    
+
+        return inertia('Home', [
             // 新着お知らせ
             'notices' => fn () => Notice::with(['user:id,name'])->take(3)->get(),
 
@@ -69,6 +114,7 @@ class HomeController extends Controller
             // 最近の日報
             'reports' => fn () => Report
                 ::exceptPrivate()
+                ->exceptDraftFlg()
                 ->with(['user:id,name'])
                 ->withExists([
                     'report_contents_sales',
@@ -116,6 +162,13 @@ class HomeController extends Controller
                 'is_readed' => 0,
             ])->get()),
 
+            'todo_data' => TodoCheck::check(),
+
+            'visitor_rate' => $visitor_rate,
+            'visitor_count' => $visitor_count,
+            'report_count' => $report_count,
+
+            'is_read_meeting' => $is_read_meeting,
         ]);
     }
 }

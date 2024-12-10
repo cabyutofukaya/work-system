@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Middleware\RequestLogger;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
         $url_path = parse_url(config('app.url'), PHP_URL_PATH);
         $url_path = preg_replace("/^\/+/", "", $url_path ?? "");
         $url_path = preg_replace("/\/+$/", "", $url_path ?? "");
+
+        view()->share('test', 'test');
+
         if ($url_path) {
             View::composer(['telescope::layout'], function ($view) use ($url_path) {
                 $view->with('telescopeScriptVariables', [
@@ -44,5 +48,7 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             });
         }
+
+        Validator::extend('num_check','App\Rules\NumCheck@passes');
     }
 }

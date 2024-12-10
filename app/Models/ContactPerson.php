@@ -24,7 +24,8 @@ class ContactPerson extends BaseContactPerson implements Auditable
         'email',
         'tel',
         'department',
-        'position'
+        'position',
+        'image'
     ];
 
     /**
