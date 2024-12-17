@@ -23,7 +23,7 @@ class BasicAuthMiddleware
         //     return $next($request);
         // }
 
-        if ($username == 'a' && $password == 'a') {
+        if ($username == 'dev' && $password == 'dev') {
             return $next($request);
         }
 

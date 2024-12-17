@@ -43,15 +43,32 @@
 
           <v-list-item-content>
             <v-list-item-title class="font-weight-bold mb-1">
-              {{ client.name }}
+
+              <template v-if="client.name_position == '前' || client.name_position == '後ろ'">
+                <template v-if="client.name_position == '前'">
+                  {{ client.type_name }} {{ client.name }}
+                </template>
+
+                <template v-if="client.name_position == '後ろ'">
+                  {{ client.name }} {{ client.type_name }}
+                </template>
+
+              </template>
+
+              <template v-else>
+                {{ client.name }}
+              </template>
+
+
             </v-list-item-title>
 
             <v-list-item-subtitle>
               <span style="white-space: pre-line;" v-if="client.description">{{ client.description }} / </span>
               <span style="white-space: pre-line;font-size: small;" v-if="client.prefecture"> 所在地:</span>
-              <span style="white-space: pre-line;" v-if="client.prefecture"> {{ client.prefecture }}{{ client.address }} /</span>
+              <span style="white-space: pre-line;" v-if="client.prefecture"> {{ client.prefecture }}{{ client.address }}</span>
               <span style="white-space: pre-line;font-size: small;" v-if="client.tel">電話番号:</span>
-              <span style="white-space: pre-line;color: #2d9acd;text-decoration: underline;" v-if="client.tel" @click="(event) => clickAlert(client.tel, event)">{{client.tel }}</span>
+              <span style="white-space: pre-line;color: #2d9acd;text-decoration: underline;" v-if="client.tel"
+                @click="(event) => clickAlert(client.tel, event)">{{ client.tel }}</span>
               <!-- <span style="white-space: pre-line;" v-if="client.tel"@click="(event) => clickAlert(client.tel, event)"><object><a :href="'tel:' + client.tel"
                   >{{ client.tel }}</a></object></span> -->
             </v-list-item-subtitle>
@@ -151,8 +168,8 @@
               </v-list-item>
 
               <v-list-item v-if="client_type['categories']">
-                <v-select dense filled clearable name="category" label="カテゴリー" hint="指定したカテゴリーの項目に絞り込みます" persistent-hint
-                  v-model="form.category"
+                <v-select dense filled clearable name="category" label="カテゴリー" hint="指定したカテゴリーの項目に絞り込みます"
+                  persistent-hint v-model="form.category"
                   :items="Object.entries(client_type['categories']).map(([value, text]) => ({ value, text }))"></v-select>
               </v-list-item>
 

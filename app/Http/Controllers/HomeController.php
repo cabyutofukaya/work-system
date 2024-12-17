@@ -14,38 +14,75 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 use App\Common\TodoCheck;
+use App\Models\Client;
 use App\Models\ReportVisitor;
 
 class HomeController extends Controller
 {
     public function index(): Response|ResponseFactory
     {
-        $three_month = date('Y-m-d',strtotime('-3 month'));
+
+        $clients = Client::orderBy('id')->get();
+
+        $type_list = config('const.client_list');
+
+        foreach ($clients as $client) {
+            $name = $client->name;
+            $name_2 = '';
+            $name_position = '';
+
+            foreach ($type_list as $type) {
+                if (preg_match('/' . $type .'/', $name)) {
+
+                    $num = mb_strpos($name, $type);
+
+                    if($num == 0){
+                        $name_position = '前';
+                    }else{
+                        $name_position = '後ろ';
+                    }
+
+                    //残り文字
+                    $name_2 = str_replace($type, '', $name);
+
+                    Client::where('id',$client->id)->update([
+                        'name' => $name_2,
+                        'name_2' => $name,
+                        'name_position' => $name_position,
+                        'type_name' => $type,
+                    ]);
+
+                }
+            }
+          
+        }
+
+        $three_month = date('Y-m-d', strtotime('-3 month'));
 
         $reports = Report::where([
             'draft_flg' => 0,
             'is_private' => 0,
-        ])->where('date','>=',$three_month)
-        ->get();
+        ])->where('date', '>=', $three_month)
+            ->get();
 
         $report_count = count($reports);
-        
+
         $user_id = Auth::user()->id;
 
 
         $visitor_count = 0;
-        foreach($reports as $report){
-            $report_visitor = ReportVisitor::where('report_id',$report->id)->where('user_id',$user_id)->count();
+        foreach ($reports as $report) {
+            $report_visitor = ReportVisitor::where('report_id', $report->id)->where('user_id', $user_id)->count();
             $visitor_count = $visitor_count + $report_visitor;
         }
 
         $visitor_rate = 0;
-        if($visitor_count != 0){
-            $visitor_rate = round(($visitor_count / $report_count) * 100,2);
+        if ($visitor_count != 0) {
+            $visitor_rate = round(($visitor_count / $report_count) * 100, 2);
         }
 
 
-       
+
         // $meeting = Meeting::with(['user:id,name,deleted_at'])
         //     ->withCount([
         //         'meeting_likes',
@@ -65,27 +102,27 @@ class HomeController extends Controller
 
         // 自分自身が閲覧済みかどうか
         $meetings = Meeting::withExists([
-                'meeting_visitors as is_visited' => function ($query) {
-                    $query->where('user_id', auth()->id());
-                }
-            ])->get();
+            'meeting_visitors as is_visited' => function ($query) {
+                $query->where('user_id', auth()->id());
+            }
+        ])->get();
 
 
-        foreach($meetings as $meeting){
-            if($meeting['is_visited'] == 0){
+        foreach ($meetings as $meeting) {
+            if ($meeting['is_visited'] == 0) {
                 $is_read_meeting = true;
                 break;
             }
         }
-    
+
 
         return inertia('Home', [
             // 新着お知らせ
-            'notices' => fn () => Notice::with(['user:id,name'])->take(3)->get(),
+            'notices' => fn() => Notice::with(['user:id,name'])->take(3)->get(),
 
             // 議事録お知らせ
             // 'meetings' => fn() => Meeting::with(['user:id,name'])->take(3)->get(),
-            'meetings' => fn () => Meeting::with(['user:id,name,deleted_at'])
+            'meetings' => fn() => Meeting::with(['user:id,name,deleted_at'])
                 ->withCount([
                     'meeting_likes',
                     'meeting_comments',
@@ -100,19 +137,19 @@ class HomeController extends Controller
 
 
             // 直近の営業ToDo
-            'sales_todos' => fn () => SalesTodo::with(['client:id,name,image', 'sales_todo_participants.user:id,name'])
+            'sales_todos' => fn() => SalesTodo::with(['client:id,name,image', 'sales_todo_participants.user:id,name'])
                 // 自分のToDoに絞る
                 ->where('user_id', Auth::id())
                 ->take(3)->get(),
 
             // 直近の社内ToDo
-            'office_todos' => fn () => OfficeTodo::with(['office_todo_participants.user:id,name'])
+            'office_todos' => fn() => OfficeTodo::with(['office_todo_participants.user:id,name'])
                 // 自分のToDoに絞る
                 ->where('user_id', Auth::id())
                 ->take(3)->get(),
 
             // 最近の日報
-            'reports' => fn () => Report
+            'reports' => fn() => Report
                 ::exceptPrivate()
                 ->exceptDraftFlg()
                 ->with(['user:id,name'])
@@ -121,7 +158,7 @@ class HomeController extends Controller
                     'report_contents_work',
                     'report_comments as is_readed' => function ($query) {
                         $query->where('mention_id', auth()->id());
-                        $query->where('is_readed',0);
+                        $query->where('is_readed', 0);
                     }
                 ])
                 ->withCount([
@@ -131,7 +168,7 @@ class HomeController extends Controller
                 ->take(3)->get(),
 
             // コメントがついた日報
-            'reports_latest_comment' => fn () => Report
+            'reports_latest_comment' => fn() => Report
                 ::exceptPrivate()
                 ->with([
                     'latest_comment',
@@ -142,7 +179,7 @@ class HomeController extends Controller
                     'report_contents_work',
                     'report_comments as is_readed' => function ($query) {
                         $query->where('mention_id', auth()->id());
-                        $query->where('is_readed',0);
+                        $query->where('is_readed', 0);
                     },
                 ])
                 ->withCount([
@@ -154,10 +191,10 @@ class HomeController extends Controller
                 ->take(3)
                 ->get(),
 
-            'user' => User::where('id',auth()->id())->first(),
+            'user' => User::where('id', auth()->id())->first(),
 
             //日報コメント未読
-            'is_read'=> fn () => count(ReportComment::where([
+            'is_read' => fn() => count(ReportComment::where([
                 'mention_id' => auth()->id(),
                 'is_readed' => 0,
             ])->get()),
