@@ -54,6 +54,9 @@ class StoreClient extends FormRequest
             'description' => ['nullable'],
             'contact' => ['nullable'],
 
+            'name_position' => ['nullable','required_with:type_name'],
+            'type_name' => ['nullable','required_if:name_position,前,後ろ'],
+
             'representative_position' => ['nullable'],
             'representative_kana' => ['nullable'],
 

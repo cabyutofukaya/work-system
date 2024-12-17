@@ -27,6 +27,26 @@
               </v-col>
             </v-row>
 
+
+            <v-row>
+              <v-col cols="12" sm="4">会社の種類</v-col>
+              <v-col cols="3">
+                <v-select dense filled label="名称の位置"
+                prepend-inner-icon="mdi-pencil" :items="name_position" item-value="id"
+                item-text="name" clearable v-model="form.name_position" :error="Boolean(form.errors.name_position)"
+                :error-messages="form.errors.name_position"></v-select>   
+              </v-col>
+              <v-col cols="6">
+                <v-select dense filled label="会社の種類"
+                prepend-inner-icon="mdi-pencil" :items="client_list" item-value="id"
+                item-text="name" clearable v-model="form.type_name" :error="Boolean(form.errors.type_name)"
+                :error-messages="form.errors.type_name"></v-select>   
+              </v-col>
+
+            </v-row>
+
+
+
             <v-row>
               <v-col cols="12" sm="4">会社名よみがな</v-col>
               <v-col>
@@ -698,7 +718,7 @@ import {gmapApi} from "gmap-vue";
 export default {
   components: {Layout, Link},
 
-  props: ['prefectures', 'client_type', 'client', 'genre_ids', 'product_ids', 'genres', 'products', 'client_type_column_names', 'location_default','charges','charge_ids'],
+  props: ['prefectures', 'client_type', 'client', 'genre_ids', 'product_ids', 'genres', 'products', 'client_type_column_names', 'location_default','charges','charge_ids','client_list','name_position'],
 
   data() {
     return {

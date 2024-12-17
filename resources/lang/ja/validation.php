@@ -262,6 +262,9 @@ return [
         'clients' => [
             'name' => '会社名',
             'name_kana' => '会社名よみがな',
+
+            'name_position' => '名称の位置',
+            'type_name' => '会社の種類',
         ],
         'client_type_taxibus' => [
             'client_id' => '会社ID',

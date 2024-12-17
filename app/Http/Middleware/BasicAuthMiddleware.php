@@ -23,7 +23,7 @@ class BasicAuthMiddleware
         //     return $next($request);
         // }
 
-        if ($username == 'grouptube' && $password == 'Q4yGBhPxFzG2') {
+        if ($username == 'a' && $password == 'a') {
             return $next($request);
         }
 

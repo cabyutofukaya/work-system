@@ -283,8 +283,6 @@ class ClientController extends Controller
             $form_columns["client_type_" . $client_type_id][$column] = null;
         }
 
-
-
         return inertia('ClientsCreate', [
             // 都道府県
             'prefectures' => config("const.prefectures"),
@@ -302,6 +300,10 @@ class ClientController extends Controller
             'location_default' => config("const.location_default"),
             // 社内担当者リスト
             'charges' => User::ofClientType($client_type_id)->get(["id", "name"]),
+
+            //会社名称リスト
+            'client_list' => config("const.client_list"),
+            'name_position' => config("const.name_position"),
 
         ]);
     }
@@ -508,6 +510,9 @@ class ClientController extends Controller
             'charges' => User::ofClientType($client->client_type_id)->get(["id", "name"]),
             // 社内担当者リスト情報
             'charge_ids' => $client->charges()->get()->pluck("id"),
+
+            'client_list' => config("const.client_list"),
+            'name_position' => config("const.name_position"),
         ]);
     }
 

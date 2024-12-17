@@ -50,7 +50,22 @@
           <v-row>
             <v-col cols="12" sm="4">会社名</v-col>
             <v-col>
-              {{ client.name }}
+
+              <template v-if="client.name_position == '前' || client.name_position == '後ろ'">
+                <template v-if="client.name_position == '前'">
+                  {{ client.type_name }} {{ client.name }}
+                </template>
+
+                <template v-if="client.name_position == '後ろ'">
+                {{ client.name }} {{ client.type_name }}
+                </template>
+
+              </template>
+
+              <template v-else>
+                {{ client.name }}
+              </template>
+             
             </v-col>
           </v-row>
 

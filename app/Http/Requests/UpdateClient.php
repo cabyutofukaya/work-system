@@ -57,6 +57,9 @@ class UpdateClient extends FormRequest
             'manager_name' => ['nullable'],
             'contact' => ['nullable'],
 
+            'name_position' => ['nullable','required_with:type_name'],
+            'type_name' => ['nullable','required_if:name_position,前,後ろ'],
+
             'representative_kana' => ['nullable'],
             'representative_position' => ['nullable'],
 

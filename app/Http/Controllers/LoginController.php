@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
+use Illuminate\Support\Facades\Hash;
+
 class LoginController extends Controller
 {
     /**

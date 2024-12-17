@@ -376,15 +376,45 @@
                     @change=" reportContentFormError.client_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
-                      <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
-                        :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }} <span v-if="item.prefecture" class="">{{ item.prefecture }}</span> <span v-if="item.address">{{ item.address }}</span>
+
+                      <template v-if="item.name_position == '前' || item.name_position == '後ろ'">
+                        <template v-if="item.name_position == '前'">
+                          {{ item.type_name }} {{ item.name }}
+                        </template>
+
+                        <template v-if="item.name_position == '後ろ'">
+                          {{ item.name }} {{ item.type_name }}
+                        </template>
+
+                      </template>
+
+                      <template v-else>
+                        {{ item.name }}
+                      </template>
+                   
+                      <span v-if="item.prefecture" class="">{{ item.prefecture }}</span> <span v-if="item.address">{{ item.address }}</span>
                     </template>
                     <!-- カスタム選択肢表示 -->
                     <template v-slot:item="{ item }">
-                      <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
-                        :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }}
+                      
+                      <template v-if="item.name_position == '前' || item.name_position == '後ろ'">
+                        <template v-if="item.name_position == '前'">
+                          {{ item.type_name }} {{ item.name }}
+                        </template>
+
+                        <template v-if="item.name_position == '後ろ'">
+                          {{ item.name }} {{ item.type_name }}
+                        </template>
+
+                      </template>
+
+                      <template v-else>
+                        {{ item.name }}
+                      </template>
+
+                      <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{
+                        item.prefecture }})</span>
+                      
                     </template>
                   </v-select>
                 </v-list-item>

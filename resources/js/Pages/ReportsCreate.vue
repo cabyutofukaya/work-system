@@ -28,8 +28,9 @@
 
             <v-col>
               <v-switch dense filled class="ma-0 pa-0" color="warning" :label="(form.is_private) ? '非公開' : '公開'"
-                :prepend-icon="(form.is_private) ? 'mdi-eye-off' : 'mdi-eye'" name="is_private" v-model="form.is_private"
-                required :error="Boolean(form.errors.is_private)" :error-messages="form.errors.is_private"></v-switch>
+                :prepend-icon="(form.is_private) ? 'mdi-eye-off' : 'mdi-eye'" name="is_private"
+                v-model="form.is_private" required :error="Boolean(form.errors.is_private)"
+                :error-messages="form.errors.is_private"></v-switch>
             </v-col>
           </v-row>
 
@@ -329,23 +330,55 @@
                   <v-select v-if="!clientsListEnable" dense filled clearable label="会社" disabled>
                   </v-select>
                   <v-select v-if="clientsListEnable" dense filled clearable label="会社" :items="clients" item-value="id"
-                    name="client_id" v-model="reportContentForm.client_id" 
-                    :error="Boolean(reportContentFormError.client_id)" :error-messages="reportContentFormError.client_id"
+                    name="client_id" v-model="reportContentForm.client_id"
+                    :error="Boolean(reportContentFormError.client_id)"
+                    :error-messages="reportContentFormError.client_id"
                     @change="reportContentFormError.client_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
-                      <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
-                        :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }}   <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{ item.prefecture }})</span>
-                      
-                      
+
+                      <template v-if="item.name_position == '前' || item.name_position == '後ろ'">
+                        <template v-if="item.name_position == '前'">
+                          {{ item.type_name }} {{ item.name }}
+                        </template>
+
+                        <template v-if="item.name_position == '後ろ'">
+                          {{ item.name }} {{ item.type_name }}
+                        </template>
+
+                      </template>
+
+                      <template v-else>
+                        {{ item.name }}
+                      </template>
+
+                      <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{
+                        item.prefecture
+                      }})</span>
+
+
                       <!-- <span v-if="item.prefecture" class="font-weight-thin text-body-2">{{ item.prefecture }}</span> <span v-if="item.address" class="font-weight-thin">{{ item.address }}</span> -->
                     </template>
                     <!-- カスタム選択肢表示 -->
                     <template v-slot:item="{ item }">
-                      <v-img contain height="2em" width="2em" max-height="2em" max-width="2em" class="my-2 mr-2"
-                        :src="item['icon_image_url']" alt=""></v-img>
-                      {{ item.name }} <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{ item.prefecture }})</span>
+
+                      <template v-if="item.name_position == '前' || item.name_position == '後ろ'">
+                        <template v-if="item.name_position == '前'">
+                          {{ item.type_name }} {{ item.name }}
+                        </template>
+
+                        <template v-if="item.name_position == '後ろ'">
+                          {{ item.name }} {{ item.type_name }}
+                        </template>
+
+                      </template>
+
+                      <template v-else>
+                        {{ item.name }}
+                      </template>
+
+                      <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{
+                        item.prefecture }})</span>
                     </template>
                   </v-select>
                 </v-list-item>
@@ -358,7 +391,8 @@
                   </v-select>
                   <v-select v-if="reportContentForm.client_id" dense filled clearable label="営業所" :items="branches"
                     item-value="id" name="branch_id" v-model="reportContentForm.branch_id"
-                    :error="Boolean(reportContentFormError.branch_id)" :error-messages="reportContentFormError.branch_id"
+                    :error="Boolean(reportContentFormError.branch_id)"
+                    :error-messages="reportContentFormError.branch_id"
                     @change="reportContentFormError.branch_id = undefined">
                     <!-- カスタム選択済み表示 -->
                     <template v-slot:selection="{ item }">
@@ -403,8 +437,8 @@
 
               <!-- 部署名 -->
               <v-list-item v-if="reportContentForm.type === 'sales'">
-                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名" maxlength="200" name="departments"
-                  v-model="reportContentForm.departments"></v-text-field>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名" maxlength="200"
+                  name="departments" v-model="reportContentForm.departments"></v-text-field>
               </v-list-item>
 
               <!-- 役職名 -->
