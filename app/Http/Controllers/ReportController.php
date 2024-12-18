@@ -8,6 +8,7 @@ use App\Http\Requests\ShowReport;
 use App\Http\Requests\StoreReport;
 use App\Http\Requests\UpdateReport;
 use App\Models\Client;
+use App\Models\ClientReportUser;
 use App\Models\Evaluation;
 use App\Models\Genre;
 use App\Models\Product;
@@ -79,15 +80,15 @@ class ReportController extends Controller
 
         $start_date = $request->input('start_date');
 
-        if(!$request->input('start_date')){
-            if($request->filled('client_id')){
-                $start_date = date('Y-m-d',strtotime('-1 year'));
-            }else{
-                $start_date = date('Y-m-d',strtotime('-1 month'));
+        if (!$request->input('start_date')) {
+            if ($request->filled('client_id')) {
+                $start_date = date('Y-m-d', strtotime('-1 year'));
+            } else {
+                $start_date = date('Y-m-d', strtotime('-1 month'));
             }
         }
-       
- 
+
+
         return inertia('Reports', [
 
             'reports' => $reports,
@@ -272,15 +273,15 @@ class ReportController extends Controller
         // 期間設定
         if ($request->start_date) {
             $reports->where('date', '>=', $request->start_date);
-        }else{
-            if($request->filled('client_id')){
-                $reports->where('date', '>=', date('Y-m-d',strtotime('-1 year')));
-            }else{
-                $reports->where('date', '>=', date('Y-m-d',strtotime('-1 month')));
+        } else {
+            if ($request->filled('client_id')) {
+                $reports->where('date', '>=', date('Y-m-d', strtotime('-1 year')));
+            } else {
+                $reports->where('date', '>=', date('Y-m-d', strtotime('-1 month')));
             }
         }
 
-        if($request->end_date){
+        if ($request->end_date) {
             $reports->where('date', '<=', $request->end_date);
         }
 
@@ -338,26 +339,42 @@ class ReportController extends Controller
                 });
             }
 
-            // 会社タイプ
-            if ($validator->validated()["client_type_id"]) {
-                $clients->where("client_type_id", $validator->validated()["client_type_id"]);
-            }
 
-            // 固有情報 バス・タクシー会社
-            if ($validator->validated()["client_type_taxibus_category"]) {
-                // カテゴリー検索
-                $clients->whereHas('client_type_taxibus', function (Builder $query) use ($validator) {
-                    $query->where('category', $validator->validated()["client_type_taxibus_category"]);
+            // 都道府県
+            if ($validator->validated()["prefecture"]) {
+                $clients->where(function ($query) use ($validator) {
+                    $query->where('prefecture', $validator->validated()["prefecture"]);
                 });
             }
 
-            // ジャンル
-            if ($validator->validated()["genre_id"]) {
-                $clients->whereHas('genres', function (Builder $query) use ($validator) {
-                    // orderで指定したカラムにIntegrity constraint violationエラーが発生するためグローバルスコープを削除
-                    $query->withoutGlobalScope('order')->where('genre_id', $validator->validated()["genre_id"]);
+
+            // 自分の担当
+            if ($validator->validated()["my_charge"]) {
+                $clients->whereHas('client_report_user', function (Builder $query) use ($validator) {
+                    $query->where('user_id', Auth::id());
                 });
             }
+
+            // // 会社タイプ
+            // if ($validator->validated()["client_type_id"]) {
+            //     $clients->where("client_type_id", $validator->validated()["client_type_id"]);
+            // }
+
+            // // 固有情報 バス・タクシー会社
+            // if ($validator->validated()["client_type_taxibus_category"]) {
+            //     // カテゴリー検索
+            //     $clients->whereHas('client_type_taxibus', function (Builder $query) use ($validator) {
+            //         $query->where('category', $validator->validated()["client_type_taxibus_category"]);
+            //     });
+            // }
+
+            // // ジャンル
+            // if ($validator->validated()["genre_id"]) {
+            //     $clients->whereHas('genres', function (Builder $query) use ($validator) {
+            //         // orderで指定したカラムにIntegrity constraint violationエラーが発生するためグローバルスコープを削除
+            //         $query->withoutGlobalScope('order')->where('genre_id', $validator->validated()["genre_id"]);
+            //     });
+            // }
 
             // 該当する件数が多すぎればエラーを設定して戻す
             if ($clients->count() > 100) {
@@ -369,19 +386,22 @@ class ReportController extends Controller
             }
         }
 
+
+
         // レスポンス
         return inertia('ReportsCreate', [
-            'client_types' => fn () => collect(config("const.client_types"))->values(),
-            'client_type_taxibus_categories' => fn () => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
+            'client_types' => fn() => collect(config("const.client_types"))->values(),
+            'client_type_taxibus_categories' => fn() => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
                 return ['id' => $id, 'name' => $name];
             })->values(),
-            'genres' => fn () => Genre::get(),
-            'clients_total_count' => fn () => Client::count(),
-            'clients_count' => Inertia::lazy(fn () => $clients->count()),
-            'clients' => Inertia::lazy(fn () => $clients->get(["id", "client_type_id", "name", "name_kana", "image","prefecture","address","name_position","type_name"])),
-            'products' => fn () => Product::get(),
-            'evaluations' => fn () => Evaluation::get(),
-            'sales_methods' => fn () => SalesMethod::get(),
+            'genres' => fn() => Genre::get(),
+            'clients_total_count' => fn() => Client::count(),
+            'clients_count' => Inertia::lazy(fn() => $clients->count()),
+            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name"])),
+            'products' => fn() => Product::get(),
+            'evaluations' => fn() => Evaluation::get(),
+            'sales_methods' => fn() => SalesMethod::get(),
+            'prefecture' => config("const.prefectures"),
         ]);
     }
 
@@ -449,6 +469,14 @@ class ReportController extends Controller
                     'departments' => $report_content['departments'] ?? null,
                     'position' => $report_content['position'] ?? null,
                 ]);
+
+
+                       //日報に紐づく顧客を保存
+                       $clients = Client::find($report_content['client_id']);
+
+                       $clients->client_report_user()->updateOrCreate([
+                           'user_id' => auth()->id(),
+                       ]);
 
                 // 商材評価情報を保存
                 if (isset($report_content['product_evaluation'])) {
@@ -538,35 +566,34 @@ class ReportController extends Controller
         $report_url = session()->get('report_url');
 
 
-      
+
 
         $newReportData = DB::table('reports')
-        ->select('id')
-        ->where('reports.id', '>', $report->id)
-        ->where('reports.draft_flg', 0)
-        ->where('reports.is_private', 0)
-        ->orderBy('reports.id')
-        ->get();
+            ->select('id')
+            ->where('reports.id', '>', $report->id)
+            ->where('reports.draft_flg', 0)
+            ->where('reports.is_private', 0)
+            ->orderBy('reports.id')
+            ->get();
 
         $report_visitors = [];
         $tmp_id = 0;
 
-        foreach($newReportData as $reportData){
+        foreach ($newReportData as $reportData) {
             $report_visitors = DB::table('report_visitors')
-            ->where('report_id',$reportData->id)
-            ->where('user_id',Auth::id())
-            ->first();
+                ->where('report_id', $reportData->id)
+                ->where('user_id', Auth::id())
+                ->first();
 
-            if(!$report_visitors){
+            if (!$report_visitors) {
                 $tmp_id = $reportData->id;
                 break;
             }
-         
         }
-        
-        if($tmp_id != 0){
+
+        if ($tmp_id != 0) {
             $report_url = $report_url . '#report_' . $tmp_id;
-        }else{
+        } else {
             $report_url = $report_url . '#report_' . $report->id;
         }
 
@@ -574,7 +601,7 @@ class ReportController extends Controller
         $link_list = [];
         $link_list['pre'] = $report_m->get_pre_id($report);
         $link_list['next'] = $report_m->get_next_id($report);
-    
+
         return inertia('ReportsShow', [
             'report' => $report,
             'report_comment' => $report,
@@ -676,18 +703,18 @@ class ReportController extends Controller
         }
 
         return inertia('ReportsEdit', [
-            'report' => fn () => $report,
-            'client_types' => fn () => collect(config("const.client_types"))->values(),
-            'client_type_taxibus_categories' => fn () => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
+            'report' => fn() => $report,
+            'client_types' => fn() => collect(config("const.client_types"))->values(),
+            'client_type_taxibus_categories' => fn() => collect(config("const.client_types.taxibus.categories"))->map(function ($name, $id) {
                 return ['id' => $id, 'name' => $name];
             })->values(),
-            'genres' => fn () => Genre::get(),
-            'clients_total_count' => fn () => Client::count(),
-            'clients_count' => Inertia::lazy(fn () => $clients->count()),
-            'clients' => Inertia::lazy(fn () => $clients->get(["id", "client_type_id", "name", "name_kana", "image","prefecture","address","name_position","type_name"])),
-            'products' => fn () => Product::get(),
-            'evaluations' => fn () => Evaluation::get(),
-            'sales_methods' => fn () => SalesMethod::get(),
+            'genres' => fn() => Genre::get(),
+            'clients_total_count' => fn() => Client::count(),
+            'clients_count' => Inertia::lazy(fn() => $clients->count()),
+            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name"])),
+            'products' => fn() => Product::get(),
+            'evaluations' => fn() => Evaluation::get(),
+            'sales_methods' => fn() => SalesMethod::get(),
         ]);
     }
 
@@ -761,7 +788,7 @@ class ReportController extends Controller
                             'required_time' => $report_content['required_time'] ?? null,
                             'departments' => $report_content['departments'] ?? null,
                             'position' => $report_content['position'] ?? null,
-                            
+
                         ],
                     );
                 } else {
@@ -779,10 +806,18 @@ class ReportController extends Controller
                         'required_time' => $report_content['required_time'] ?? null,
                         'departments' => $report_content['departments'] ?? null,
                         'position' => $report_content['position'] ?? null,
-                        
+
                     ]);
                 }
 
+
+
+                //日報に紐づく顧客を保存
+                $clients = Client::find($report_content['client_id']);
+
+                $clients->client_report_user()->updateOrCreate([
+                    'user_id' => auth()->id(),
+                ]);
 
                 // 商材評価情報を保存
                 $report_content_upsert->products()->detach();

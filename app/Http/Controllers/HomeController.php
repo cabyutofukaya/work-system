@@ -8,7 +8,7 @@ use App\Models\OfficeTodo;
 use App\Models\Report;
 use App\Models\SalesTodo;
 use App\Models\User;
-use App\Models\ReportComment;
+use App\Models\ReportContent;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,45 +17,69 @@ use App\Common\TodoCheck;
 use App\Models\Client;
 use App\Models\ReportVisitor;
 
+ini_set("max_execution_time", 0);
+
 class HomeController extends Controller
 {
     public function index(): Response|ResponseFactory
     {
 
-        $clients = Client::orderBy('id')->get();
+        $reports = Report::orderBy('id')->get();
 
-        $type_list = config('const.client_list');
+        foreach ($reports as $report) {
 
-        foreach ($clients as $client) {
-            $name = $client->name;
-            $name_2 = '';
-            $name_position = '';
+            $contents = ReportContent::where('report_id', $report->id)->get();
 
-            foreach ($type_list as $type) {
-                if (preg_match('/' . $type .'/', $name)) {
+            foreach ($contents as $content) {
 
-                    $num = mb_strpos($name, $type);
+                if ($content->type == 'sales') {
+                    //日報に紐づく顧客を保存
+                    $clients = Client::find($content->client_id);
 
-                    if($num == 0){
-                        $name_position = '前';
-                    }else{
-                        $name_position = '後ろ';
-                    }
 
-                    //残り文字
-                    $name_2 = str_replace($type, '', $name);
-
-                    Client::where('id',$client->id)->update([
-                        'name' => $name_2,
-                        'name_2' => $name,
-                        'name_position' => $name_position,
-                        'type_name' => $type,
+                    $clients->client_report_user()->updateOrCreate([
+                        'user_id' => $report->user_id,
                     ]);
-
                 }
             }
-          
         }
+
+
+
+        // $type_list = config('const.client_list');
+
+        // foreach ($clients as $client) {
+        // $name = $client->name;
+        // $name_2 = '';
+        // $name_position = '';
+
+        // foreach ($type_list as $type) {
+        //     if (preg_match('/' . $type .'/', $name)) {
+
+        //         $num = mb_strpos($name, $type);
+
+        //         if($num == 0){
+        //             $name_position = '前';
+        //         }else{
+        //             $name_position = '後ろ';
+        //         }
+
+        //         //残り文字
+        //         $name_2 = str_replace($type, '', $name);
+
+        //         Client::where('id',$client->id)->update([
+        //             'name' => $name_2,
+        //             'name_2' => $name,
+        //             'name_position' => $name_position,
+        //             'type_name' => $type,
+        //         ]);
+
+        //     }
+        // }
+
+        // }
+
+        dd('uu');
 
         $three_month = date('Y-m-d', strtotime('-3 month'));
 

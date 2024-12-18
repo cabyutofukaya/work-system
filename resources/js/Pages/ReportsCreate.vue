@@ -285,15 +285,38 @@
                       v-model="clientsFilterForm.name" maxlength="200" @input="getClients()"></v-text-field>
                   </v-list-item>
 
+
+                  <!-- <v-list-item>
+                    <v-text-field dense outlined clearable prepend-inner-icon="mdi-pencil" label="フリーワードから検索"
+                      hint="複数のワードで検索する場合は、スペースを開けてください" persistent-hint name="clientsFilterForm.word"
+                      v-model="clientsFilterForm.word" maxlength="200" @input="getClients()"></v-text-field>
+                  </v-list-item> -->
+
+
                   <v-list-item>
+                    <v-autocomplete dense outlined clearable label="都道府県" hint="指定の都道府県に該当する会社だけをリストに表示します" persistent-hint
+                      :items="prefecture" name="clientsFilterForm.prefecture"
+                      v-model="clientsFilterForm.prefecture"
+                      @change="getClients()">
+                    </v-autocomplete>
+                  </v-list-item>
+
+
+                  <v-list-item>
+                    <v-checkbox dense outlined label="過去自身で日報記載あり"  @change="getClients();" v-model="clientsFilterForm.my_charge">
+                    </v-checkbox>
+
+                  </v-list-item>
+
+                  <!-- <v-list-item>
                     <v-select dense outlined clearable label="会社種別" hint="該当する会社だけをリストに表示します" persistent-hint
                       :items="client_types" item-value="id" item-text="name" name="clientsFilterForm.client_type_id"
                       v-model="clientsFilterForm.client_type_id"
                       @change="clientsFilterForm.client_type_taxibus_category = ''; clientsFilterForm.genre_id = ''; getClients()">
                     </v-select>
-                  </v-list-item>
+                  </v-list-item> -->
 
-                  <v-list-item>
+                  <!-- <v-list-item>
                     <v-select dense outlined clearable label="カテゴリー(タクシー・バス会社のみ)" hint="該当する会社だけをリストに表示します"
                       persistent-hint :items="client_type_taxibus_categories" item-value="id" item-text="name"
                       name="clientsFilterForm.client_type_taxibus_category"
@@ -308,7 +331,7 @@
                       v-model="clientsFilterForm.genre_id" :disabled="!Boolean(clientsFilterForm.client_type_id)"
                       @change="getClients()">
                     </v-select>
-                  </v-list-item>
+                  </v-list-item> -->
                 </div>
 
                 <v-list-item class="font-weight-bold">
@@ -591,7 +614,7 @@ import _ from "lodash";
 export default {
   components: { Layout, Link },
 
-  props: ['client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods'],
+  props: ['client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods','prefecture'],
 
   data() {
     return {
@@ -649,6 +672,9 @@ export default {
         client_type_id: "",
         client_type_taxibus_category: "",
         genre_id: "",
+
+        prefecture: "",
+        my_charge:false,
       },
 
       // 会社絞り込みフォーム
@@ -703,6 +729,8 @@ export default {
         // フォーム内容に設定された条件の会社リストを取得
         param = this.clientsFilterForm;
       }
+
+      console.log('getClients');
 
       this.$inertia.post(this.$route('reports.create'), param, {
         preserveState: true,

@@ -221,4 +221,10 @@ class Client extends BaseClient implements Auditable
     {
         return $date->format("Y-m-d H:i");
     }
+
+
+    public function client_report_user(): HasMany
+    {
+        return $this->hasMany(ClientReportUser::class);
+    }
 }

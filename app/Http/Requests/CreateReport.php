@@ -30,6 +30,11 @@ class CreateReport extends FormRequest
             'client_type_id' => ['nullable', Rule::in(array_keys(config("const.client_types")))],
             'client_type_taxibus_category' => ['nullable', Rule::in(array_keys(config("const.client_types.taxibus.categories")))],
             'genre_id' => ['nullable', Rule::exists('genres', "id")],
+
+            'prefecture' => ['nullable', Rule::in(config("const.prefectures"))],
+            'my_charge' => ['nullable'],
+
+
         ];
     }
 }
