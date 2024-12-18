@@ -108,9 +108,10 @@
                 {{ report_content.participants }}
 
 
-
+                <template v-if="report_content.sales_method">
                 <h4 class="mt-2 mb-1">営業手段</h4>
                 {{ report_content["sales_method"]["name"] }}
+                </template>
 
                 <h4 class="mt-2 mb-1">商談所要時間</h4>
                 {{ report_content.required_time }}
@@ -786,12 +787,12 @@ export default {
         return;
       }
 
-      if (this.reportContentForm.type === "sales" && !this.reportContentForm.sales_method_id) {
-        this.reportContentFormError.sales_method_id = "営業手段を選択してください";
-        this.$toasted.error('営業手段を選択してください');
+      // if (this.reportContentForm.type === "sales" && !this.reportContentForm.sales_method_id) {
+      //   this.reportContentFormError.sales_method_id = "営業手段を選択してください";
+      //   this.$toasted.error('営業手段を選択してください');
 
-        return;
-      }
+      //   return;
+      // }
 
 
       if (this.reportContentForm.type === "sales" && !this.reportContentForm.required_time) {
@@ -855,12 +856,12 @@ export default {
         return;
       }
 
-      if (this.reportContentForm.type === "sales" && !this.reportContentForm.sales_method_id) {
-        this.reportContentFormError.sales_method_id = "営業手段を選択してください";
-        this.$toasted.error('営業手段を選択してください');
+      // if (this.reportContentForm.type === "sales" && !this.reportContentForm.sales_method_id) {
+      //   this.reportContentFormError.sales_method_id = "営業手段を選択してください";
+      //   this.$toasted.error('営業手段を選択してください');
 
-        return;
-      }
+      //   return;
+      // }
 
       console.log('商談所要時間');
       console.log(this.reportContentForm.required_time);

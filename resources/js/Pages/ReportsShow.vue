@@ -243,9 +243,10 @@
                     {{ report_content["participants"] }}
 
 
-
+                    <template v-if="report_content.sales_method">
                     <h4 class="mt-2 mb-1">営業手段</h4>
                     {{ report_content["sales_method"]["name"] }}
+                    </template>
 
                     <h4 class="mt-2 mb-1">商談所要時間</h4>
                     {{ report_content.required_time }}

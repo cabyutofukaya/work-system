@@ -54,7 +54,10 @@ class StoreReport extends FormRequest
             'report_contents.*.client_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('clients', "id")],
             'report_contents.*.branch_id' => ['nullable', Rule::exists('branches', "id")],
             'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
-            'report_contents.*.sales_method_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('sales_methods', "id")],
+            // 'report_contents.*.sales_method_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('sales_methods', "id")],
+
+            'report_contents.*.sales_method_id' => ['nullable', Rule::exists('sales_methods', "id")],
+
 
             'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
             'report_contents.*.departments' => ['nullable','string'],

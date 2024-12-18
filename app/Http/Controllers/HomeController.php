@@ -9,6 +9,7 @@ use App\Models\Report;
 use App\Models\SalesTodo;
 use App\Models\User;
 use App\Models\ReportContent;
+use App\Models\ReportComment;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,25 +25,33 @@ class HomeController extends Controller
     public function index(): Response|ResponseFactory
     {
 
-        $reports = Report::orderBy('id')->get();
+        // $reports = Report::orderBy('id')->get();
 
-        foreach ($reports as $report) {
+        // foreach ($reports as $report) {
 
-            $contents = ReportContent::where('report_id', $report->id)->get();
+        //     $contents = ReportContent::where('report_id', $report->id)->get();
 
-            foreach ($contents as $content) {
+        //     foreach ($contents as $content) {
 
-                if ($content->type == 'sales') {
-                    //日報に紐づく顧客を保存
-                    $clients = Client::find($content->client_id);
+        //         if ($content->sales_method_id && $content->sales_method_id == 8) {
+
+        //             ReportContent::where('id',$content->id)->update([
+        //                 'sales_method_id' => 100,
+        //             ]);
 
 
-                    $clients->client_report_user()->updateOrCreate([
-                        'user_id' => $report->user_id,
-                    ]);
-                }
-            }
-        }
+        //             // //日報に紐づく顧客を保存
+        //             // $clients = Client::find($content->client_id);
+
+
+        //             // $clients->client_report_user()->updateOrCreate([
+        //             //     'user_id' => $report->user_id,
+        //             // ]);
+        //         }
+        //     }
+        // }
+
+        // dd('uu');
 
 
 
@@ -79,7 +88,7 @@ class HomeController extends Controller
 
         // }
 
-        dd('uu');
+        // dd('uu');
 
         $three_month = date('Y-m-d', strtotime('-3 month'));
 
