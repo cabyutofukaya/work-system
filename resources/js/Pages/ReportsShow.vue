@@ -210,14 +210,7 @@
                   <v-col cols="12" sm="3">
                     <h4 class="mb-1">会社</h4>
                     <div class="d-flex align-center">
-                      <div>
-                        <Link :href="$route('clients.show', { client: report_content.client.id })">
-                        <v-list-item-avatar tile>
-                          <v-img :src="report_content.client['icon_image_url']" alt=""></v-img>
-                        </v-list-item-avatar>
-                        </Link>
-                      </div>
-
+                
                       <div>
                         <div>
                           <Link :href="$route('clients.show', { client: report_content.client.id })">
@@ -238,10 +231,19 @@
                 {{ report_content.departments }} {{ report_content.position }}
               </span>
 
-
-                    <h4 class="mt-2 mb-1">面談者</h4>
+              <template v-if="report_content['contact_persons'].length > 0">
+                  <h4 class="mt-2 mb-1">面談者</h4>
+                  <template v-for="contact_person in report_content['contact_persons']">
+                    <div class="mb-2">{{ contact_person.name }} <br/><span style="font-size: small;">({{ contact_person.department }} / {{ contact_person.position }})<br/></span></div>
+                    <!-- <v-divider></v-divider> -->
+                  </template>
+                  <template v-if="report_content.participants">
                     {{ report_content["participants"] }}
+                  </template>
+                </template>
+                
 
+              
 
                     <template v-if="report_content.sales_method">
                     <h4 class="mt-2 mb-1">営業手段</h4>

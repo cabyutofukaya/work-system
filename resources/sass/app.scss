@@ -128,7 +128,7 @@ html {
     > div:first-child {
       // 2かカラムのPCビューでは左カラムの最大幅を制限
       @media #{map-get($display-breakpoints, 'sm-and-up')} {
-        max-width: 300px;
+        max-width: 400px;
       }
     }
   }

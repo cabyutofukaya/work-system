@@ -443,6 +443,12 @@ class ClientController extends Controller
             ->where("client_id", $client->id)
             ->get();
 
+        //担当者作成
+        $contanct_person_create = false;
+        if(isset($_GET['contact_person'])){
+            $contanct_person_create = true;
+        }
+
 
         return inertia('ClientsShow', [
             // 都道府県
@@ -463,6 +469,9 @@ class ClientController extends Controller
             'evaluations' => fn () => Evaluation::get(),
             // 商材一覧
             'products' => fn () => Product::get(),
+
+            //担当者作成時
+            'contanct_person_create' => $contanct_person_create,
         ]);
     }
 

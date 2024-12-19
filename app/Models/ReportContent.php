@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 日報コンテンツ
@@ -204,6 +205,11 @@ class ReportContent extends BaseReportContent implements Auditable
             ->using(ReportContentProduct::class)
             ->withPivot('id', 'evaluation_id')
             ->withTimestamps();
+    }
+
+    public function report_content_contact_person(): HasMany
+    {
+        return $this->hasMany(ReportContentContanctPerson::class);
     }
 
     /**

@@ -6,6 +6,7 @@ use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 use App\Models\Base\Product as BaseProduct;
 use Illuminate\Database\Eloquent\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 商材
@@ -13,6 +14,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Product extends BaseProduct implements Auditable
 {
     use EagerLoadPivotTrait;
+    use SoftDeletes;
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [

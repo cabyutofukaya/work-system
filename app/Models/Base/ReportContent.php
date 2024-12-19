@@ -13,6 +13,7 @@ use App\Models\Product;
 use App\Models\Report;
 use App\Models\ReportContentLike;
 use App\Models\SalesMethod;
+use App\Models\ContactPerson;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -87,11 +88,18 @@ class ReportContent extends Model
 	{
 		return $this->hasMany(ReportContentLike::class);
 	}
-	
+
 	public function products()
 	{
 		return $this->belongsToMany(Product::class, 'report_content_product')
-					->withPivot('id', 'evaluation_id')
-					->withTimestamps();
+			->withPivot('id', 'evaluation_id')
+			->withTimestamps();
+	}
+
+	public function contact_persons()
+	{
+		return $this->belongsToMany(ContactPerson::class, 'report_content_contact_person')
+			->withPivot('id')
+			->withTimestamps();
 	}
 }

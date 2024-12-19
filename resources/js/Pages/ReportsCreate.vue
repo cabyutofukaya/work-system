@@ -75,13 +75,7 @@
               <template v-if="report_content.type === 'sales'">
                 <h4 class="mb-1">会社</h4>
                 <div class="d-flex align-center">
-                  <div>
-                    <Link :href="$route('clients.show', { client: report_content.client.id })">
-                    <v-list-item-avatar tile>
-                      <v-img :src="report_content.client['icon_image_url']" alt=""></v-img>
-                    </v-list-item-avatar>
-                    </Link>
-                  </div>
+
 
                   <div>
                     <div>
@@ -98,19 +92,28 @@
                   </div>
                 </div>
 
-                <span v-if="report_content.departments || report_content.position">
+
+                <template v-if="report_content['contact_persons']">
+                  <h4 class="mt-2 mb-1">面談者</h4>
+                  <template v-for="contact_person in report_content['contact_persons']">
+                    <div class="mb-2">{{ contact_person.name }} <br/><span style="font-size: small;">({{ contact_person.department }} / {{ contact_person.position }})<br/></span></div>
+                    <!-- <v-divider></v-divider> -->
+                  </template>
+                </template>
+
+                <!-- <span v-if="report_content.departments || report_content.position">
                   <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
                   <span v-if="report_content.departments">{{ report_content.departments }}</span><span
                     v-if="report_content.position"> {{ report_content.position }}</span>
                 </span>
 
                 <h4 class="mt-2 mb-1">面談者</h4>
-                {{ report_content.participants }}
+                {{ report_content.participants }} -->
 
 
                 <template v-if="report_content.sales_method">
-                <h4 class="mt-2 mb-1">営業手段</h4>
-                {{ report_content["sales_method"]["name"] }}
+                  <h4 class="mt-2 mb-1">営業手段</h4>
+                  {{ report_content["sales_method"]["name"] }}
                 </template>
 
                 <h4 class="mt-2 mb-1">商談所要時間</h4>
@@ -279,6 +282,7 @@
             <v-list>
               <!-- 会社リストの絞り込み -->
               <template v-if="reportContentForm.type === 'sales'">
+
                 <div class="mx-8">
                   <v-list-item>
                     <v-text-field dense outlined clearable prepend-inner-icon="mdi-pencil" label="会社名(ふりがな)から検索"
@@ -295,19 +299,20 @@
 
 
                   <v-list-item>
-                    <v-autocomplete dense outlined clearable label="都道府県" hint="指定の都道府県に該当する会社だけをリストに表示します" persistent-hint
-                      :items="prefecture" name="clientsFilterForm.prefecture"
-                      v-model="clientsFilterForm.prefecture"
-                      @change="getClients()">
+                    <v-autocomplete dense outlined clearable label="都道府県" hint="指定の都道府県に該当する会社だけをリストに表示します"
+                      persistent-hint :items="prefecture" name="clientsFilterForm.prefecture"
+                      v-model="clientsFilterForm.prefecture" @change="getClients()">
                     </v-autocomplete>
                   </v-list-item>
 
 
                   <v-list-item>
-                    <v-checkbox dense outlined label="過去自身で日報記載あり"  @change="getClients();" v-model="clientsFilterForm.my_charge">
+                    <v-checkbox dense outlined label="過去自身で日報記載あり" @change="getClients();"
+                      v-model="clientsFilterForm.my_charge">
                     </v-checkbox>
-
                   </v-list-item>
+
+                  <v-divider></v-divider>
 
                   <!-- <v-list-item>
                     <v-select dense outlined clearable label="会社種別" hint="該当する会社だけをリストに表示します" persistent-hint
@@ -408,11 +413,32 @@
                 </v-list-item>
 
 
+                <v-list-item v-if="reportContentForm.client_id" style="margin-top: -20px;margin-bottom: 10px;">
+
+                  <span class="ml-auto">
+
+                    <a :href="'/clients/' + reportContentForm.client_id" target="_blank">
+                      <v-btn tile depressed color="#969797" dark small>
+                        会社情報
+                      </v-btn>
+                    </a>
+
+                    <a :href="'/clients/' + reportContentForm.client_id + '/edit'" target="_blank">
+                      <v-btn tile depressed color="#969797" dark small>
+                        会社編集
+                      </v-btn>
+                    </a>
+
+                  </span>
+                </v-list-item>
+
+
 
                 <!-- 営業所リスト -->
                 <v-list-item>
-                  <v-select v-if="!reportContentForm.client_id" dense filled clearable label="営業所" disabled>
-                  </v-select>
+                  <!-- <v-select v-if="!reportContentForm.client_id" dense filled clearable label="営業所" disabled>
+                  </v-select> -->
+
                   <v-select v-if="reportContentForm.client_id" dense filled clearable label="営業所" :items="branches"
                     item-value="id" name="branch_id" v-model="reportContentForm.branch_id"
                     :error="Boolean(reportContentFormError.branch_id)"
@@ -429,20 +455,62 @@
                   </v-select>
                 </v-list-item>
 
-                <v-list-item>
+                <v-list-item v-if="reportContentForm.client_id" style="margin-top: -20px;margin-bottom: 10px;">
 
-
-                  <span class="ml-auto" v-if="reportContentForm.client_id">
-
+                  <span class="ml-auto">
 
                     <a :href="'/clients/' + reportContentForm.client_id + '/branches/create'" target="_blank">
-                      <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs">
+                      <v-btn tile depressed color="#969797" dark small>
                         営業所を新規追加
                       </v-btn>
                     </a>
 
-                    <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs"
-                      @click="getClients(reportContentForm.client_id)"> <v-icon>
+                    <v-btn tile depressed color="#969797" dark small @click="getClients(reportContentForm.client_id)">
+                      <v-icon>
+                        mdi-reload
+                      </v-icon></v-btn>
+
+                  </span>
+                </v-list-item>
+
+              </template>
+
+
+              <!-- 担当者 -->
+              <template v-if="reportContentForm.type === 'sales' && reportContentForm.client_id">
+                <v-list-item>
+
+                  <v-select dense multiple chips filled clearable label="担当者" :items="contact_persons"
+                    item-value="id" name="contact_person_id" v-model="reportContentForm.contact_person_id"
+                    :error="Boolean(reportContentFormError.contact_person_id)"
+                    :error-messages="reportContentFormError.contact_person_id" 
+                    @change="reportContentFormError.contact_person_id = undefined">
+                    <!-- カスタム選択済み表示 -->
+                    <template v-slot:selection="{ item }">
+                      <!-- {{ item.name }} -->
+                      {{ item.name }} ,
+                    </template>
+                    <!-- カスタム選択肢表示 -->
+                    <template v-slot:item="{ item }">
+                      <!-- {{ item.name }} -->
+                      {{ item.name }} / ({{item.department}} | {{item.position}})
+                    </template>
+                  </v-select>
+
+                </v-list-item>
+
+                <v-list-item style="margin-top: -20px;margin-bottom: 10px;">
+
+                  <span class="ml-auto">
+
+                    <a :href="'/clients/' + reportContentForm.client_id + '?contact_person=create'" target="_blank">
+                      <v-btn tile depressed color="#969797" dark small>
+                        担当者を新規追加
+                      </v-btn>
+                    </a>
+
+                    <v-btn tile depressed color="#969797" dark small @click="getClients(reportContentForm.client_id)">
+                      <v-icon>
                         mdi-reload
                       </v-icon></v-btn>
 
@@ -452,6 +520,9 @@
                 <v-divider class="my-4"></v-divider>
               </template>
 
+
+
+
               <!-- 仕事内容 -->
               <v-list-item v-if="reportContentForm.type === 'work'">
                 <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" required maxlength="300"
@@ -459,21 +530,25 @@
               </v-list-item>
 
 
+
+
+
+
               <!-- 部署名 -->
-              <v-list-item v-if="reportContentForm.type === 'sales'">
+              <!-- <v-list-item v-if="reportContentForm.type === 'sales'">
                 <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名" maxlength="200"
                   name="departments" v-model="reportContentForm.departments"></v-text-field>
-              </v-list-item>
+              </v-list-item> -->
 
               <!-- 役職名 -->
-              <v-list-item v-if="reportContentForm.type === 'sales'">
+              <!-- <v-list-item v-if="reportContentForm.type === 'sales'">
                 <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="役職名" maxlength="200" name="position"
                   v-model="reportContentForm.position"></v-text-field>
-              </v-list-item>
+              </v-list-item> -->
 
               <!-- 面談者 -->
               <v-list-item v-if="reportContentForm.type === 'sales'">
-                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="面談者" required maxlength="200"
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="面談者" maxlength="200"
                   name="participants" v-model="reportContentForm.participants"></v-text-field>
               </v-list-item>
 
@@ -615,7 +690,7 @@ import _ from "lodash";
 export default {
   components: { Layout, Link },
 
-  props: ['client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods','prefecture'],
+  props: ['client_types', 'client_type_taxibus_categories', 'genres', 'clients_total_count', 'clients_count', 'clients', 'products', 'evaluations', 'sales_methods', 'prefecture'],
 
   data() {
     return {
@@ -656,6 +731,9 @@ export default {
         required_time: undefined,
         departments: undefined,
         position: undefined,
+
+        contact_persons:undefined,
+        contact_person_id: undefined,
       },
 
       // 追加ダイアログフォームデータ
@@ -675,7 +753,7 @@ export default {
         genre_id: "",
 
         prefecture: "",
-        my_charge:false,
+        my_charge: false,
       },
 
       // 会社絞り込みフォーム
@@ -704,11 +782,32 @@ export default {
 
       // 新しいリストに選択された営業所が含まれなければリセット
       if (client && !client.branches.find(branch => branch.id === this.reportContentForm.branch_id)) {
-        this.reportContentForm.branch_id = undefined;
+        this.reportContentForm.branch = undefined;
       }
+
+      console.log('営業所リストを返す');
+      console.log(client.branches);
 
       // 営業所リストを返す
       return client.branches;
+    },
+
+
+    // // 選択中の会社の担当者リスト
+    contact_persons: function () {
+
+      let client = this.clients?.find(client => client.id === this.reportContentForm.client_id);
+
+
+      // // 新しいリストに選択された営業所が含まれなければリセット
+      // if (client && !client.contact_persons.find(contact_person => contact_person.id === this.reportContentForm.contact_person_id)) {
+      //   this.reportContentForm.contact_persons = undefined;
+      // }
+
+      console.log('会社の担当者');
+      console.log(client.contact_persons);
+
+      return client.contact_persons;
     },
   },
 
@@ -812,10 +911,21 @@ export default {
         this.reportContentForm["branch"] = this.branches.find(branch => branch.id === this.reportContentForm.branch_id);
       }
 
+
+      // 担当者が選択されていれば担当者情報を追加
+      if (this.reportContentForm.contact_person_id) {
+        this.reportContentForm["contact_persons"] = this.contact_persons.filter(contact_person => this.reportContentForm.contact_person_id.includes(contact_person.id));
+      }
+
       // 営業手段が選択されていれば営業手段情報を追加
       if (this.reportContentForm.sales_method_id) {
         this.reportContentForm["sales_method"] = this.sales_methods.find(sales_method => sales_method.id === this.reportContentForm.sales_method_id);
       }
+
+      console.log('reportContentForm');
+      console.log(this.reportContentForm);
+
+
 
       // フォームに追加
       this.form.report_contents.push(this.reportContentForm);
@@ -840,6 +950,9 @@ export default {
         this.getClients(this.reportContentForm.client_id);
       }
 
+      console.log('editReportContent');
+      console.log(this.reportContentForm);
+
       // ダイアログを開く
       this.reportContentMode = "edit";
       this.dialog = true;
@@ -847,6 +960,10 @@ export default {
 
     // 日報コンテンツ編集の完了
     updateReportContent: function () {
+
+      console.log('updateReportContent');
+      console.log(this.reportContentForm);
+
       // コンテンツ追加ダイアログはサーバ側バリデーションが行われないためrequired属性を設定してsubmit時のバリデーションを行う
       // ただしv-selectではrequired属性が動作しないため個別に入力チェックを行う
       if (this.reportContentForm.type === "sales" && !this.reportContentForm.client_id) {
@@ -875,7 +992,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments", "position"].forEach((key) => {
+      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments", "position","contact_person_id"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 
@@ -887,9 +1004,22 @@ export default {
         // 営業所情報を更新
         report_contents_update["branch"] = this.branches.find(branch => branch.id === report_contents_update.branch_id);
 
+
+       // 担当者が選択されていれば担当者情報を追加
+       if (this.reportContentForm.contact_person_id) {
+        
+        console.log(this.contact_persons);
+        console.log(this.reportContentForm.contact_person_id);
+
+        report_contents_update["contact_persons"] = this.contact_persons.filter(contact_person => this.reportContentForm.contact_person_id.includes(contact_person.id));
+      }
+
         // 営業手段情報を更新
         report_contents_update["sales_method"] = this.sales_methods.find(sales_method => sales_method.id === report_contents_update.sales_method_id);
       }
+
+      console.log('report_contents_update');
+      console.log(report_contents_update);
 
       // 追加ダイアログフォーム・インデックス値をリセットして閉じる
       this.reportContentForm = {};

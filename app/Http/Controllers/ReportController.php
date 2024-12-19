@@ -7,6 +7,7 @@ use App\Http\Requests\EditReport;
 use App\Http\Requests\ShowReport;
 use App\Http\Requests\StoreReport;
 use App\Http\Requests\UpdateReport;
+use App\Models\Base\ReportContent;
 use App\Models\Client;
 use App\Models\ClientReportUser;
 use App\Models\Evaluation;
@@ -17,6 +18,7 @@ use App\Models\SalesMethod;
 use App\Models\User;
 use App\Models\ReportFile;
 use App\Models\ReportCommentUser;
+use App\Models\ReportContentContanctPerson;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -325,11 +327,11 @@ class ReportController extends Controller
         $clients = null;
         if (request()->hasAny(["client_id"])) {
             // 会社IDが指定されていれば該当の会社だけを取得
-            $clients = Client::with(['client_type_taxibus:id,client_id,category', 'genres:id', 'branches:id,client_id,name'])
+            $clients = Client::with(['client_type_taxibus:id,client_id,category', 'genres:id', 'branches:id,client_id,name', 'contact_persons:id,client_id,name,department,position'])
                 ->where("id", $validator->validated()["client_id"]);
         } else if (request()->hasAny(["name", "client_type_id", "client_type_taxibus_category", "genre_id"])) {
             // 条件が指定されていれば該当する会社一覧を取得
-            $clients = Client::with(['client_type_taxibus:id,client_id,category', 'genres:id', 'branches:id,client_id,name']);
+            $clients = Client::with(['client_type_taxibus:id,client_id,category', 'genres:id', 'branches:id,client_id,name', 'contact_persons:id,client_id,name,department,position']);
 
             // 会社名・よみがな
             if ($validator->validated()["name"]) {
@@ -385,6 +387,9 @@ class ReportController extends Controller
                 ]);
             }
         }
+
+
+
 
 
 
@@ -462,21 +467,30 @@ class ReportController extends Controller
                     'title' => $report_content['title'] ?? null,
                     'client_id' => $report_content['client_id'] ?? null,
                     'branch_id' => $report_content['branch_id'] ?? null,
-                    'participants' => $report_content['participants'] ?? null,
+                    // 'participants' => $report_content['participants'] ?? null,
                     'sales_method_id' => $report_content['sales_method_id'] ?? null,
                     'product_description' => $report_content['product_description'] ?? null,
                     'required_time' => $report_content['required_time'] ?? null,
-                    'departments' => $report_content['departments'] ?? null,
-                    'position' => $report_content['position'] ?? null,
+                    // 'departments' => $report_content['departments'] ?? null,
+                    // 'position' => $report_content['position'] ?? null,
                 ]);
 
 
-                       //日報に紐づく顧客を保存
-                       $clients = Client::find($report_content['client_id']);
+                //日報に紐づく顧客を保存
+                $clients = Client::find($report_content['client_id']);
 
-                       $clients->client_report_user()->updateOrCreate([
-                           'user_id' => auth()->id(),
-                       ]);
+                $clients->client_report_user()->updateOrCreate([
+                    'user_id' => auth()->id(),
+                ]);
+
+                // 担当者を保存
+                if (isset($report_content['contact_person_id'])) {
+                    foreach ($report_content['contact_person_id'] as $contact_person_id) {
+                        $report_content_upsert->report_content_contact_person()->updateOrCreate([
+                            'contact_person_id' => $contact_person_id,
+                        ]);
+                    }
+                }
 
                 // 商材評価情報を保存
                 if (isset($report_content['product_evaluation'])) {
@@ -516,6 +530,7 @@ class ReportController extends Controller
             'user:id,name,deleted_at',
             'report_contents.client',
             'report_contents.branch',
+            'report_contents.contact_persons',
             'report_contents.sales_method:id,name',
             'report_contents' => function ($query) {
                 $query
@@ -602,6 +617,7 @@ class ReportController extends Controller
         $link_list['pre'] = $report_m->get_pre_id($report);
         $link_list['next'] = $report_m->get_next_id($report);
 
+
         return inertia('ReportsShow', [
             'report' => $report,
             'report_comment' => $report,
@@ -637,6 +653,7 @@ class ReportController extends Controller
             'report_contents.client',
             'report_contents.branch',
             'report_contents.sales_method',
+            'report_contents.contact_persons',
             'report_files',
         ]);
 
@@ -657,11 +674,11 @@ class ReportController extends Controller
 
         if (request()->hasAny(["client_id"])) {
             // 会社IDが指定されていれば該当の会社だけを取得
-            $clients = Client::with(['client_type_taxibus:id,client_id,client_id,category', 'genres:id', 'branches:id,client_id,name'])
+            $clients = Client::with(['client_type_taxibus:id,client_id,client_id,category', 'genres:id', 'branches:id,client_id,name', 'contact_persons:id,client_id,name,department,position'])
                 ->where("id", $validator->validated()["client_id"]);
         } else if (request()->hasAny(["name", "client_type_id", "client_type_taxibus_category", "genre_id"])) {
             // 条件が指定されていれば該当する会社一覧を取得
-            $clients = Client::with(['client_type_taxibus:id,client_id,category', 'genres:id', 'branches:id,client_id,name']);
+            $clients = Client::with(['client_type_taxibus:id,client_id,category', 'genres:id', 'branches:id,client_id,name', 'contact_persons:id,client_id,name,department,position']);
 
             // 会社名・よみがな
             if ($validator->validated()["name"]) {
@@ -671,26 +688,42 @@ class ReportController extends Controller
                 });
             }
 
-            // 会社タイプ
-            if ($validator->validated()["client_type_id"]) {
-                $clients->where("client_type_id", $validator->validated()["client_type_id"]);
-            }
 
-            // 固有情報 バス・タクシー会社
-            if ($validator->validated()["client_type_taxibus_category"]) {
-                // カテゴリー検索
-                $clients->whereHas('client_type_taxibus', function (Builder $query) use ($validator) {
-                    $query->where('category', $validator->validated()["client_type_taxibus_category"]);
+            // 都道府県
+            if ($validator->validated()["prefecture"]) {
+                $clients->where(function ($query) use ($validator) {
+                    $query->where('prefecture', $validator->validated()["prefecture"]);
                 });
             }
 
-            // ジャンル
-            if ($validator->validated()["genre_id"]) {
-                $clients->whereHas('genres', function (Builder $query) use ($validator) {
-                    // orderで指定したカラムにIntegrity constraint violationエラーが発生するためグローバルスコープを削除
-                    $query->withoutGlobalScope('order')->where('genre_id', $validator->validated()["genre_id"]);
+
+            // 自分の担当
+            if ($validator->validated()["my_charge"]) {
+                $clients->whereHas('client_report_user', function (Builder $query) use ($validator) {
+                    $query->where('user_id', Auth::id());
                 });
             }
+
+            // // 会社タイプ
+            // if ($validator->validated()["client_type_id"]) {
+            //     $clients->where("client_type_id", $validator->validated()["client_type_id"]);
+            // }
+
+            // // 固有情報 バス・タクシー会社
+            // if ($validator->validated()["client_type_taxibus_category"]) {
+            //     // カテゴリー検索
+            //     $clients->whereHas('client_type_taxibus', function (Builder $query) use ($validator) {
+            //         $query->where('category', $validator->validated()["client_type_taxibus_category"]);
+            //     });
+            // }
+
+            // // ジャンル
+            // if ($validator->validated()["genre_id"]) {
+            //     $clients->whereHas('genres', function (Builder $query) use ($validator) {
+            //         // orderで指定したカラムにIntegrity constraint violationエラーが発生するためグローバルスコープを削除
+            //         $query->withoutGlobalScope('order')->where('genre_id', $validator->validated()["genre_id"]);
+            //     });
+            // }
 
             // 該当する件数が多すぎればエラーを設定して戻す
             if ($clients->count() > 100) {
@@ -715,6 +748,7 @@ class ReportController extends Controller
             'products' => fn() => Product::get(),
             'evaluations' => fn() => Evaluation::get(),
             'sales_methods' => fn() => SalesMethod::get(),
+            'prefecture' => config("const.prefectures"),
         ]);
     }
 
@@ -818,6 +852,21 @@ class ReportController extends Controller
                 $clients->client_report_user()->updateOrCreate([
                     'user_id' => auth()->id(),
                 ]);
+
+                //担当者を一時削除
+                // $report_content_upsert->report_content_contact_person()->destory();
+
+                 // 担当者を保存
+                 if (isset($report_content['contact_person_id'])) {
+
+                    ReportContentContanctPerson::where('report_content_id',$report_content_upsert['id'])->delete();
+                  
+                     foreach ($report_content['contact_person_id'] as $contact_person_id) {
+                        $report_content_upsert->report_content_contact_person()->updateOrCreate([
+                             'contact_person_id' => $contact_person_id,
+                        ]);
+                     }
+                 }
 
                 // 商材評価情報を保存
                 $report_content_upsert->products()->detach();

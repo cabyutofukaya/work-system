@@ -53,7 +53,8 @@ class UpdateReport extends FormRequest
             // type:salesのみ
             'report_contents.*.client_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('clients', "id")],
             'report_contents.*.branch_id' => ['nullable', Rule::exists('branches', "id")],
-            'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
+            // 'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
+            'report_contents.*.participants' => ['nullable','string'],
             // 'report_contents.*.sales_method_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('sales_methods', "id")],
 
             'report_contents.*.sales_method_id' => ['nullable', Rule::exists('sales_methods', "id")],
@@ -64,6 +65,8 @@ class UpdateReport extends FormRequest
             'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
             'report_contents.*.departments' => ['nullable','string'],
             'report_contents.*.position' => ['nullable','string'],
+
+            'report_contents.*.contact_person_id' => ['array','nullable'],
 
             // 'report_contents.*.required_time' => ['required', 'string'],
             // 'report_contents.*.departments' => ['string'],

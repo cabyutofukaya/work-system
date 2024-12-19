@@ -944,15 +944,27 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['prefectures', 'sales_todos', 'report_contents', 'report_contents_count_by_fy', 'latest_evaluations', 'client', 'client_type_column_names'],
+  props: ['prefectures', 'sales_todos', 'report_contents', 'report_contents_count_by_fy', 'latest_evaluations', 'client', 'client_type_column_names','contanct_person_create'],
 
   data() {
+
+
+    //担当者作成
+    var contactPersonDialog = false;
+    var contactPersonDialogMode = null;
+
+    if(this.contanct_person_create){
+      contactPersonDialog = true;
+      contactPersonDialogMode = 'store';
+    }
+
+    
     return {
       showContact: [],
       imageOverlayUrl: undefined,
       // 担当者
-      contactPersonDialog: false,
-      contactPersonDialogMode: null, // store|update
+      contactPersonDialog: contactPersonDialog,
+      contactPersonDialogMode: contactPersonDialogMode, // store|update
       contactPersonForm: this.$inertia.form({
         id: null,
         client_id: this.client.id,

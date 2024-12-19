@@ -104,6 +104,10 @@ Route::group([
 
     // 日報閲覧状況詳細
     $router->get('report-visitors/show/{user}', 'ReportVisitorController@all_detail');
+
+
+    // 教材
+    $router->resource('products', 'ProductController');
 });
 
 Route::group([
