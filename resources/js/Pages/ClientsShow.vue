@@ -636,6 +636,14 @@
                     <v-list-item-subtitle>
                       {{ report_content.report.date }}
                     </v-list-item-subtitle>
+
+                    <v-list-item-subtitle v-if="report_content.contact_persons.length > 0">
+                      <span v-for="(contact_person,c_index) in report_content.contact_persons">
+                        <template v-if="c_index != report_content.contact_persons.length - 1">{{ contact_person.name }} 様,</template>
+                        <template v-if="c_index == report_content.contact_persons.length - 1">{{ contact_person.name }} 様</template>
+                      </span>
+                    </v-list-item-subtitle>
+
                     <v-list-item-subtitle class="overflow-hidden">
                       <div class="text-nowrap overflow-hidden">
                         {{ report_content.description }}

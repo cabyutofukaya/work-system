@@ -50,4 +50,10 @@ class ContactPersonController extends Controller
 
         return redirect()->route('clients.show', ['client' => $client_id]);
     }
+
+
+    public function show(ContactPerson $contactPerson) {
+
+        return response()->json(['contact_person' => $contactPerson], 200);
+    }
 }

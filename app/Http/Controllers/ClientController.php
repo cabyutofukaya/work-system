@@ -401,7 +401,7 @@ class ClientController extends Controller
         // 最近の営業日報
         $report_contents = ReportContent
             ::exceptPrivate()
-            ->with(["report:id,user_id,date", "report.user:id,name"])
+            ->with(["report:id,user_id,date", "report.user:id,name","contact_persons"])
             ->where("type", "sales")
             ->where("client_id", $client->id)
             ->where("hidden", 0)

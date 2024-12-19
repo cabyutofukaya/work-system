@@ -52,9 +52,9 @@
             <v-col cols="12" sm="" class="text-h6">
               <div style="display: flex;">
 
-                <span v-if="report.draft_flg == 0">{{ report.created_at.substr(0,16) }}</span>
-                <span v-if="report.draft_flg == 1">{{ report.created_at.substr(0,10) }}</span>
-                <span v-if="report.draft_flg == 1" style="font-size: xx-small;vertical-align:bottom;">  (下書き)</span>
+                <span v-if="report.draft_flg == 0">{{ report.created_at.substr(0, 16) }}</span>
+                <span v-if="report.draft_flg == 1">{{ report.created_at.substr(0, 10) }}</span>
+                <span v-if="report.draft_flg == 1" style="font-size: xx-small;vertical-align:bottom;"> (下書き)</span>
                 <!-- {{ report.date }}   {{ report.time }} -->
                 <!-- <span class="ml-2">{{ report.created_at.substr(11,5) }}</span> -->
 
@@ -210,7 +210,7 @@
                   <v-col cols="12" sm="3">
                     <h4 class="mb-1">会社</h4>
                     <div class="d-flex align-center">
-                
+
                       <div>
                         <div>
                           <Link :href="$route('clients.show', { client: report_content.client.id })">
@@ -227,33 +227,36 @@
                     </div>
 
                     <span v-if="report_content.departments || report_content.position">
-                <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
-                {{ report_content.departments }} {{ report_content.position }}
-              </span>
+                      <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
+                      {{ report_content.departments }} {{ report_content.position }}
+                    </span>
 
-              <template v-if="report_content['contact_persons'].length > 0">
-                  <h4 class="mt-2 mb-1">面談者</h4>
-                  <template v-for="contact_person in report_content['contact_persons']">
-                    <div class="mb-2">{{ contact_person.name }} <br/><span style="font-size: small;">({{ contact_person.department }} / {{ contact_person.position }})<br/></span></div>
-                    <!-- <v-divider></v-divider> -->
-                  </template>
-                  <template v-if="report_content.participants">
-                    {{ report_content["participants"] }}
-                  </template>
-                </template>
-                
+                    <template v-if="report_content['contact_persons'].length > 0">
+                      <h4 class="mt-2 mb-1">面談者</h4>
+                      <template v-for="contact_person in report_content['contact_persons']">
 
-              
+                        <div class="mb-2"><a href="#" @click="openContactPersonDialog(contact_person.id)">{{
+                          contact_person.name }}</a> <br /><span style="font-size: small;">({{
+                              contact_person.department }} / {{ contact_person.position }})<br /></span></div>
+                        <!-- <v-divider></v-divider> -->
+                      </template>
+                      <template v-if="report_content.participants">
+                        {{ report_content["participants"] }}
+                      </template>
+                    </template>
+
+
+
 
                     <template v-if="report_content.sales_method">
-                    <h4 class="mt-2 mb-1">営業手段</h4>
-                    {{ report_content["sales_method"]["name"] }}
+                      <h4 class="mt-2 mb-1">営業手段</h4>
+                      {{ report_content["sales_method"]["name"] }}
                     </template>
 
                     <h4 class="mt-2 mb-1">商談所要時間</h4>
                     {{ report_content.required_time }}
 
-                  
+
 
 
                   </v-col>
@@ -277,7 +280,7 @@
 
                     <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
                     {{ report_content["product_description"] }}
-                    
+
 
                     <div class="text-right mt-2">
                       <v-chip small class="mr-2" color="primary" :outlined="!report_content['has_own_like']"
@@ -305,7 +308,7 @@
                     </div> -->
 
 
-                    
+
 
 
                   </v-col>
@@ -510,6 +513,86 @@
           </v-card-text>
         </v-card>
       </v-dialog>
+
+
+
+      <!-- 報告追加・編集ダイアログ -->
+      <v-dialog :max-width="$vuetify.breakpoint.smAndUp ? '500px' : 'unset'" v-model="contactPersonDialog">
+        <v-card flat tile>
+          <v-card-title>
+            <span>面談者
+            </span>
+          </v-card-title>
+
+          <v-card-text>
+
+            <v-list dense class="description-list">
+
+              <v-list-item>
+                <v-list-item-content>
+                  <v-row>
+                    <v-col cols="4">氏名</v-col>
+                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.name }}</v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item v-if="contactPersonForm.email">
+                <v-list-item-content>
+                  <v-row>
+                    <v-col cols="4">メールアドレス</v-col>
+                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.email }}</v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item v-if="contactPersonForm.tel">
+                <v-list-item-content>
+                  <v-row>
+                    <v-col cols="4">電話番号</v-col>
+                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.tel }}</v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-content>
+                  <v-row>
+                    <v-col cols="4">部署名</v-col>
+                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.department }}</v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-content>
+                  <v-row>
+                    <v-col cols="4">役職</v-col>
+                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.position }}</v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+
+            </v-list>
+
+
+          </v-card-text>
+
+
+
+
+          <v-divider></v-divider>
+          <v-card-text class="text-right">
+            <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="contactPersonDialog = false;">
+              <v-icon>
+                mdi-close
+              </v-icon>
+              閉じる
+            </Button>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
     </div>
   </Layout>
 </template>
@@ -542,6 +625,16 @@ export default {
       }),
       loading: {},
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
+      contactPersonDialog: false,
+
+      contactPersonForm: {
+        name: undefined,
+        email: undefined,
+        tel: undefined,
+        department: undefined,
+        position: undefined,
+      },
+
     };
   },
 
@@ -608,6 +701,27 @@ export default {
           })
         }
       })
+    },
+
+
+    openContactPersonDialog(contact_person_id) {
+
+      //選択した会社情報取得
+      axios.get(`/contact-persons/${contact_person_id}`).then(res => {
+
+        console.log(res.data);
+
+        this.contactPersonForm.name = res.data.contact_person.name;
+        this.contactPersonForm.email = res.data.contact_person.email;
+        this.contactPersonForm.tel = res.data.contact_person.tel;
+        this.contactPersonForm.position = res.data.contact_person.position;
+        this.contactPersonForm.department = res.data.contact_person.department;
+
+      }).catch(err => {
+        alert('会社の取得に失敗しました。');
+      });
+
+      this.contactPersonDialog = true;
     },
 
     // handlePopstate() {
