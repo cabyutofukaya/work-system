@@ -30,6 +30,8 @@ use App\Http\Controllers\LatestProductController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ScheduleListController;
 use App\Http\Controllers\ContactPersonImageController;
+use App\Http\Controllers\ReportVisitorController;
+use App\Http\Controllers\UploadImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,7 +83,7 @@ Route::group(['middleware' => 'basicauth'], function () {
         Route::get('client-types/{client_type}/clients/map', [ClientController::class, "map"])->name('client-types.clients.map');
 
         // 担当者
-        Route::resource('contact-persons', ContactPersonController::class)->only(["store", "update", "destroy","show"]);
+        Route::resource('contact-persons', ContactPersonController::class)->only(["store", "update", "destroy", "show"]);
 
         // 営業所
         Route::resource('clients.branches', BranchController::class)->only(["create", "store", "edit", "update", "destroy"])->shallow();
@@ -273,3 +275,10 @@ Route::post('/upload/meeting/update', [MeetingController::class, "file_update"])
 
 //写真削除
 Route::post('/upload/meeting/delete', [MeetingController::class, "file_delete"])->name('meetings-file.delete');
+
+
+Route::get('/visitor/report/{user_id}', [ReportVisitorController::class, "index"]);
+
+
+// 日報ファイルアップ
+Route::post('report-file/upload', [UploadImageController::class, "upload"]);

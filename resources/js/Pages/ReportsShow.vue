@@ -140,7 +140,7 @@
               <div class="report-description-list">
                 <v-row class="grey lighten-3 px-6">
                   <v-col>
-                    <h3>{{ report_content["type_name"] }}</h3>
+                    <h3>業務日報</h3>
                   </v-col>
                 </v-row>
 
@@ -202,47 +202,75 @@
               <div class="report-description-list">
                 <v-row class="grey lighten-3 px-6">
                   <v-col>
-                    <h3>{{ report_content["type_name"] }}</h3>
+                    <h3>
+                      営業日報<template v-if="report_content.free">(フリー営業)</template>
+                    </h3>
                   </v-col>
                 </v-row>
 
                 <v-row>
                   <v-col cols="12" sm="3">
-                    <h4 class="mb-1">会社</h4>
-                    <div class="d-flex align-center">
 
-                      <div>
+
+                    <template v-if="!report_content.free">
+
+                      <h4 class="mb-1">会社</h4>
+                      <div class="d-flex align-center">
+
                         <div>
-                          <Link :href="$route('clients.show', { client: report_content.client.id })">
-                          {{ report_content.client.name }}
-                          </Link>
-                        </div>
-                        <div class="mt-1" v-if="report_content.branch">
-                          {{ report_content.branch.name }}
-                        </div>
-                        <div class="mt-1">
-                          {{ report_content["client"]["client_type_name"] }}
+                          <div>
+                            <Link :href="$route('clients.show', { client: report_content.client.id })">
+                            {{ report_content.client.name }}
+                            </Link>
+                          </div>
+                          <div class="mt-1" v-if="report_content.branch">
+                            {{ report_content.branch.name }}
+                          </div>
+                          <div class="mt-1">
+                            {{ report_content["client"]["client_type_name"] }}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <span v-if="report_content.departments || report_content.position">
+                      <!-- <span v-if="report_content.departments || report_content.position">
                       <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
                       {{ report_content.departments }} {{ report_content.position }}
-                    </span>
+                    </span> -->
 
-                    <template v-if="report_content['contact_persons'].length > 0">
-                      <h4 class="mt-2 mb-1">面談者</h4>
-                      <template v-for="contact_person in report_content['contact_persons']">
+                      <template v-if="report_content['contact_persons'].length > 0">
+                        <h4 class="mt-2 mb-1">面談者</h4>
+                        <template v-for="contact_person in report_content['contact_persons']">
 
-                        <div class="mb-2"><a href="#" @click="openContactPersonDialog(contact_person.id)">{{
-                          contact_person.name }}</a> <br /><span style="font-size: small;">({{
-                              contact_person.department }} / {{ contact_person.position }})<br /></span></div>
-                        <!-- <v-divider></v-divider> -->
+                          <div class="mb-2"><a @click="openContactPersonDialog(contact_person.id)">{{
+                            contact_person.name }}</a> <br /><span style="font-size: small;">({{
+                                contact_person.department }} / {{ contact_person.position }})<br /></span></div>
+                          <!-- <v-divider></v-divider> -->
+                        </template>
+                        <!-- <template v-if="report_content.participants">
+                        {{ report_content["participants"] }}
+                      </template> -->
                       </template>
+
+                    </template>
+
+                    <!-- フリー営業 -->
+                    <template v-else>
+
+                      <h4 class="mt-1">会社</h4>
+                      {{ report_content['client_name'] }}
+
+
+                      <template v-if="report_content.departments || report_content.position">
+                        <h4 class="mt-1">部署名 / 役職</h4>
+                        {{ report_content["departments"] ?? '-' }} / {{ report_content["position"] ?? '-' }}
+                      </template>
+
+
                       <template v-if="report_content.participants">
+                        <h4 class="mt-1">面談者</h4>
                         {{ report_content["participants"] }}
                       </template>
+
                     </template>
 
 
@@ -322,37 +350,48 @@
         </div>
 
 
-        <div v-for="(report_file, index) in report['report_files']" :key="report_file.id">
-          <v-card-text>
-            <div class="report-description-list">
 
-              <v-row class="grey lighten-3 px-6" v-if="index == 0">
-                <v-col>
-                  <h3>
-                    <template>ファイル</template>
-                  </h3>
-                </v-col>
-              </v-row>
+        <template v-if="report.report_files.length > 0">
+          <v-container fluid class="mt-5">
+            <v-row v-if="!$vuetify.breakpoint.xs">
+              <template  v-for="(file, f_index) in report.report_files">
+              <v-col cols="3" class="text-al" :key="f_index" v-if="file.type == 'image'">
+                  <v-card class="mx-auto" max-width="400" @click.native="clickImage(file.name, 'content')">
+                    <v-img color="surface-variant" max-height="250" min-height="150"
+                      :src="`/storage/report/${file.name}`" cover>
+                    </v-img>
+                  </v-card>
+              </v-col>
+              </template>
+            </v-row>
 
-              <v-row class="lighten-3 px-6">
-                <a :href="`/storage/report/${report_file.path}`" :download="`${report_file.name}`"
-                  v-if="report_file.type == 'file'">
-                  <div class="text-right mt-2">
-                    {{ report_file.name }}
-                  </div>
-                </a>
 
-                <a :href="`/storage/report/${report_file.path}`" :download="`${report_file.name}`"
-                  v-if="report_file.type == 'image'">
-                  <div class="text-right my-3">
-                    <v-img :width="150" :height="120" cover :src="`/storage/report/${report_file.path}`"></v-img>
-                  </div>
-                </a>
+            <v-row v-if="$vuetify.breakpoint.xs">
+              <v-col cols="12" v-for="(file, f_index) in report.report_files" :key="f_index" class="text-al">
+                <template v-if="file.type == 'image'">
+                  <v-card class="mx-auto" max-width="400" @click.native="clickImage(file.name, 'content')">
+                    <v-img color="surface-variant" max-height="250" min-height="150"
+                      :src="`/storage/report/${file.name}`" cover>
+                    </v-img>
+                  </v-card>
 
-              </v-row>
-            </div>
-          </v-card-text>
-        </div>
+                </template>
+              </v-col>
+            </v-row>
+
+          </v-container>
+
+          <div v-for="(file, f_index) in report.report_files" :key="f_index">
+            <a :href="`/storage/report/${file.name}`" target="_blank" v-if="file.type == 'file'">
+              <div class="text-left ml-10">
+                {{ file.original_name }}
+              </div>
+            </a>
+
+          </div>
+
+
+        </template>
 
 
 
@@ -593,6 +632,18 @@
         </v-card>
       </v-dialog>
 
+
+          <!-- コメント入力ダイアログ -->
+          <v-dialog v-model="fileDialog" :max-width="$vuetify.breakpoint.smAndUp ? '800px' : 'unset'"
+        @click:outside="fileDialog = false;">
+        <v-card flat tile>
+
+          <v-img :src="`/storage/report/${file_name}`"></v-img>
+
+
+        </v-card>
+      </v-dialog>
+
     </div>
   </Layout>
 </template>
@@ -634,6 +685,12 @@ export default {
         department: undefined,
         position: undefined,
       },
+
+
+      // 報告作成・編集ダイアログ
+      fileDialog: false,
+      file_name: undefined,
+      imageType: undefined,
 
     };
   },
@@ -722,6 +779,13 @@ export default {
       });
 
       this.contactPersonDialog = true;
+    },
+
+
+    clickImage(file_name, imageType) {
+      this.imageType = imageType;
+      this.file_name = file_name;
+      this.fileDialog = true;
     },
 
     // handlePopstate() {

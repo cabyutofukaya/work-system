@@ -90,29 +90,29 @@ class HomeController extends Controller
 
         // dd('uu');
 
-        $three_month = date('Y-m-d', strtotime('-3 month'));
+        // $three_month = date('Y-m-d', strtotime('-3 month'));
 
-        $reports = Report::where([
-            'draft_flg' => 0,
-            'is_private' => 0,
-        ])->where('date', '>=', $three_month)
-            ->get();
+        // $reports = Report::where([
+        //     'draft_flg' => 0,
+        //     'is_private' => 0,
+        // ])->where('date', '>=', $three_month)
+        //     ->get();
 
-        $report_count = count($reports);
+        // $report_count = count($reports);
 
-        $user_id = Auth::user()->id;
+        // $user_id = Auth::user()->id;
 
 
-        $visitor_count = 0;
-        foreach ($reports as $report) {
-            $report_visitor = ReportVisitor::where('report_id', $report->id)->where('user_id', $user_id)->count();
-            $visitor_count = $visitor_count + $report_visitor;
-        }
+        // $visitor_count = 0;
+        // foreach ($reports as $report) {
+        //     $report_visitor = ReportVisitor::where('report_id', $report->id)->where('user_id', $user_id)->count();
+        //     $visitor_count = $visitor_count + $report_visitor;
+        // }
 
-        $visitor_rate = 0;
-        if ($visitor_count != 0) {
-            $visitor_rate = round(($visitor_count / $report_count) * 100, 2);
-        }
+        // $visitor_rate = 0;
+        // if ($visitor_count != 0) {
+        //     $visitor_rate = round(($visitor_count / $report_count) * 100, 2);
+        // }
 
 
 
@@ -233,10 +233,6 @@ class HomeController extends Controller
             ])->get()),
 
             'todo_data' => TodoCheck::check(),
-
-            'visitor_rate' => $visitor_rate,
-            'visitor_count' => $visitor_count,
-            'report_count' => $report_count,
 
             'is_read_meeting' => $is_read_meeting,
         ]);

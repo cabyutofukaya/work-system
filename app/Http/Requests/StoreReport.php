@@ -42,6 +42,11 @@ class StoreReport extends FormRequest
             'is_private' => ['required', 'boolean'],
             // 'time' => ['required'],
             'draft_flg' => ['int', 'nullable'],
+
+
+            //添付ファイル
+            'report_attach_file' => ['nullable', 'array'],
+
             'report_contents' => ['required', 'array'],
             'report_contents.*.type' => ['required', 'in:' . implode(",", array_keys(config("const.report_content_type")))],
             'report_contents.*.description' => ['nullable', 'string'],
@@ -50,25 +55,33 @@ class StoreReport extends FormRequest
 
             // type:workのみ
             'report_contents.*.title' => ['required_if:report_contents.*.type,work'],
-            // type:salesのみ
-            'report_contents.*.client_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('clients', "id")],
-            'report_contents.*.branch_id' => ['nullable', Rule::exists('branches', "id")],
-           
-            // 'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
-            
-            'report_contents.*.participants' => ['nullable','string'],
 
-            'report_contents.*.contact_person_id' => ['array','required'],
+            // type:salesのみ
+            // 'report_contents.*.client_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('clients', "id")],
+
+            'report_contents.*.client_id' => ['nullable', Rule::exists('clients', "id")],
+            'report_contents.*.branch_id' => ['nullable', Rule::exists('branches', "id")],
+
+            // 'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
+
+            'report_contents.*.participants' => ['nullable', 'string'],
+
+            'report_contents.*.contact_person_id' => ['array', 'nullable'],
 
             // 'report_contents.*.sales_method_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('sales_methods', "id")],
 
             'report_contents.*.sales_method_id' => ['nullable', Rule::exists('sales_methods', "id")],
 
 
-            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales','nullable', 'string'],
-            'report_contents.*.departments' => ['nullable','string'],
-            'report_contents.*.position' => ['nullable','string'],
-            
+            'report_contents.*.required_time' => ['required_if:report_contents.*.type,sales', 'nullable', 'string'],
+            'report_contents.*.departments' => ['nullable', 'string'],
+            'report_contents.*.position' => ['nullable', 'string'],
+
+            //フリー営業
+            'report_contents.*.free' => ['nullable', 'boolean'],
+            'report_contents.*.client_name' => ['nullable', 'string'],
+
+
 
             // 'report_contents.*.file' => ['nullable','max:2028','mimes:jpg,jpeg,png,gif'],
             'report_contents.*.product_evaluation' => ['nullable', 'array'],

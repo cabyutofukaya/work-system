@@ -41,6 +41,11 @@ class UpdateReport extends FormRequest
             // 更新・削除される日報コンテンツIDがルートパラメータで指定された日報に属しているかのチェックは省略しコントローラ側リレーションで制限
             'date' => ['required'],
             'is_private' => ['required', 'boolean'],
+
+            //添付ファイル
+            'report_attach_file' => ['nullable', 'array'],
+            '_delete_report_attach_file_ids' => ['nullable', 'array'],
+
             // 日報コンテンツ
             'report_contents' => ['required', 'array'],
             'report_contents.*.id' => ['nullable', Rule::exists('report_contents', "id")],
@@ -51,7 +56,8 @@ class UpdateReport extends FormRequest
             // type:workのみ
             'report_contents.*.title' => ['required_if:report_contents.*.type,work'],
             // type:salesのみ
-            'report_contents.*.client_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('clients', "id")],
+            'report_contents.*.client_id' => ['nullable', Rule::exists('clients', "id")],
+            // 'report_contents.*.client_id' => ['required_if:report_contents.*.type,sales', 'nullable', Rule::exists('clients', "id")],
             'report_contents.*.branch_id' => ['nullable', Rule::exists('branches', "id")],
             // 'report_contents.*.participants' => ['required_if:report_contents.*.type,sales'],
             'report_contents.*.participants' => ['nullable','string'],
@@ -72,6 +78,7 @@ class UpdateReport extends FormRequest
             // 'report_contents.*.departments' => ['string'],
 
             'report_contents.*.product_evaluation.*.evaluation_id' => [Rule::exists('evaluations', "id")],
+            
             // type:salesにおいて指定された会社IDに所属する営業所IDが指定されているかチェック
             'report_contents.*' => Rule::forEach(function ($value, $attribute, $attribute2) {
                 return [

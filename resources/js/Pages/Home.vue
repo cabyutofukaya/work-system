@@ -2,12 +2,9 @@
   <Layout>
 
 
-     <!-- 絞り込み条件ダイアログ -->
-     <v-dialog
-        v-model="isReadDialog"
-        :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-        @click:outside="closeIsReadDialog"
-    >
+    <!-- 絞り込み条件ダイアログ -->
+    <v-dialog v-model="isReadDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="closeIsReadDialog">
       <v-card flat tile>
         <v-card-title>
           <template>
@@ -16,18 +13,15 @@
         </v-card-title>
 
         <v-card-text>
-          未読のコメントがあります。<br/><a href="/reports?is_readed=1">こちら</a>から確認してください。
+          未読のコメントがあります。<br /><a href="/reports?is_readed=1">こちら</a>から確認してください。
         </v-card-text>
-      
+
         <v-divider></v-divider>
 
-       
+
 
         <v-card-text class="text-right">
-          <Button
-              class="mt-4"
-              @click.native="isReadDialog = false"
-          >
+          <Button class="mt-4" @click.native="isReadDialog = false">
             <v-icon>
               mdi-close
             </v-icon>
@@ -38,35 +32,49 @@
     </v-dialog>
 
 
-    <v-card class="ml-auto" max-width="400" flat tile v-if="windowSize >= 800">
+    <template v-if="$vuetify.breakpoint.xs">
+      <v-card class="ml-auto" max-width="400" flat tile>
 
-      <v-card-actions>
-        <v-list-item class="w-100">
-          <v-img :width="50" :height="50" cover :src="`/storage/user/${user.img_file}`"
-            v-if="user.img_file"></v-img>
-          <v-img :width="50" :height="50" cover src="/storage/user/noimg.jpeg"
-            v-if="!user.img_file"></v-img>
+        <v-card-actions>
+          <v-list-item class="w-100">
+            <v-img :width="50" :height="50" cover :src="`/storage/user/${user.img_file}`" v-if="user.img_file"></v-img>
+            <v-img :width="50" :height="50" cover src="/storage/user/noimg.jpeg" v-if="!user.img_file"></v-img>
 
-          <v-list-item-title style="font-size: large;margin-left: 5px;">お疲れ様です、{{ $page.props.auth.user.name }}さん!</v-list-item-title>
+            <v-list-item-title style="font-size: large;margin-left: 5px;">お疲れ様です、{{ $page.props.auth.user.name
+              }}さん!</v-list-item-title>
 
-        </v-list-item>
-      </v-card-actions>
-    </v-card>
+          </v-list-item>
+        </v-card-actions>
+      </v-card>
+    </template>
 
 
-    <v-card class="ml-auto" style="margin-left: auto;" flat tile v-if="windowSize < 800">
+    <template v-if="!$vuetify.breakpoint.xs">
+      <v-row>
 
-      <v-card-actions>
-        <v-list-item class="w-100">
-          <v-img :width="30" :height="30"  cover :src="`/storage/user/${user.img_file}`"
-            v-if="user.img_file"></v-img>
-          <v-img :width="30" :height="30" cover  src="/storage/user/noimg.jpeg"
-            v-if="!user.img_file"></v-img>
-          <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name }}さん!</v-list-item-title>
+        <v-card class="mr-auto" max-width="400" flat tile>
+          <v-card-text>直近3ヶ月の日報既読率 :
+            <template v-if="loadingReadRate">
+              <v-progress-circular indeterminate size="20"></v-progress-circular>
+            </template>
+            {{ visitor_rate ?? '-' }}% </v-card-text>
+        </v-card>
 
-        </v-list-item>
-      </v-card-actions>
-    </v-card>
+        <v-card class="ml-auto" style="margin-left: auto;" flat tile>
+
+          <v-card-actions>
+            <v-list-item class="w-100">
+              <v-img :width="30" :height="30" cover :src="`/storage/user/${user.img_file}`"
+                v-if="user.img_file"></v-img>
+              <v-img :width="30" :height="30" cover src="/storage/user/noimg.jpeg" v-if="!user.img_file"></v-img>
+              <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name }}さん!!</v-list-item-title>
+
+            </v-list-item>
+          </v-card-actions>
+        </v-card>
+      </v-row>
+
+    </template>
 
 
 
@@ -354,7 +362,8 @@
       </v-list>
 
       <div class="mt-4 text-right" v-if="sales_todos.length">
-        <Button class="mb-2 mr-2" :small="$vuetify.breakpoint.xs" :to="$route('sales-todos.index')" dusk="salesTodoIndex">
+        <Button class="mb-2 mr-2" :small="$vuetify.breakpoint.xs" :to="$route('sales-todos.index')"
+          dusk="salesTodoIndex">
           <v-icon>
             mdi-format-list-bulleted
           </v-icon>
@@ -419,8 +428,9 @@
                 <!-- 社内担当者 PCビュー -->
                 <template v-if="!$vuetify.breakpoint.xs">
                   <v-col cols="1">
-                    <div v-for="(office_todo_participant, index) in office_todo['office_todo_participants']" :key="index"
-                      class="d-inline-block mr-2" :class="{ 'mt-1': index !== 0 }" style="white-space:nowrap">
+                    <div v-for="(office_todo_participant, index) in office_todo['office_todo_participants']"
+                      :key="index" class="d-inline-block mr-2" :class="{ 'mt-1': index !== 0 }"
+                      style="white-space:nowrap">
                       <Link :href="$route('users.show', { user: office_todo_participant['user_id'] })"
                         dusk="userShowOfficeTodoParticipant">
                       {{ office_todo_participant['user']['name'] }}
@@ -433,8 +443,8 @@
                 <template v-else>
                   <v-col cols="12" v-if="office_todo['office_todo_participants'].length">
                     社内担当者：
-                    <div v-for="(office_todo_participant, index) in office_todo['office_todo_participants']" :key="index"
-                      class="d-inline-block mr-2" :class="{ 'mt-1': index !== 0 }">
+                    <div v-for="(office_todo_participant, index) in office_todo['office_todo_participants']"
+                      :key="index" class="d-inline-block mr-2" :class="{ 'mt-1': index !== 0 }">
                       <Link :href="$route('users.show', { user: office_todo_participant['user_id'] })"
                         dusk="userShowOfficeTodoParticipant">
                       {{ office_todo_participant['user']['name'] }}
@@ -732,7 +742,7 @@
 </template>
 
 <style>
-.is_readed{
+.is_readed {
   color: rgb(240, 49, 42);
 }
 </style>
@@ -744,7 +754,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment', 'meetings', 'user','is_read'],
+  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment', 'meetings', 'user', 'is_read'],
 
   data: () => ({
     loading: {},
@@ -754,7 +764,11 @@ export default {
     return {
       windowSize: window.innerWidth,
       isReadDialog: Boolean(this.is_read != 0),
-      loading: {}
+      loading: {},
+
+      //既読率
+      visitor_rate: undefined,
+      loadingReadRate: true,
     };
   },
 
@@ -860,22 +874,25 @@ export default {
         }
       })
     },
-    handleResize: function () {
-      // resizeのたびにこいつが発火するので、ここでやりたいことをやる
-      this.windowSize = window.innerWidth;
-    },
-     // ダイアログを閉じる
-     closeIsReadDialog() {
+    // ダイアログを閉じる
+    closeIsReadDialog() {
       //  ダイアログを閉じる
       this.isReadDialog = false;
 
     }
   },
+
   mounted: function () {
-    window.addEventListener('resize', this.handleResize)
+    //サジェスト管理
+    axios.get(`/visitor/report/${this.user.id}`).then(res => {
+
+      this.visitor_rate = res.data.visitor_rate;
+      console.log(res.data);
+      this.loadingReadRate = false;
+
+    }).catch(err => {
+      //  alert(err);
+    });
   },
-  beforeDestroy: function () {
-    window.removeEventListener('resize', this.handleResize)
-  }
 }
 </script>

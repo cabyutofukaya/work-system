@@ -43,6 +43,8 @@ class ReportContent extends BaseReportContent implements Auditable
         'position',
         'hidden',
         'product_bikou',
+        'free',
+        'client_name',
     ];
 
     /**

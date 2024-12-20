@@ -91,6 +91,7 @@ class ReportController extends Controller
         }
 
 
+
         return inertia('Reports', [
 
             'reports' => $reports,
@@ -112,6 +113,7 @@ class ReportController extends Controller
                 // 'end_date' => $end_date,
                 'end_date' => $request->input('end_date'),
                 'department' => $request->input('department'),
+                'report_type' => $request->input('report_type'),
             ],
 
             // 会社ID検索時の対象
@@ -120,6 +122,7 @@ class ReportController extends Controller
             'report_url' => $report_url,
             'is_phone' => $isPhone,
             'user' => Auth::user(),
+            'report_content_type' => collect(config("const.report_content_type"))->values()
         ]);
     }
 
@@ -239,6 +242,15 @@ class ReportController extends Controller
                 });
             }
         }
+
+
+        // 日報種別
+        if ($request->filled('report_type') && $validator->validated()["report_type"]) {
+            $reports->whereHas('report_contents', function ($query) use ($request) {
+                $query->where('type', $request->report_type);
+            });
+        }
+
 
         // クレーム・トラブルのみ
         if ($request->filled('only_complaint') && $validator->validated()["only_complaint"]) {
@@ -425,36 +437,36 @@ class ReportController extends Controller
             // 日報情報を保存
             $report->fill($request->safe()->merge(['user_id' => Auth::id()])->all())->save();
 
-            //写真情報登録
-            $fileName = NULL;
-            $originalName = NULL;
-            $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
+            // //写真情報登録
+            // $fileName = NULL;
+            // $originalName = NULL;
+            // $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
 
-            if (isset($request->file_name)) {
+            // if (isset($request->file_name)) {
 
-                foreach ($request->file_name as $file) {
+            //     foreach ($request->file_name as $file) {
 
-                    // $file = $request->file_name;
-                    $originalName = $file->getClientOriginalName();
+            //         // $file = $request->file_name;
+            //         $originalName = $file->getClientOriginalName();
 
-                    $extension = pathinfo($originalName, PATHINFO_EXTENSION);
-                    $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
-                    $file->storeAs('', '/public/report/' . $fileName);
+            //         $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+            //         $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
+            //         $file->storeAs('', '/public/report/' . $fileName);
 
-                    $type = 'image';
-                    if (in_array($extension, $extension_list)) {
-                        $type = 'file';
-                    }
+            //         $type = 'image';
+            //         if (in_array($extension, $extension_list)) {
+            //             $type = 'file';
+            //         }
 
-                    $report_file = new ReportFile();
-                    $report_file->create([
-                        'type' => $type,
-                        'name' => $originalName,
-                        'path' => $fileName,
-                        'report_id' => $report->id,
-                    ]);
-                }
-            }
+            //         $report_file = new ReportFile();
+            //         $report_file->create([
+            //             'type' => $type,
+            //             'name' => $originalName,
+            //             'path' => $fileName,
+            //             'report_id' => $report->id,
+            //         ]);
+            //     }
+            // }
 
             // 日報コンテンツ情報を保存
             foreach ($request->validated()['report_contents'] as $report_content) {
@@ -471,17 +483,26 @@ class ReportController extends Controller
                     'sales_method_id' => $report_content['sales_method_id'] ?? null,
                     'product_description' => $report_content['product_description'] ?? null,
                     'required_time' => $report_content['required_time'] ?? null,
-                    // 'departments' => $report_content['departments'] ?? null,
-                    // 'position' => $report_content['position'] ?? null,
+                    'departments' => $report_content['departments'] ?? null,
+                    'position' => $report_content['position'] ?? null,
+
+                    'free' => $report_content['free'] ?? 0,
+                    'client_name' => $report_content['client_name'] ?? null,
+
                 ]);
 
 
                 //日報に紐づく顧客を保存
-                $clients = Client::find($report_content['client_id']);
+                if (isset($report_content['client_id'])) {
+                    $clients = Client::find($report_content['client_id']);
 
-                $clients->client_report_user()->updateOrCreate([
-                    'user_id' => auth()->id(),
-                ]);
+                    $clients->client_report_user()->updateOrCreate([
+                        'user_id' => auth()->id(),
+                    ]);
+                }
+
+
+
 
                 // 担当者を保存
                 if (isset($report_content['contact_person_id'])) {
@@ -500,6 +521,20 @@ class ReportController extends Controller
                             ['evaluation_id' => $product_evaluation["evaluation_id"]]
                         );
                     }
+                }
+            }
+
+
+            //添付ファイル
+            if ($request->report_attach_file) {
+                foreach ($request->report_attach_file as $report_attach_file) {
+
+                    ReportFile::create([
+                        'name' => $report_attach_file['name'],
+                        'type' => $report_attach_file['type'],
+                        'original_name' => $report_attach_file['original_name'],
+                        'report_id' => $report->id,
+                    ]);
                 }
             }
         });
@@ -649,7 +684,8 @@ class ReportController extends Controller
 
         $report->load([
             'user:id,name,deleted_at',
-            'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description,required_time,departments,position',
+            'report_contents',
+            // 'report_contents:id,report_id,type,client_id,branch_id,sales_method_id,title,participants,description,is_complaint,is_zaitaku,product_description,required_time,departments,position',
             'report_contents.client',
             'report_contents.branch',
             'report_contents.sales_method',
@@ -773,33 +809,33 @@ class ReportController extends Controller
                 ]);
             }
 
-            //写真情報登録
-            $fileName = NULL;
-            $originalName = NULL;
-            $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
+            // //写真情報登録
+            // $fileName = NULL;
+            // $originalName = NULL;
+            // $extension_list = ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'];
 
-            if (isset($request->file)) {
-                foreach ($request->file as $file) {
+            // if (isset($request->file)) {
+            //     foreach ($request->file as $file) {
 
-                    $originalName = $file->getClientOriginalName();
-                    $extension = pathinfo($originalName, PATHINFO_EXTENSION);
-                    $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
-                    $file->storeAs('', '/public/report/' . $fileName);
+            //         $originalName = $file->getClientOriginalName();
+            //         $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+            //         $fileName =  auth()->id() . date('YmdGhi') . mt_rand('111111111', '999999999') . '.' . $extension;
+            //         $file->storeAs('', '/public/report/' . $fileName);
 
-                    $type = 'image';
-                    if (in_array($extension, $extension_list)) {
-                        $type = 'file';
-                    }
+            //         $type = 'image';
+            //         if (in_array($extension, $extension_list)) {
+            //             $type = 'file';
+            //         }
 
-                    $report_file = new ReportFile();
-                    $report_file->create([
-                        'type' => $type,
-                        'name' => $originalName,
-                        'path' => $fileName,
-                        'report_id' => $report->id,
-                    ]);
-                }
-            }
+            //         $report_file = new ReportFile();
+            //         $report_file->create([
+            //             'type' => $type,
+            //             'name' => $originalName,
+            //             'path' => $fileName,
+            //             'report_id' => $report->id,
+            //         ]);
+            //     }
+            // }
 
             // 日報コンテンツ情報を保存
             foreach ($request->validated()['report_contents'] as $report_content) {
@@ -823,6 +859,9 @@ class ReportController extends Controller
                             'departments' => $report_content['departments'] ?? null,
                             'position' => $report_content['position'] ?? null,
 
+                            'free' => $report_content['free'] ?? 0,
+                            'client_name' => $report_content['client_name'] ?? null,
+
                         ],
                     );
                 } else {
@@ -841,32 +880,35 @@ class ReportController extends Controller
                         'departments' => $report_content['departments'] ?? null,
                         'position' => $report_content['position'] ?? null,
 
+                        'free' => $report_content['free'] ?? 0,
+                        'client_name' => $report_content['client_name'] ?? null,
+
                     ]);
                 }
 
-
-
                 //日報に紐づく顧客を保存
-                $clients = Client::find($report_content['client_id']);
+                if (isset($report_content['client_id'])) {
+                    $clients = Client::find($report_content['client_id']);
 
-                $clients->client_report_user()->updateOrCreate([
-                    'user_id' => auth()->id(),
-                ]);
+                    $clients->client_report_user()->updateOrCreate([
+                        'user_id' => auth()->id(),
+                    ]);
+                }
 
                 //担当者を一時削除
                 // $report_content_upsert->report_content_contact_person()->destory();
 
-                 // 担当者を保存
-                 if (isset($report_content['contact_person_id'])) {
+                // 担当者を保存
+                if (isset($report_content['contact_person_id'])) {
 
-                    ReportContentContanctPerson::where('report_content_id',$report_content_upsert['id'])->delete();
-                  
-                     foreach ($report_content['contact_person_id'] as $contact_person_id) {
+                    ReportContentContanctPerson::where('report_content_id', $report_content_upsert['id'])->delete();
+
+                    foreach ($report_content['contact_person_id'] as $contact_person_id) {
                         $report_content_upsert->report_content_contact_person()->updateOrCreate([
-                             'contact_person_id' => $contact_person_id,
+                            'contact_person_id' => $contact_person_id,
                         ]);
-                     }
-                 }
+                    }
+                }
 
                 // 商材評価情報を保存
                 $report_content_upsert->products()->detach();
@@ -880,6 +922,35 @@ class ReportController extends Controller
                     }
                 }
             }
+
+
+            //添付ファイル
+            if ($request->report_attach_file) {
+                foreach ($request->report_attach_file as $report_attach_file) {
+
+                    //すでに登録されているもの
+                    if (isset($report_attach_file['id'])) {
+                        continue;
+                    }
+
+                    ReportFile::create([
+                        'name' => $report_attach_file['name'],
+                        'type' => $report_attach_file['type'],
+                        'original_name' => $report_attach_file['original_name'],
+                        'report_id' => $report->id,
+                    ]);
+                }
+            }
+
+
+            if (!empty($request->_delete_report_attach_file_ids)) {
+                foreach ($request->_delete_report_attach_file_ids as $_delete_report_attach_file_ids) {
+                    ReportFile::where('id', $_delete_report_attach_file_ids)->update([
+                        'deleted_at' => date('Y-m-d G:i:s'),
+                    ]);
+                }
+            }
+
 
             // 日報コンテンツ情報の削除
             //  複数削除を行うとdeletedイベントが実行されないためeachで処理

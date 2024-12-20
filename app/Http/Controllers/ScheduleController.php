@@ -24,7 +24,7 @@ class ScheduleController extends Controller
     public function index(): Response|ResponseFactory
     {
         $user = Auth::user();
-        $schedule_list = DB::table('schedules')->where('date', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
+        $schedule_list = DB::table('schedules')->where('date', '>=', date('Y-m-d', strtotime('-1 years')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
         $schedule = [];
         $k = 0;
@@ -70,7 +70,7 @@ class ScheduleController extends Controller
             }
         }
 
-        $sales_todo_list = DB::table('sales_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
+        $sales_todo_list = DB::table('sales_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 years')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
         if ($sales_todo_list) {
             foreach ($sales_todo_list as $sales_todo) {
@@ -97,7 +97,7 @@ class ScheduleController extends Controller
             }
         }
 
-        $office_todo_list = DB::table('office_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
+        $office_todo_list = DB::table('office_todos')->where('scheduled_at', '>=', date('Y-m-d', strtotime('-1 years')))->where('user_id', $user->id)->whereNull('deleted_at')->get();
 
         if ($office_todo_list) {
             foreach ($office_todo_list as $office_todo) {

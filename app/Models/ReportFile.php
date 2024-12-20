@@ -27,7 +27,7 @@ class ReportFile extends BaseReportFile implements Auditable
         'report_id',
         'type',
         'name',
-        'path',
+        'original_name',
     ];
 
     /**

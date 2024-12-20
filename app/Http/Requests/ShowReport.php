@@ -43,6 +43,8 @@ class ShowReport extends FormRequest
             'is_zaitaku' => ['nullable', 'boolean'],
             'start_date' => ['nullable'],
             'end_date' => ['nullable'],
+
+            'report_type' => ['nullable'],
         ];
     }
 }

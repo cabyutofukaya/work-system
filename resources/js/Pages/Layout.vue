@@ -135,6 +135,10 @@ export default {
       {title: '日報', to: 'reports.index', icon: 'mdi-notebook', dusk: "reportIndex"},
       {title: '議事録', to: 'meetings.index', icon: 'mdi-file-document-edit', dusk: "meetingIndex"},
       {title: 'お知らせ', to: 'notices.index', icon: 'mdi-information', dusk: "NoticeIndex"},
+
+      {title: '売上', to: 'sales.index', icon: 'mdi-file-document-edit', dusk: "NoticeIndex"},
+
+
       {title: '書類', to: 'documents', icon: 'mdi-file-download', dusk: "documents"},
       {title: 'メンバー', to: 'users.index', icon: 'mdi-account', dusk: "userIndex"},
     

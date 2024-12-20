@@ -242,6 +242,15 @@ a.Link_item {
                   :error-messages="form.errors.word" :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
               </v-list-item>
 
+
+              <v-list-item class="mt-4">
+                <v-select dense filled clearable label="日報の種類" hint="指定の日報種類の日報が表示されます" persistent-hint
+                      :items="report_content_type" name="report_type" item-text="name" item-value="id"
+                      v-model="form.report_type">
+                    </v-select>
+              </v-list-item>
+
+
               <v-list-item class="mt-4">
                 <v-switch dense filled class="mt-0 ml-2" color="error" label="クレーム・トラブル" hint="クレーム・トラブルの報告に絞り込みます"
                   persistent-hint name="only_complaint" v-model="form.only_complaint" true-value="1" false-value=""
@@ -272,11 +281,10 @@ a.Link_item {
 
 
               <v-list-item class="mt-4">
-                <v-select dense filled clearable multiple label="所属部署" hint="表示する所属部署を選択してください" persistent-hint
+                <v-select dense filled clearable multiple label="所属部署" hint="指定の所属部署の記載した日報が表示されます" persistent-hint
                       :items="department_list" name="department"
                       v-model="form.department">
                     </v-select>
-
               </v-list-item>
 
 
@@ -358,7 +366,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['reports', 'form_params', 'client', 'user', 'report_url','is_phone'],
+  props: ['reports', 'form_params', 'client', 'user', 'report_url','is_phone','report_content_type'],
 
   
  
