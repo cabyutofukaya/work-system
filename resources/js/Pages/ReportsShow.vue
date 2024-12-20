@@ -570,8 +570,8 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
-                    <v-col cols="4">氏名</v-col>
-                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.name }}</v-col>
+                    <v-col cols="2">氏名</v-col>
+                    <v-col cols="10" style="white-space: pre;">{{ contactPersonForm.name }}</v-col>
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
@@ -579,8 +579,8 @@
               <v-list-item v-if="contactPersonForm.email">
                 <v-list-item-content>
                   <v-row>
-                    <v-col cols="4">メールアドレス</v-col>
-                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.email }}</v-col>
+                    <v-col cols="2">メールアドレス</v-col>
+                    <v-col cols="10" style="white-space: pre;">{{ contactPersonForm.email }}</v-col>
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
@@ -588,8 +588,8 @@
               <v-list-item v-if="contactPersonForm.tel">
                 <v-list-item-content>
                   <v-row>
-                    <v-col cols="4">電話番号</v-col>
-                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.tel }}</v-col>
+                    <v-col cols="2">電話番号</v-col>
+                    <v-col cols="10" style="white-space: pre;">{{ contactPersonForm.tel }}</v-col>
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
@@ -597,8 +597,8 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
-                    <v-col cols="4">部署名</v-col>
-                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.department }}</v-col>
+                    <v-col cols="2">部署名</v-col>
+                    <v-col cols="10" style="white-space: pre;">{{ contactPersonForm.department }}</v-col>
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
@@ -606,8 +606,8 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
-                    <v-col cols="4">役職</v-col>
-                    <v-col cols="8" style="white-space: pre;">{{ contactPersonForm.position }}</v-col>
+                    <v-col cols="2">役職</v-col>
+                    <v-col cols="10" style="white-space: pre;">{{ contactPersonForm.position }}</v-col>
                   </v-row>
                 </v-list-item-content>
               </v-list-item>

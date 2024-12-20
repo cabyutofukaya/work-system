@@ -91,6 +91,24 @@ class ReportController extends Controller
         }
 
 
+        if (!$request->input('start_date')) {
+            if ($request->filled('client_id')) {
+                $start_date = date('Y-m-d', strtotime('-1 year'));
+            } else {
+                $start_date = date('Y-m-d', strtotime('-1 month'));
+            }
+        }
+
+        if ($request->filled('is_readed')) {
+            $start_date = null;
+        } else {
+            $start_date = date('Y-m-d', strtotime('-1 month'));
+        }
+
+
+
+
+
 
         return inertia('Reports', [
 
@@ -108,6 +126,9 @@ class ReportController extends Controller
                 'is_visited' => $request->input('is_visited'),
                 'is_readed' => $request->input('is_readed'),
                 'is_zaitaku' => $request->input('is_zaitaku'),
+                'free_sales' => $request->input('free_sales'),
+
+
                 // 'start_date' => $request->input('start_date'),
                 'start_date' => $start_date,
                 // 'end_date' => $end_date,
@@ -193,6 +214,10 @@ class ReportController extends Controller
                 },
                 'report_contents as is_zaitaku' => function ($query) {
                     $query->where('is_zaitaku', 1);
+                },
+                // 自分自身が閲覧済みかどうか
+                   'report_contents as sales_free' => function ($query) {
+                    $query->where('free', 1);
                 },
             ])
             ->withCount([
@@ -285,15 +310,19 @@ class ReportController extends Controller
 
 
         // 期間設定
-        if ($request->start_date) {
-            $reports->where('date', '>=', $request->start_date);
-        } else {
-            if ($request->filled('client_id')) {
-                $reports->where('date', '>=', date('Y-m-d', strtotime('-1 year')));
+        if (!$request->filled('is_readed')) {
+            if ($request->start_date) {
+                $reports->where('date', '>=', $request->start_date);
             } else {
-                $reports->where('date', '>=', date('Y-m-d', strtotime('-1 month')));
+                if ($request->filled('client_id')) {
+                    $reports->where('date', '>=', date('Y-m-d', strtotime('-1 year')));
+                } else {
+                    $reports->where('date', '>=', date('Y-m-d', strtotime('-1 month')));
+                }
             }
         }
+     
+
 
         if ($request->end_date) {
             $reports->where('date', '<=', $request->end_date);
@@ -306,6 +335,14 @@ class ReportController extends Controller
             $reports->whereHas('user', function ($query) use ($request) {
                 $query->whereIn('department', $request->department);
                 // $query->whereIn('department', ['CCD']);
+            });
+        }
+
+
+        //フリー営業
+        if ($request->filled('free_sales')) {
+            $reports->whereHas('report_contents', function ($query) use ($request) {
+                $query->where('free', 1);
             });
         }
 

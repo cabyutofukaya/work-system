@@ -113,7 +113,7 @@ a.Link_item {
           <v-divider class="mx-4"></v-divider>
         </template>
 
-        <div v-for="(report,index) in reports['data']" :key="report.id" :id="'report_' + report.id">
+        <div v-for="(report, index) in reports['data']" :key="report.id" :id="'report_' + report.id">
           <!-- <Link as="v-list-item" :href="$route('reports.show', { id: report.id })" dusk="reportShow" class="Link_item"> -->
           <v-list-item class="Link_item">
             <v-list-item-content>
@@ -129,12 +129,22 @@ a.Link_item {
                   </v-col>
                   <v-col sm="6" :class="{ 'font-weight-bold': !report['is_visited'] }">
                     <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
-                      <span v-if="report['report_contents_sales_exists']">営業日報</span><span
-                        v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                        v-if="report['report_contents_work_exists']">業務日報</span>
+
+
+                      <template v-if="report['report_contents_sales_exists']">
+                        営業日報
+                        <template v-if="report['sales_free']">
+                          (フリー営業)
+                        </template>
+                      </template>
+                      <template
+                        v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</template>
+                      <template v-if="report['report_contents_work_exists']">
+                        業務日報
+                      </template>
                     </a>
 
-    
+
                     <span v-if="report['is_zaitaku']">(在宅)</span>
                   </v-col>
 
@@ -148,13 +158,14 @@ a.Link_item {
                       <!-- {{ report.date }} -->
                       {{ report.created_at.substr(0, 16) }}
                     </div>
-                    <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}</div>
+                    <div class="mb-1" :class="{ 'font-weight-bold': !report['is_visited'] }">{{ report.user.name }}
+                    </div>
                     <div :class="{ 'font-weight-bold': !report['is_visited'] }">
                       <a :href="$route('reports.show', { id: report.id })" dusk="reportShow">
                         <span v-if="report['report_contents_sales_exists']">営業日報</span><span
                           v-if="report['report_contents_sales_exists'] && report['report_contents_work_exists']">・</span><span
-                          v-if="report['report_contents_work_exists']">業務日報</span></a> 
-                          <span v-if="report['is_zaitaku']">(在宅)</span>
+                          v-if="report['report_contents_work_exists']">業務日報</span></a>
+                      <span v-if="report['is_zaitaku']">(在宅)</span>
                     </div>
 
                   </v-col>
@@ -243,61 +254,77 @@ a.Link_item {
               </v-list-item>
 
 
-              <v-list-item class="mt-4">
+              <v-list-item class="mt-2">
                 <v-select dense filled clearable label="日報の種類" hint="指定の日報種類の日報が表示されます" persistent-hint
-                      :items="report_content_type" name="report_type" item-text="name" item-value="id"
-                      v-model="form.report_type">
-                    </v-select>
+                  :items="report_content_type" name="report_type" item-text="name" item-value="id"
+                  v-model="form.report_type">
+                </v-select>
+              </v-list-item>
+
+              <v-list-item class="mt-2">
+
+                <v-row>
+                  <v-col>
+                    <v-switch dense filled class="mt-0 ml-2" color="error" label="フリー営業" hint="フリー営業記載の営業日報を絞り込みます"
+                      persistent-hint name="free_sales" v-model="form.free_sales" true-value="1" false-value=""
+                      :error="Boolean(form.errors.free_sales)" :error-messages="form.errors.free_sales"></v-switch>
+                  </v-col>
+
+                  <v-col>
+                    <v-switch dense filled class="mt-0 ml-2" color="error" label="クレーム・トラブル" hint="クレーム・トラブルの報告に絞り込みます"
+                      persistent-hint name="only_complaint" v-model="form.only_complaint" true-value="1" false-value=""
+                      :error="Boolean(form.errors.only_complaint)"
+                      :error-messages="form.errors.only_complaint"></v-switch>
+                  </v-col>
+
+                </v-row>
+
               </v-list-item>
 
 
-              <v-list-item class="mt-4">
-                <v-switch dense filled class="mt-0 ml-2" color="error" label="クレーム・トラブル" hint="クレーム・トラブルの報告に絞り込みます"
-                  persistent-hint name="only_complaint" v-model="form.only_complaint" true-value="1" false-value=""
-                  :error="Boolean(form.errors.only_complaint)" :error-messages="form.errors.only_complaint"></v-switch>
+
+
+              <v-list-item class="mt-2">
+                <v-row>
+                  <v-col>
+                    <v-switch dense filled class="mt-0 ml-2" color="warning" label="未読分表示" hint="未読分を絞り込みます"
+                      persistent-hint name="is_visited" v-model="form.is_visited" true-value="1" false-value=""
+                      :error="Boolean(form.errors.is_visited)" :error-messages="form.errors.is_visited"></v-switch>
+                  </v-col>
+                  <v-col>
+                    <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読ある日報を絞り込みます"
+                      persistent-hint name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
+                      :error="Boolean(form.errors.is_readed)" :error-messages="form.errors.is_readed"></v-switch>
+                  </v-col>
+                </v-row>
+
               </v-list-item>
 
 
-              <v-list-item class="mt-4">
-                <v-switch dense filled class="mt-0 ml-2" color="warning" label="未読分表示" hint="未読分を絞り込みます" persistent-hint
-                  name="is_visited" v-model="form.is_visited" true-value="1" false-value=""
-                  :error="Boolean(form.errors.is_visited)" :error-messages="form.errors.is_visited"></v-switch>
-              </v-list-item>
 
-
-              <v-list-item class="mt-4">
-                <v-switch dense filled class="mt-0 ml-2" color="warning" label="コメント未読あり" hint="コメント未読あり" persistent-hint
-                  name="is_readed" v-model="form.is_readed" true-value="1" false-value=""
-                  :error="Boolean(form.errors.is_readed)" :error-messages="form.errors.is_readed"></v-switch>
-              </v-list-item>
-
-
-              <v-list-item class="mt-4"
-                v-if="user.admin_report == 1">
-                <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅" persistent-hint name="is_zaitaku"
+              <v-list-item class="mt-2" v-if="user.admin_report == 1">
+                <v-switch dense filled class="mt-0 ml-2" color="blue" label="在宅" persistent-hint name="is_zaitaku" hint="在宅の日報を絞り込みます"
                   v-model="form.is_zaitaku" true-value="1" false-value="" :error="Boolean(form.errors.is_zaitaku)"
                   :error-messages="form.errors.is_zaitaku"></v-switch>
               </v-list-item>
 
 
-              <v-list-item class="mt-4">
+              <v-list-item class="mt-2">
                 <v-select dense filled clearable multiple label="所属部署" hint="指定の所属部署の記載した日報が表示されます" persistent-hint
-                      :items="department_list" name="department"
-                      v-model="form.department">
-                    </v-select>
+                  :items="department_list" name="department" v-model="form.department">
+                </v-select>
               </v-list-item>
 
 
-              <v-list-item class="mt-4"
-              v-if="user.admin_report == 1">
-                <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="開始表示期間" class="mx-5"
-                  hint="表示を絞り込む開始期間を記載してください" persistent-hint type="date" name="start_date" v-model="form.start_date"
-                  maxlength="200" :error="Boolean(form.errors.start_date)" :error-messages="form.errors.start_date"
+              <v-list-item class="mt-2">
+                <v-text-field dense filled clearable class="mr-1" hint="検索開始期間を記載してください" label="検索開始日" persistent-hint
+                  type="date" name="start_date" v-model="form.start_date" maxlength="200"
+                  :error="Boolean(form.errors.start_date)" :error-messages="form.errors.start_date"
                   :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
 
-                <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="終了表示期間" class="mx-5"
-                  hint="表示を絞り込む終了期間を記載してください" persistent-hint type="date" name="end_date" v-model="form.end_date"
-                  maxlength="200" :error="Boolean(form.errors.end_date)" :error-messages="form.errors.end_date"
+                <v-text-field dense filled clearable class="ml-1" hint="検索終了期間を記載してください" label="検索終了日" persistent-hint
+                  type="date" name="end_date" v-model="form.end_date" maxlength="200"
+                  :error="Boolean(form.errors.end_date)" :error-messages="form.errors.end_date"
                   :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
               </v-list-item>
 
@@ -331,7 +358,7 @@ a.Link_item {
   </Layout>
 </template>
 
-<script src="https://unpkg.com/axios/dist/axios.min.js"/>
+<script src="https://unpkg.com/axios/dist/axios.min.js" />
 
 <style scoped>
 /* 既読時の背景色とボーダーの間にスペースができるためネガティブマージンをデフォルトの-12から減らす */
