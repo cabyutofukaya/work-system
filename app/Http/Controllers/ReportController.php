@@ -8,6 +8,7 @@ use App\Http\Requests\ShowReport;
 use App\Http\Requests\StoreReport;
 use App\Http\Requests\UpdateReport;
 use App\Models\Base\ReportContent;
+use App\Models\Base\UserProduct;
 use App\Models\Client;
 use App\Models\ClientReportUser;
 use App\Models\Evaluation;
@@ -442,7 +443,11 @@ class ReportController extends Controller
         }
 
 
-
+        $user_products = UserProduct::where('user_id', Auth::id())->get();
+        $product_id_list = [];
+        foreach ($user_products as $user_product) {
+            array_push($product_id_list, $user_product['product_id']);
+        }
 
 
 
@@ -455,8 +460,8 @@ class ReportController extends Controller
             'genres' => fn() => Genre::get(),
             'clients_total_count' => fn() => Client::count(),
             'clients_count' => Inertia::lazy(fn() => $clients->count()),
-            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name","business_name","business_name_kana"])),
-            'products' => fn() => Product::get(),
+            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name", "business_name", "business_name_kana"])),
+            'products' => fn() => Product::whereIn('id', $product_id_list)->get(),
             'evaluations' => fn() => Evaluation::get(),
             'sales_methods' => fn() => SalesMethod::get(),
             'prefecture' => config("const.prefectures"),
@@ -816,6 +821,14 @@ class ReportController extends Controller
             }
         }
 
+
+
+        $user_products = UserProduct::where('user_id', Auth::id())->get();
+        $product_id_list = [];
+        foreach ($user_products as $user_product) {
+            array_push($product_id_list, $user_product['product_id']);
+        }
+
         return inertia('ReportsEdit', [
             'report' => fn() => $report,
             'client_types' => fn() => collect(config("const.client_types"))->values(),
@@ -825,8 +838,8 @@ class ReportController extends Controller
             'genres' => fn() => Genre::get(),
             'clients_total_count' => fn() => Client::count(),
             'clients_count' => Inertia::lazy(fn() => $clients->count()),
-            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name","business_name","business_name_kana"])),
-            'products' => fn() => Product::get(),
+            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name", "business_name", "business_name_kana"])),
+            'products' => fn() => Product::whereIn('id', $product_id_list)->get(),
             'evaluations' => fn() => Evaluation::get(),
             'sales_methods' => fn() => SalesMethod::get(),
             'prefecture' => config("const.prefectures"),
