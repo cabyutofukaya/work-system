@@ -33,6 +33,7 @@
         "@fullcalendar/interaction": "^6.1.5",
         "@fullcalendar/timegrid": "^6.1.5",
         "@fullcalendar/vue": "^6.1.5",
+        "@fullcalendar/resource-timeline": "^6.1.11",
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-vue": "^0.8.0",
         "@inertiajs/progress": "^0.2.7",

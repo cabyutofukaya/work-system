@@ -14,25 +14,18 @@
 
 <template>
     <Layout>
-        <v-card flat tile height="300">
 
+        
+        <v-card flat tile>
 
-            <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
-
-            </FullCalendar>
-
-        </v-card>
-
-
-        <v-card flat tile height="20">
-
-
-            <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
+            <FullCalendar :options='calendarOptions'>
 
             </FullCalendar>
 
         </v-card>
 
+
+    
 
     </Layout>
 </template>
@@ -43,46 +36,33 @@ import { Link } from "@inertiajs/inertia-vue";
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import jaLocale from '@fullcalendar/core/locales/ja'
+
+// import FullCalendar from '@fullcalendar/vue3'
+// import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
+
 import 'tippy.js/dist/tippy.css';
 
 export default {
     components: { Layout, Link, FullCalendar },
 
-    props: ['schedule', 'user'],
+    props: ['memberData'],
 
     data() {
+
         return {
             showDialog: false,
 
-            calendarOptions: {
-                plugins: [timeGridPlugin, interactionPlugin],
-                initialView: 'timeGridWeek',
-                locales: [jaLocale],
-                locale: "ja",
-                businessHours: "true",
-                height: "500",
-                firstDay: "1",
-                weekends: "true",
-                // events: this.schedule,
-                headerToolbar: {
-                    // title, prev, next, prevYear, nextYear, today
-                    left: '',
-                    center: 'prev,next today',
-                    right: '',
-                    // center: 'title',
-                    // right: 'timeGridWeek'
-                },
-                slotMinTime:"07:00:00",
-                slotMaxTime:"20:00:00",
-                defaultTimedEventDuration:"08:00:00",
-                weekends:"true"
-            
+            calendarOptions:{
+                // plugins: [resourceTimelinePlugin],
             },
+            
+
+            
             loading: {},
         }
     },
+
+    
 
     methods: {
 

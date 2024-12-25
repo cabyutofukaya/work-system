@@ -126,7 +126,7 @@ class UserScheduleController extends Controller
         $department_list = User::select('department')->whereNotNull('department')->groupBy('department')->get();
 
 
-        return inertia('ScheduleList0310', [
+        return inertia('ScheduleList', [
             'user' => $user,
             'schedule' => $schedule,
             'loginUser' => Auth::user(),
