@@ -216,7 +216,7 @@ class ReportController extends Controller
                     $query->where('is_zaitaku', 1);
                 },
                 // 自分自身が閲覧済みかどうか
-                   'report_contents as sales_free' => function ($query) {
+                'report_contents as sales_free' => function ($query) {
                     $query->where('free', 1);
                 },
             ])
@@ -321,7 +321,7 @@ class ReportController extends Controller
                 }
             }
         }
-     
+
 
 
         if ($request->end_date) {
@@ -384,10 +384,14 @@ class ReportController extends Controller
 
             // 会社名・よみがな
             if ($validator->validated()["name"]) {
-                $clients->where(function ($query) use ($validator) {
-                    $query->whereLike('name', $validator->validated()["name"])
-                        ->orWhereLike('name_kana', $validator->validated()["name"]);
-                });
+                foreach (preg_split('/[\p{Z}\p{Cc}]++/u', $validator->validated()["name"], -1, PREG_SPLIT_NO_EMPTY) as $word) {
+                    $clients->where(function ($query) use ($word) {
+                        $query->whereLike('name', $word)
+                            ->orWhereLike('name_kana', $word)
+                            ->orWhereLike('business_name', $word)
+                            ->orWhereLike('business_name_kana', $word);
+                    });
+                }
             }
 
 
@@ -451,7 +455,7 @@ class ReportController extends Controller
             'genres' => fn() => Genre::get(),
             'clients_total_count' => fn() => Client::count(),
             'clients_count' => Inertia::lazy(fn() => $clients->count()),
-            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name"])),
+            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name","business_name","business_name_kana"])),
             'products' => fn() => Product::get(),
             'evaluations' => fn() => Evaluation::get(),
             'sales_methods' => fn() => SalesMethod::get(),
@@ -755,10 +759,14 @@ class ReportController extends Controller
 
             // 会社名・よみがな
             if ($validator->validated()["name"]) {
-                $clients->where(function ($query) use ($validator) {
-                    $query->whereLike('name', $validator->validated()["name"])
-                        ->orWhereLike('name_kana', $validator->validated()["name"]);
-                });
+                foreach (preg_split('/[\p{Z}\p{Cc}]++/u', $validator->validated()["name"], -1, PREG_SPLIT_NO_EMPTY) as $word) {
+                    $clients->where(function ($query) use ($word) {
+                        $query->whereLike('name', $word)
+                            ->orWhereLike('name_kana', $word)
+                            ->orWhereLike('business_name', $word)
+                            ->orWhereLike('business_name_kana', $word);
+                    });
+                }
             }
 
 
@@ -817,7 +825,7 @@ class ReportController extends Controller
             'genres' => fn() => Genre::get(),
             'clients_total_count' => fn() => Client::count(),
             'clients_count' => Inertia::lazy(fn() => $clients->count()),
-            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name"])),
+            'clients' => Inertia::lazy(fn() => $clients->get(["id", "client_type_id", "name", "name_kana", "image", "prefecture", "address", "name_position", "type_name","business_name","business_name_kana"])),
             'products' => fn() => Product::get(),
             'evaluations' => fn() => Evaluation::get(),
             'sales_methods' => fn() => SalesMethod::get(),

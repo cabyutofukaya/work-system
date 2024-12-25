@@ -62,6 +62,25 @@
               </v-col>
             </v-row>
 
+
+            <v-row>
+              <v-col cols="12" sm="4">屋号</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="business_name" v-model="form.business_name"
+                  maxlength="200" :error="Boolean(form.errors.business_name)" :error-messages="form.errors.business_name"></v-text-field>
+              </v-col>
+            </v-row>
+
+
+            <v-row>
+              <v-col cols="12" sm="4">屋号よみがな</v-col>
+              <v-col>
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" name="business_name_kana"
+                  v-model="form.business_name_kana" maxlength="200" :error="Boolean(form.errors.business_name_kana)"
+                  :error-messages="form.errors.business_name_kana"></v-text-field>
+              </v-col>
+            </v-row>
+
             <!-- <v-row>
               <v-col cols="12" sm="4">画像</v-col>
               <v-col>

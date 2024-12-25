@@ -435,8 +435,8 @@
                 <template v-if="!reportContentForm.free">
                   <div class="mx-8">
                     <v-list-item>
-                      <v-text-field dense outlined clearable prepend-inner-icon="mdi-pencil" label="会社名(ふりがな)から検索"
-                        hint="文字を含む会社だけをリストに表示します" persistent-hint name="clientsFilterForm.name"
+                      <v-text-field dense outlined clearable prepend-inner-icon="mdi-pencil" label="会社名,屋号(ふりがな)から検索"
+                        hint="会社名、屋号(ふりがな)から指定したワードを含む会社を表示します" persistent-hint name="clientsFilterForm.name"
                         v-model="clientsFilterForm.name" maxlength="200" @input="getClients()"></v-text-field>
                     </v-list-item>
 
@@ -999,7 +999,7 @@ export default {
       loading: {},
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
 
-      required_time: ['15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
+      required_time: ['5分','15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
 
 
       formReportFile: this.$inertia.form(`ReportsEdit${this.report.id}`, {

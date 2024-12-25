@@ -40,6 +40,10 @@ class UpdateClient extends FormRequest
             '_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:' . (1024 * 20)], // 20MB
             'name' => ['required'],
             'name_kana' => ['nullable'],
+
+            'business_name' => ['nullable'],
+            'business_name_kana' => ['nullable'],
+
             'postcode' => ['nullable', 'regex:/^[0-9]{7}$/'],
             'prefecture' => ['nullable', Rule::in(config("const.prefectures"))],
             'address' => ['nullable'],

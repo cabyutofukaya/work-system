@@ -376,9 +376,16 @@
               <!-- 会社リストの絞り込み -->
               <template v-if="reportContentForm.type === 'sales'">
 
-                <div>
-                  <v-checkbox dense label="フリー営業" v-model="reportContentForm.free"></v-checkbox>
-                </div>
+                <v-row>
+                  <v-col cols="3">
+                    <div>
+                      <v-checkbox dense label="フリー営業" v-model="reportContentForm.free"></v-checkbox>
+                    </div>
+                  </v-col>
+                  <v-col cols="9"></v-col>
+                </v-row>
+
+
 
 
                 <v-divider v-if="reportContentForm.type === 'sales'" class="mb-4"></v-divider>
@@ -488,7 +495,10 @@
 
                         <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{
                           item.prefecture
-                          }})</span>
+                        }})</span>
+
+
+
 
 
                         <!-- <span v-if="item.prefecture" class="font-weight-thin text-body-2">{{ item.prefecture }}</span> <span v-if="item.address" class="font-weight-thin">{{ item.address }}</span> -->
@@ -513,6 +523,12 @@
 
                         <span v-if="item.prefecture" class="font-weight-thin text-body-2 ml-2">({{
                           item.prefecture }})</span>
+
+
+<span v-if="item.business_name" class="font-weight-thin text-body-2 ml-2"> / 屋号:{{
+                          item.business_name
+                        }}</span>
+
                       </template>
                     </v-select>
                   </v-list-item>
@@ -978,7 +994,7 @@ export default {
       // 会社絞り込みフォーム 会社リスト表示
       clientsListEnable: false,
 
-      required_time: ['15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
+      required_time: ['5分','15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
 
       loading: {},
 

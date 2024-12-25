@@ -67,7 +67,7 @@ class User extends Authenticatable implements Auditable
      *
      * @var int
      */
-    protected $perPage = 20;
+    protected $perPage = 66;
 
     /**
      * コンストラクタ

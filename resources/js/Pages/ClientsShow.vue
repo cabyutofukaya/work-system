@@ -81,6 +81,21 @@
             <v-col>{{ client.name_kana }}</v-col>
           </v-row>
 
+
+        
+
+
+          <v-row v-if="client.business_name">
+            <v-col cols="12" sm="4">屋号</v-col>
+            <v-col>{{ client.business_name }}</v-col>
+          </v-row>
+
+
+          <v-row v-if="client.business_name_kana">
+            <v-col cols="12" sm="4">屋号よみがな</v-col>
+            <v-col>{{ client.business_name_kana }}</v-col>
+          </v-row>
+
           <v-row>
             <v-col cols="12" sm="4">所在地</v-col>
             <v-col>

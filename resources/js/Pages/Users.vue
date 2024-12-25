@@ -8,7 +8,7 @@
 
       <v-card-text>
 
-        <v-row v-if="windowSize >= 800">
+        <v-row v-if="!$vuetify.breakpoint.xs">
 
           <v-col>
             <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="searchDialog = true"
@@ -21,7 +21,11 @@
             </Link>
           </v-col>
 
+
+     
+
           <v-col class="text-right">
+
             <Button :small="$vuetify.breakpoint.xs" :to="$route('user-profile-information.edit')">
               <v-icon left>
                 mdi-pencil
@@ -31,7 +35,7 @@
           </v-col>
         </v-row>
 
-        <v-row v-if="windowSize < 800">
+        <v-row v-if="$vuetify.breakpoint.xs">
 
           <v-col class="text-right">
 
@@ -109,67 +113,129 @@
         </v-card>
       </v-dialog>
 
-      <div class="d-flex align-center flex-column" v-if="windowSize >= 800">
 
-        <v-row v-if="windowSize >= 800">
 
-          <v-col v-for="user in users" :key="user.id" cols="4" class="mx-auto my-12" max-width="374" min-width="300">
-            <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow">
-            <v-card class="ma-2 pa-2">
+      <v-row v-if="!$vuetify.breakpoint.xs">
 
-              <v-img :src="`/storage/user/${user.img_file}`" cover width="375" height="250" v-if="user.img_file"
-                class="align-center"></v-img>
-              <v-img :src="`/storage/user/noimg.jpeg`" cover v-if="!user.img_file" width="375" height="250"
-                class="align-center"></v-img>
-              <v-card-title style="font-weight: bold;">{{ user['name'] }} ({{ user['name_kana'] }})</v-card-title>
-              <v-card-subtitle class="mt-5">
+        <v-col v-for="user in users['data']" :key="user.id" cols="2">
+
+          <v-container fill-height>
+            <v-card>
+
+
+              <v-img v-bind:src="`/storage/user/${user.profile_img_file}`" class="grey lighten-2" max-height="150px"
+                min-height="100px" v-if="user.profile_img_file" @click.native="clickImage(user.profile_img_file)">
+                <template v-slot:placeholder>
+                  <v-row class="ma-0" align="center" justify="center">
+                    <v-progress-circular indeterminate></v-progress-circular>
+                  </v-row>
+                </template>
+              </v-img>
+
+
+
+              <v-img v-bind:src="`/storage/user/noimg.jpeg`" class="grey lighten-2" v-if="!user.profile_img_file"
+                max-height="150px" min-height="100px">
+                <template v-slot:placeholder>
+                  <v-row class="ma-0" align="center" justify="center">
+                    <v-progress-circular indeterminate></v-progress-circular>
+                  </v-row>
+                </template>
+              </v-img>
+
+
+              <v-card-text style="font-size: 16px;font-weight: bold;">
+                <a :href="$route('users.show', { id: user.id })" dusk="userShow">
+                  {{ user['name'] }}
+                </a>
+              </v-card-text>
+
+
+              <v-card-text style="font-size: 12px;margin-top: -20px;">
                 <v-icon>mdi-email-outline</v-icon> {{ user['email'] }} <br>
-                <v-icon>mdi-phone</v-icon> {{ user['tel'] }} <br>
                 <v-icon>mdi-account-group</v-icon> {{ user['department'] }}
-              </v-card-subtitle>
+              </v-card-text>
 
             </v-card>
-            </Link>
-          </v-col>
+          </v-container>
 
-        </v-row>
+        </v-col>
 
-      </div>
+      </v-row>
 
-      <v-list v-if="windowSize < 800">
+      <!-- </div> -->
+
+      <v-list v-if="$vuetify.breakpoint.xs">
         <div v-for="user in users" :key="user.id">
           <v-divider class="mx-4"></v-divider>
 
-          <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow">
+          <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow" class="my-2">
 
+          <v-row>
 
-          <v-list-item-content class="px-auto">
-            <!-- <img :src="`/storage/user/${user.img_file}`" alt="" class="c-img" height="80px"
-              style="border-radius: 15%;margin: 0px 10px;" v-if="user.img_file">
-            <img :src="`/storage/user/noimg.jpeg`" alt="" class="c-img" height="80px"
-              style="border-radius: 15%;margin: 0px 10px;" v-if="!user.img_file"> -->
+            <v-col cols="3">
+              <img :src="`/storage/user/${user.profile_img_file}`" alt="" class="c-img" height="80px"
+                v-if="user.profile_img_file">
 
-            <v-list-item-title style="font-weight: bold;">
-              {{ user["name"] }} ({{ user["name_kana"] }})
-            </v-list-item-title>
+              <img :src="`/storage/user/noimg.jpeg`" alt="" class="c-img" height="80px" v-if="!user.profile_img_file">
 
-            <v-list-item-subtitle>
-              <v-icon>mdi-email-outline</v-icon>{{ user["email"] }}<br><v-icon>mdi-phone</v-icon>{{ user["tel"] }}<br>
-              <v-icon>mdi-account-group </v-icon>所属:{{ user["department"] }}
-            </v-list-item-subtitle>
+            </v-col>
 
-          </v-list-item-content>
+            <v-col cols="9">
+              <v-list-item-title style="font-weight: bold;">
+                {{ user["name"] }} <span v-if="name_kana">({{ user["name_kana"] }})</span>
+              </v-list-item-title>
+
+              <v-list-item-subtitle>
+                <v-icon>mdi-email-outline</v-icon>{{ user["email"] }}<br>
+                <v-icon>mdi-account-group </v-icon>{{ user["department"] }}
+              </v-list-item-subtitle>
+            </v-col>
+
+          </v-row>
+
 
           </Link>
         </div>
       </v-list>
 
 
+
+      <v-card-text>
+        <v-pagination v-model="page" :length="length" @input="changePage"></v-pagination>
+      </v-card-text>
+
+
       <v-divider></v-divider>
     </v-card>
 
+
+    <!-- 写真表示 -->
+    <v-dialog v-model="imageDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="fileDialog = false;">
+      <v-card flat tile>
+
+        <v-img v-bind:src="`/storage/user/${profile_img}`" class="grey lighten-2" height="auto" v-if="profile_img">
+          <template v-slot:placeholder>
+            <v-row class="ma-0" align="center" justify="center">
+              <v-progress-circular indeterminate></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
+
+      </v-card>
+    </v-dialog>
+
+
   </Layout>
 </template>
+
+
+<style>
+.v-carousel__controls {
+  background: rgba(0, 0, 0, 0.1);
+}
+</style>
 
 <script>
 import Layout from "./Layout";
@@ -178,7 +244,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ["users", "form_params", "productList"],
+  props: ["users", "form_params", "productList", 'user'],
 
 
 
@@ -188,8 +254,10 @@ export default {
       // 検索ダイアログ
       searchDialog: false,
       form: this.$inertia.form(this.form_params),
-      windowSize: window.innerWidth,
 
+      profile_img: undefined,
+      icon_img: undefined,
+      imageDialog: false,
 
       // 設定されている検索条件の件数
       formParamsCount: Object
@@ -197,6 +265,9 @@ export default {
         .filter(function (param) {
           return param[1] && param[1].length !== 0;
         }).length,
+
+      page: Number(this.users['current_page']),
+      length: Number(this.users['last_page']),
     };
   },
 
@@ -223,21 +294,34 @@ export default {
         });
     },
 
+
+    changePage() {
+      // サーバ側で生成された検索パラメータを含む最終ページURLを取得
+      let url = new URL(this.users["last_page_url"]);
+
+      // ページ数の書き換え
+      if (this.page !== 1) {
+        url.searchParams.set('page', String(this.page));
+      } else {
+        url.searchParams.delete('page');
+      }
+
+      // ページ移動
+      this.$inertia.get(url.href);
+    },
+
     // ダイアログを閉じる
     closeSearchDialog() {
       //  ダイアログを閉じる
       this.searchDialog = false;
     },
-    handleResize: function () {
-      // resizeのたびにこいつが発火するので、ここでやりたいことをやる
-      this.windowSize = window.innerWidth;
-    }
+  
+
+    clickImage(profile_img) {
+      this.profile_img = profile_img;
+      this.imageDialog = true;
+    },
   },
-  mounted: function () {
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy: function () {
-    window.removeEventListener('resize', this.handleResize)
-  }
+
 }
 </script>
