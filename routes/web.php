@@ -32,6 +32,7 @@ use App\Http\Controllers\ScheduleListController;
 use App\Http\Controllers\ContactPersonImageController;
 use App\Http\Controllers\ReportVisitorController;
 use App\Http\Controllers\UploadImageController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -195,6 +196,12 @@ Route::group(['middleware' => 'basicauth'], function () {
 
         // 商材の評価
         Route::get('latest-product/select/{latest_product_id}', [LatestProductController::class, "select"]);
+
+        // 施設予約
+        Route::resource('bookings', BookingController::class);
+
+        // 施設予約
+        Route::post('booking/update-time', [BookingController::class , 'update_time']);
     });
 });
 

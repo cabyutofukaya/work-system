@@ -155,6 +155,7 @@ class SalesController extends Controller
 
     public function category_index($category, $year): Response|ResponseFactory
     {
+
         $category_data = BillingCategory::where('name', '=', $category)->first();
 
         $yearDataList = Billing::where([
@@ -342,6 +343,7 @@ class SalesController extends Controller
 
         $month_sort_list = config('billing.month_sort_list');
 
+        dd($data);
 
         return inertia('SalesCategory', [
             'data' => $data,
@@ -381,6 +383,8 @@ class SalesController extends Controller
         $type_data = BillingType::where('id', '=', $category_data->type_id)->first();
 
         $url = '/sales/billing/' . $category_data->name . '/' . $request->year;
+
+
         
         return redirect($url);
     }
