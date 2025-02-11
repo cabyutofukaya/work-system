@@ -45,6 +45,7 @@ class UpdateSchedule extends FormRequest
             'title' => ['required_without:title_type'],
             'title_type' => ['required_without:title'],
             'content' => ['nullable'],
+            'is_public' => ['required'],
         ];
     }
 }

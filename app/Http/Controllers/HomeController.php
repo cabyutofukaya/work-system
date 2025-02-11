@@ -54,6 +54,7 @@ class HomeController extends Controller
         // dd('uu');
 
 
+        // $clients = Client::get();
 
         // $type_list = config('const.client_list');
 
@@ -88,7 +89,7 @@ class HomeController extends Controller
 
         // }
 
-        // dd('uu');
+        // dd('完了');
 
         // $three_month = date('Y-m-d', strtotime('-3 month'));
 

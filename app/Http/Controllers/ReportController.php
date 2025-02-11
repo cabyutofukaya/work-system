@@ -525,7 +525,7 @@ class ReportController extends Controller
                     'title' => $report_content['title'] ?? null,
                     'client_id' => $report_content['client_id'] ?? null,
                     'branch_id' => $report_content['branch_id'] ?? null,
-                    // 'participants' => $report_content['participants'] ?? null,
+                    'participants' => $report_content['participants'] ?? null,
                     'sales_method_id' => $report_content['sales_method_id'] ?? null,
                     'product_description' => $report_content['product_description'] ?? null,
                     'required_time' => $report_content['required_time'] ?? null,

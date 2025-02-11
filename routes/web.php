@@ -84,7 +84,7 @@ Route::group(['middleware' => 'basicauth'], function () {
         Route::get('client-types/{client_type}/clients/map', [ClientController::class, "map"])->name('client-types.clients.map');
 
         // 担当者
-        Route::resource('contact-persons', ContactPersonController::class)->only(["store", "update", "destroy"]);
+        Route::resource('contact-persons', ContactPersonController::class)->only(["store", "update", "destroy","show"]);
 
         // 営業所
         Route::resource('clients.branches', BranchController::class)->only(["create", "store", "edit", "update", "destroy"])->shallow();
@@ -107,7 +107,7 @@ Route::group(['middleware' => 'basicauth'], function () {
         Route::get('reports/mine', [ReportController::class, "mine"])->name('reports.mine');
 
         // 日報
-        Route::resource('reports', ReportController::class)->except(["create", "edit"]);
+        Route::resource('reports', ReportController::class)->except(["create", "edit","update"]);
 
         // 日報コメント
         Route::resource('report-comments', ReportCommentController::class)->only(["store", "destroy"]);
@@ -161,7 +161,7 @@ Route::group(['middleware' => 'basicauth'], function () {
         Route::post('reports/{report}/file/store', [ReportFileController::class, "store"])->name('reports.file.store');
 
         // 日報のファイル追加
-        Route::post('reports/{report}', [ReportController::class, "update"])->name('reports.update');
+        Route::post('report/{report}', [ReportController::class, "update"])->name('reports.update');
 
         // 集計データの項目
         Route::get('sales', [SalesController::class, "index"]);
@@ -287,3 +287,5 @@ Route::get('/visitor/report/{user_id}', [ReportVisitorController::class, "index"
 
 // 日報ファイルアップ
 Route::post('report-file/upload', [UploadImageController::class, "upload"]);
+
+Route::get('/report-visitor/XM8EYK', [ReportVisitorController::class, "read"]);

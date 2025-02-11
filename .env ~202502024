@@ -1,0 +1,21 @@
+APP_NAME="GROUPTUBE"
+APP_ENV=production
+APP_KEY=base64:Vq/gGmB3XNf/sucuJzzsksJLqd2GBvvBzknscmUxMZU=
+APP_DEBUG=true
+APP_URL=https://grouptube.biz
+
+LOG_CHANNEL=single_and_slack
+LOG_SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+# SENTRY DSN
+SENTRY_DSN=https://1013d7360ab84a40a0999b34c8bfa569@o376967.ingest.sentry.io/6197268
+
+# GoogleMapAPI\xe3\x82\xad\xe3\x83\xbc
+GOOGLE_MAP_API_KEY=AIzaSyBMuJVn6q3y2cyrVyJ3B4LTl-bHekU29tA
+
+DB_HOST=localhost
+DB_DATABASE=grouptube-dev
+DB_USERNAME=grouptube-dev
+DB_PASSWORD=hxUPRpjEFm-9H6x

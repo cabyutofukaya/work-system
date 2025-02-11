@@ -40,10 +40,6 @@ class StoreClient extends FormRequest
             '_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:' . (1024 * 20)], // 20MB
             'name' => ['required'],
             'name_kana' => ['nullable'],
-
-            'business_name' => ['nullable'],
-            'business_name_kana' => ['nullable'],
-
             'postcode' => ['nullable', 'regex:/^[0-9]{7}$/'],
             'prefecture' => ['nullable', Rule::in(config("const.prefectures"))],
             'address' => ['nullable'],
@@ -58,11 +54,15 @@ class StoreClient extends FormRequest
             'description' => ['nullable'],
             'contact' => ['nullable'],
 
+            'representative_position' => ['nullable'],
+            'representative_kana' => ['nullable'],
+
+            'representative_tel' => ['nullable'],
+            'business_name' => ['nullable'],
+            'business_name_kana' => ['nullable'],
             'name_position' => ['nullable','required_with:type_name'],
             'type_name' => ['nullable','required_if:name_position,前,後ろ'],
 
-            'representative_position' => ['nullable'],
-            'representative_kana' => ['nullable'],
 
             'genre_ids' => ['nullable', 'array'],
             'genre_ids.*' => ['nullable', Rule::exists('genres', "id")],

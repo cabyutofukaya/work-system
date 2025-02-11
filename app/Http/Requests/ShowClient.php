@@ -56,6 +56,8 @@ class ShowClient extends FormRequest
             'has_junior_seat' => ['nullable', 'in:true,false'],
             'is_bus_association_member' => ['nullable', 'in:true,false'],
             'has_safety_mark' => ['nullable', 'in:true,false'],
+
+            'product_id' => ['nullable', Rule::exists('products', "id")],
         ];
     }
 }

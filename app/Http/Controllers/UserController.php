@@ -114,6 +114,10 @@ class UserController extends Controller
             $backgroudcolor = config('schedule.backgroudColor');
             foreach ($schedule_list as $data) {
 
+                if($data->is_public == 1 && Auth::id() != $data->user_id){
+                    continue;
+                }
+
                 $tmp = [];
                 $tmp['title'] = '';
                 $tmp['pops_tile'] = '';

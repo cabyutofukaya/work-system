@@ -42,6 +42,7 @@ class Client extends BaseClient implements Auditable
         'contact',
         'representative_position',
         'representative_kana',
+        'representative_tel',
 
         'name_position',
         'type_name',

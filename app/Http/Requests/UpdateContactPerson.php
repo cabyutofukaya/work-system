@@ -40,8 +40,8 @@ class UpdateContactPerson extends FormRequest
             'name' => ['required'],
             'email' => ['nullable', 'email:filter'],
             'tel' => ['nullable', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
-            'department' => ['required'],
-            'position' => ['required'],
+            'department' => ['nullable'],
+            'position' => ['nullable'],
         ];
     }
 }
