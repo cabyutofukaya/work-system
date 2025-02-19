@@ -24,6 +24,9 @@ class UserController extends Controller
     {
         // $users = User::orderBy('name_kana', 'ASC')->get();
 
+
+ 
+
         $users = $this->search($request);
 
         $products = Product::orderBy('id','ASC')->get(['name']);
@@ -113,6 +116,10 @@ class UserController extends Controller
         if ($schedule_list) {
             $backgroudcolor = config('schedule.backgroudColor');
             foreach ($schedule_list as $data) {
+
+                if($data->is_public == 1 && Auth::id() != $data->user_id){
+                    continue;
+                }
 
                 $tmp = [];
                 $tmp['title'] = '';

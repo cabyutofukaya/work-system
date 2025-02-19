@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 
-class StoreClient extends FormRequest
+class UpdateClient extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,6 +40,10 @@ class StoreClient extends FormRequest
             '_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:' . (1024 * 20)], // 20MB
             'name' => ['required'],
             'name_kana' => ['nullable'],
+
+            'business_name' => ['nullable'],
+            'business_name_kana' => ['nullable'],
+
             'postcode' => ['nullable', 'regex:/^[0-9]{7}$/'],
             'prefecture' => ['nullable', Rule::in(config("const.prefectures"))],
             'address' => ['nullable'],
@@ -52,29 +56,26 @@ class StoreClient extends FormRequest
             'fax' => ['nullable', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
             'business_hours' => ['nullable'],
             'description' => ['nullable'],
+            'manager_department' => ['nullable'],
+            'manager_position' => ['nullable'],
+            'manager_name' => ['nullable'],
             'contact' => ['nullable'],
 
-            'representative_position' => ['nullable'],
-            'representative_kana' => ['nullable'],
-
-            'representative_tel' => ['nullable'],
-            'business_name' => ['nullable'],
-            'business_name_kana' => ['nullable'],
             'name_position' => ['nullable','required_with:type_name'],
             'type_name' => ['nullable','required_if:name_position,前,後ろ'],
 
+            'representative_kana' => ['nullable'],
+            'representative_position' => ['nullable'],
+            'representative_tel' => ['nullable'],
 
             'genre_ids' => ['nullable', 'array'],
             'genre_ids.*' => ['nullable', Rule::exists('genres', "id")],
             'product_ids' => ['nullable', 'array'],
             'product_ids.*' => ['nullable', Rule::exists('products', "id")],
 
-            'charges_ids' => ['nullable', 'array'],
-            'charges_ids.*' => ['nullable', Rule::exists('user', "id")],
-
             'charge_ids' => ['nullable', 'array'],
             'charge_ids.*' => ['nullable', Rule::exists('users', "id")],
-            
+
             'client_type_taxibus.membership_fee' => ['nullable', 'integer', 'min:0'],
             'client_type_taxibus.fee_taxi_cab' => ['nullable', 'integer', 'min:0'],
             'client_type_taxibus.fee_taxi_tabinoashi' => ['nullable', 'integer', 'min:0'],

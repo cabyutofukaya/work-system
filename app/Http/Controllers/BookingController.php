@@ -76,7 +76,10 @@ class BookingController extends Controller
 
             $tmp = [];
             $tmp['id'] = $booking->id;
-            $tmp['title'] = $booking->user->name;
+            $tmp['user_id'] = $booking->user->id;
+
+            $tmp['title'] = $booking->room->name;
+            $tmp['title'] .= ' [' . $booking->user->name . ']';
             if ($booking->title != '') {
                 $tmp['title'] .= ' / ' . $booking->title;
             }
@@ -93,13 +96,15 @@ class BookingController extends Controller
             $n++;
         }
 
-
+        // fn() => collect(config("const.client_types"))->values(),
         return inertia('Bookings', [
             'bookings' => $bookings,
             'rooms' => Room::get(),
             'room_id' => $room_id,
             'user' => Auth::user(),
             'roomType' => Room::get(['id', 'name']),
+            'timeList' => fn() => collect(config("const.timeList"))->values(),
+            // config('const.timeList'),
         ]);
         // $rooms = Room::first();
 

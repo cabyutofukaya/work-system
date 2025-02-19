@@ -57,7 +57,8 @@
             <v-col>
               <h3>
                 <template v-if="report_content.type === 'work'">業務日報</template>
-                <template v-if="report_content.type === 'sales'">営業日報<template v-if="report_content.free">(フリー営業)</template></template>
+                <template v-if="report_content.type === 'sales'">営業日報<template
+                    v-if="report_content.free">(フリー営業)</template></template>
               </h3>
             </v-col>
           </v-row>
@@ -65,6 +66,7 @@
           <v-row>
             <!-- 左カラム -->
             <v-col cols="12" sm="4">
+
               <template v-if="report_content.type === 'work'">
                 <h4 class="mb-1">仕事内容</h4>
                 {{ report_content.title }}
@@ -98,17 +100,26 @@
                   <template v-if="report_content['contact_persons'].length > 0">
                     <h4 class="mt-2 mb-1">面談者</h4>
                     <template v-for="contact_person in report_content['contact_persons']">
-                      <div class="mb-2">{{ contact_person.name }} <br /><span style="font-size: small;">({{
-                        contact_person.department }} / {{ contact_person.position }})<br /></span></div>
-                      <!-- <v-divider></v-divider> -->
-                    </template>
-
-                    <!-- <template v-if="report_content.participants">
-                    {{ report_content["participants"] }}
-                  </template> -->
-
+                      <div class="mb-2">・ {{ contact_person.name }} 様
+                      
+                        <template v-if="contact_person.department || contact_person.position">
+                              <span style="font-size: small;">
+                        (
+                          <template v-if="contact_person.department">{{ contact_person.department }}</template>
+                          <template v-if="contact_person.department && contact_person.position"> | </template>
+                          <template v-if="contact_person.position">{{ contact_person.position }}</template>
+                        )
+                        </span>
+                      </template>
+                      
+                      </div>
                   </template>
 
+                    <template v-if="report_content.participants">
+                      {{ report_content["participants"] }} 様
+                    </template>
+
+                  </template>
 
                 </template>
 
@@ -127,7 +138,7 @@
 
                   <template v-if="report_content.participants">
                     <h4 class="mt-2">面談者</h4>
-                    {{ report_content['participants'] }}
+                    {{ report_content['participants'] }} 様
                   </template>
 
                 </template>
@@ -143,8 +154,8 @@
                 {{ report_content.required_time }}
 
 
-
               </template>
+
             </v-col>
 
             <!-- 右カラム -->
@@ -411,6 +422,22 @@
           <v-card-title>
             <span v-html="reportContentForm.type === 'work' ? '業務' : '営業'"></span>日報の<span
               v-html="reportContentMode === 'create' ? '追加' : '編集'"></span>
+
+
+              <span class="ml-auto" v-if="reportContentForm.type === 'sales'">
+              <a href="/client-types/clients/create" target="_blank">
+                <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  会社登録
+                </v-btn>
+              </a>
+
+              <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs" @click.native="dialog = false">
+              <v-icon>
+                mdi-close
+              </v-icon>
+            </v-btn>
+            </span>
+
           </v-card-title>
 
           <v-card-text>
@@ -604,7 +631,16 @@
                         <!-- カスタム選択肢表示 -->
                         <template v-slot:item="{ item }">
                           <!-- {{ item.name }} -->
-                          {{ item.name }} / ({{ item.department }} | {{ item.position }})
+                          {{ item.name }}
+
+                          <template v-if="item.department || item.position">
+                            (
+                            <template v-if="item.department">{{ item.department }}</template>
+                            <template v-if="item.department && item.position"> | </template>
+                            <template v-if="item.position">{{ item.position }}</template>
+                            )
+                          </template>
+
                         </template>
                       </v-select>
 
@@ -673,8 +709,8 @@
 
               <!-- 仕事内容 -->
               <v-list-item v-if="reportContentForm.type === 'work'">
-                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" maxlength="300"
-                  name="title" v-model="reportContentForm.title" :error="Boolean(reportContentFormError.title)"
+                <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="仕事内容" maxlength="300" name="title"
+                  v-model="reportContentForm.title" :error="Boolean(reportContentFormError.title)"
                   :error-messages="reportContentFormError.title"
                   @change=" reportContentFormError.title = undefined"></v-text-field>
               </v-list-item>
@@ -730,7 +766,8 @@
               <v-list-item v-if="reportContentForm.type === 'sales'">
 
                 <v-select dense filled prepend-inner-icon="mdi-pencil" label="商談所要時間" :items="required_time"
-                  name="required_time" v-model="reportContentForm.required_time" :error="Boolean(reportContentFormError.required_time)"
+                  name="required_time" v-model="reportContentForm.required_time"
+                  :error="Boolean(reportContentFormError.required_time)"
                   :error-messages="reportContentFormError.required_time"
                   @change=" reportContentFormError.required_time = undefined"></v-select>
               </v-list-item>
@@ -958,7 +995,7 @@ export default {
         departments: "",
         position: "",
 
-        contact_persons: undefined,
+        contact_persons: {},
         contact_person_id: undefined,
         free: false,
       },
@@ -999,7 +1036,7 @@ export default {
       loading: {},
       extension_list: ['csv', 'txt', 'pdf', 'xlsx', 'xlsm'],
 
-      required_time: ['5分','15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
+      required_time: ['5分', '15分', '30分', '45分', '60分', '75分', '90分', '120分', '150分', '180分', '210分', '240分'],
 
 
       formReportFile: this.$inertia.form(`ReportsEdit${this.report.id}`, {
@@ -1206,6 +1243,8 @@ export default {
       if (this.reportContentForm.sales_method_id) {
         this.reportContentForm["sales_method"] = this.sales_methods.find(sales_method => sales_method.id === this.reportContentForm.sales_method_id);
       }
+
+      // alert('3');
 
       // フォームに追加
       this.form.report_contents.push(this.reportContentForm);
@@ -1635,10 +1674,10 @@ export default {
       })
     },
 
-    // changeReportContentFree(){
-    //   this.reportContentForm.branch_id = undefined;
-    //   this.reportContentForm.client_id = undefined;
-    // }
+    changeReportContentFree() {
+      this.reportContentForm.branch_id = undefined;
+      this.reportContentForm.client_id = undefined;
+    }
 
   }
 }

@@ -155,7 +155,7 @@
                             <v-list-item class="mb-4">
                                 <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="利用時間(分)"
                                     class="mx-5" persistent-hint name="time" v-model="form.time"
-                                    :error="Boolean(form.errors.time)" :items="this.timeList"
+                                    :error="Boolean(form.errors.time)" :items="timeList" item-text="text" item-value="id"
                                     :error-messages="form.errors.time" :autofocus="!$vuetify.breakpoint.xs"></v-select>
 
                             </v-list-item>
@@ -227,42 +227,49 @@
 
                             </v-list-item>
 
-                            <!-- 日付 -->
-                            <v-list-item class="mb-4">
-                                <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="開始日"
-                                    class="mx-5" persistent-hint type="date" name="started_at" v-model="form.started_at"
-                                    maxlength="200" :error="Boolean(form.errors.started_at)"
-                                    :error-messages="form.errors.started_at"
-                                    :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
 
-                            </v-list-item>
+                            <template v-if="this.user.id == this.user_id">
 
+                                <!-- 日付 -->
+                                <v-list-item class="mb-4">
+                                    <v-text-field dense filled clearable prepend-inner-icon="mdi-pencil" label="開始日"
+                                        class="mx-5" persistent-hint type="date" name="started_at"
+                                        v-model="form.started_at" maxlength="200"
+                                        :error="Boolean(form.errors.started_at)"
+                                        :error-messages="form.errors.started_at"
+                                        :autofocus="!$vuetify.breakpoint.xs"></v-text-field>
 
-                            <!-- 開始時間 -->
-                            <v-list-item class="mb-4">
-                                <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="開始時間"
-                                    class="mx-5" persistent-hint name="started_time" v-model="form.started_time"
-                                    :error="Boolean(form.errors.started_time)" :items="this.startedAtList"
-                                    :error-messages="form.errors.started_time"
-                                    :autofocus="!$vuetify.breakpoint.xs"></v-select>
-
-                            </v-list-item>
+                                </v-list-item>
 
 
-                            <!-- 時間 -->
-                            <v-list-item class="mb-4">
-                                <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="利用時間"
-                                    class="mx-5" persistent-hint name="time" v-model="form.time"
-                                    :error="Boolean(form.errors.time)" :items="this.timeList"
-                                    :error-messages="form.errors.time" :autofocus="!$vuetify.breakpoint.xs"></v-select>
+                                <!-- 開始時間 -->
+                                <v-list-item class="mb-4">
+                                    <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="開始時間"
+                                        class="mx-5" persistent-hint name="started_time" v-model="form.started_time"
+                                        :error="Boolean(form.errors.started_time)" :items="this.startedAtList"
+                                        :error-messages="form.errors.started_time"
+                                        :autofocus="!$vuetify.breakpoint.xs"></v-select>
 
-                            </v-list-item>
+                                </v-list-item>
+
+
+                                <!-- 時間 -->
+                                <v-list-item class="mb-4">
+                                    <v-select dense filled clearable prepend-inner-icon="mdi-pencil" label="利用時間"
+                                        class="mx-5" persistent-hint name="time" v-model="form.time"
+                                        :error="Boolean(form.errors.time)" :items="timeList" item-text="text" item-value="id"
+                                        :error-messages="form.errors.time"
+                                        :autofocus="!$vuetify.breakpoint.xs"></v-select>
+
+                                </v-list-item>
+
+                            </template>
 
 
                             <!-- 内容 -->
                             <v-list-item class="mb-4">
                                 <v-textarea dense filled clearable prepend-inner-icon="mdi-pencil" label="内容"
-                                    class="mx-5" persistent-hint name="title" v-model="form.title" rows="2"
+                                    class="mx-5" persistent-hint name="title" v-model="form.title" rows="4"
                                     :error="Boolean(form.errors.title)" :error-messages="form.errors.title"
                                     :autofocus="!$vuetify.breakpoint.xs"></v-textarea>
 
@@ -281,7 +288,7 @@
                         </v-col>
                     </v-row>
 
-                    <v-row style="margin-top:-40px">
+                    <v-row style="margin-top:-40px" v-if="this.user.id == this.user_id">
                         <v-col>
                             <v-card-text class="text-right">
                                 <Button :small="$vuetify.breakpoint.xs" type="button" color="danger"
@@ -393,7 +400,7 @@ import jaLocale from '@fullcalendar/core/locales/ja'
 export default {
     components: { Layout, Link, FullCalendar },
 
-    props: ['bookings', 'rooms', 'room_id', 'user', 'roomType'],
+    props: ['bookings', 'rooms', 'room_id', 'user', 'roomType','timeList'],
 
     data() {
 
@@ -422,7 +429,7 @@ export default {
             eventClick: this.handleEventClick,
             dateClick: this.clickCalendar,
             eventDrop: this.dropEventData,
-            eventResize:this.dropEventData,
+            eventResize: this.dropEventData,
             droppable: "true",
             editable: "true",
             selectable: "true",
@@ -453,6 +460,7 @@ export default {
             // dateClick: this.clickCalendar,
         }
 
+
         return {
 
             createDialog: false,
@@ -474,7 +482,7 @@ export default {
 
             startedAtList: ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'],
 
-            timeList: [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390],
+            // timeList: [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420,450,480,510,540],
 
             calendarOptions,
             calendarOptionsSmartphone,
@@ -615,6 +623,22 @@ export default {
             var start_time = info.event.start;
             var end_time = info.event.end;
 
+            console.log(info.event);
+
+            var event_user_id = info.event.extendedProps.user_id;
+
+            if (event_user_id != this.user.id) {
+                alert('自分の予約以外は変更できません');
+
+                if (this.room_id == 0) {
+                    window.location.href = `/bookings`;
+                } else {
+                    window.location.href = `/bookings?room=${this.room_id}`;
+                }
+
+                return false;
+            }
+
             //データ更新処理
             axios.post('/booking/update-time', {
                 booking_id: booking_id,
@@ -622,10 +646,18 @@ export default {
                 end_time: end_time,
             })
                 .then((res) => {
-                    if(res.data == false){
-                        alert('時間を変更に失敗しました');
 
-                    }else{
+                    if (res.data == false) {
+                        alert('時間を変更に失敗しました');
+                        if (this.room_id == 0) {
+                            window.location.href = `/bookings`;
+                        } else {
+                            window.location.href = `/bookings?room=${this.room_id}`;
+                        }
+
+
+
+                    } else {
                         alert('時間を変更しました。');
                     }
 
@@ -633,6 +665,12 @@ export default {
                 .catch((e) => {
                     console.log(res.data);
                     alert('時間を変更に失敗しました');
+
+                    if (this.room_id == 0) {
+                        window.location.href = `/bookings`;
+                    } else {
+                        window.location.href = `/bookings?room=${this.room_id}`;
+                    }
                 })
                 .finally(() => {
                 });

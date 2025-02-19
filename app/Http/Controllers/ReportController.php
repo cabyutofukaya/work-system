@@ -390,7 +390,8 @@ class ReportController extends Controller
                         $query->whereLike('name', $word)
                             ->orWhereLike('name_kana', $word)
                             ->orWhereLike('business_name', $word)
-                            ->orWhereLike('business_name_kana', $word);
+                            ->orWhereLike('business_name_kana', $word)
+                            ->orWhereLike('name_text', $word);
                     });
                 }
             }
@@ -525,7 +526,7 @@ class ReportController extends Controller
                     'title' => $report_content['title'] ?? null,
                     'client_id' => $report_content['client_id'] ?? null,
                     'branch_id' => $report_content['branch_id'] ?? null,
-                    // 'participants' => $report_content['participants'] ?? null,
+                    'participants' => $report_content['participants'] ?? null,
                     'sales_method_id' => $report_content['sales_method_id'] ?? null,
                     'product_description' => $report_content['product_description'] ?? null,
                     'required_time' => $report_content['required_time'] ?? null,
@@ -769,7 +770,8 @@ class ReportController extends Controller
                         $query->whereLike('name', $word)
                             ->orWhereLike('name_kana', $word)
                             ->orWhereLike('business_name', $word)
-                            ->orWhereLike('business_name_kana', $word);
+                            ->orWhereLike('business_name_kana', $word)
+                            ->orWhereLike('name_text', $word);
                     });
                 }
             }

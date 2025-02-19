@@ -67,6 +67,8 @@ class ClientController extends Controller
                 $clients->where(function ($query) use ($word) {
                     $query->whereLike('name', $word)
                         ->orWhereLike('name_kana', $word)
+                        ->orWhereLike('business_name', $word)
+                        ->orWhereLike('business_name_kana', $word)
                         ->orWhereLike('tel', $word)
                         ->orWhereLike('fax', $word);
 
@@ -101,9 +103,9 @@ class ClientController extends Controller
         // 営業所検索
         if ($request->filled('branch')) {
 
-            $clients->where(function($query) use($validated){
+            $clients->where(function ($query) use ($validated) {
                 $query->orWhere(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%')
-                      ->orWhereHas('branches', function ($query) use ($validated) {
+                    ->orWhereHas('branches', function ($query) use ($validated) {
                         $query->where(DB::raw('CONCAT(prefecture,address)'), "like", '%' . addcslashes($validated["branch"], '%_\\') . '%');
                     });
             });
@@ -163,6 +165,18 @@ class ClientController extends Controller
         }
 
 
+        // 商材検索
+        if ($request->filled('product_id')) {
+            $clients->whereHas('latest_evaluations', function (Builder $query) use ($validated) {
+                // orderで指定したカラムにIntegrity constraint violationエラーが発生するためグローバルスコープを削除
+                $query->withoutGlobalScope('order')->where('product_id', $validated["product_id"]);
+            });
+        }
+
+        $product_id = null;
+        if ($request->product_id) {
+            $product_id = (int) $validated["product_id"];
+        }
 
 
         return inertia('Clients', [
@@ -177,6 +191,9 @@ class ClientController extends Controller
 
             // 会社リスト
             'clients' => $clients->paginate()->withQueryString(),
+
+            // 商材リスト
+            'products' => Product::get(["id", "name"]),
 
             // 検索フォームの初期値
             'form_params' => [
@@ -199,6 +216,7 @@ class ClientController extends Controller
                 'has_junior_seat' => $request->boolean("has_junior_seat"),
                 'is_bus_association_member' => $request->boolean("is_bus_association_member"),
                 'has_safety_mark' => $request->boolean("has_safety_mark"),
+                'product_id' => $product_id,
             ],
         ]);
     }
@@ -377,6 +395,7 @@ class ClientController extends Controller
             'genres',
             'products',
             'users',
+            'client_telphones'
         ]);
 
         if ($client->client_type_id === "taxibus") {
@@ -401,13 +420,13 @@ class ClientController extends Controller
         // 最近の営業日報
         $report_contents = ReportContent
             ::exceptPrivate()
-            ->with(["report:id,user_id,date", "report.user:id,name","contact_persons"])
+            ->with(["report:id,user_id,date", "report.user:id,name", "contact_persons"])
             ->where("type", "sales")
             ->where("client_id", $client->id)
             ->where("hidden", 0)
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->take(3)
-            ->get(['id', 'report_id', 'type', 'description']);
+            ->get(['id', 'report_id', 'type', 'description', 'product_description']);
 
         // 7月始まり年度別の訪問回数(営業日報数)
         $report_contents_count_by_fy = ReportContent
@@ -445,10 +464,9 @@ class ClientController extends Controller
 
         //担当者作成
         $contanct_person_create = false;
-        if(isset($_GET['contact_person'])){
+        if (isset($_GET['contact_person'])) {
             $contanct_person_create = true;
         }
-
 
         return inertia('ClientsShow', [
             // 都道府県
@@ -466,9 +484,9 @@ class ClientController extends Controller
             // 最近の商材評価
             'latest_evaluations' => $latest_evaluations,
             // 評価一覧
-            'evaluations' => fn () => Evaluation::get(),
+            'evaluations' => fn() => Evaluation::get(),
             // 商材一覧
-            'products' => fn () => Product::get(),
+            'products' => fn() => Product::get(),
 
             //担当者作成時
             'contanct_person_create' => $contanct_person_create,
@@ -489,6 +507,8 @@ class ClientController extends Controller
             'products',
             'users',
         ]);
+
+        // dd($client['client_type_truck']);
 
 
         // dd($client->products()->get()->pluck("id"));
@@ -538,6 +558,7 @@ class ClientController extends Controller
         // 会社情報
         $client->fill($request->validated());
 
+
         if ($request->hasFile('_image')) {
             // 画像ファイルを取得
             $file = $request->file('_image');
@@ -547,6 +568,7 @@ class ClientController extends Controller
         }
 
         $client->save();
+
 
         // 会社タイプ固有情報
         if ($client->client_type_id === "taxibus" && $request->has("client_type_taxibus")) {

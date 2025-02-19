@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 
-class UpdateContactPerson extends FormRequest
+class UpdateClientTelphone extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,16 +18,6 @@ class UpdateContactPerson extends FormRequest
         return true;
     }
 
-    /**
-     * このモデル特有の訳語を設定
-     *
-     * @return string[]
-     */
-    public function attributes(): array
-    {
-        $attributes = Lang::get("validation.attributes.contact_persons");
-        return is_array($attributes) ? $attributes : [];
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -38,10 +28,7 @@ class UpdateContactPerson extends FormRequest
     {
         return [
             'name' => ['required'],
-            'email' => ['nullable', 'email:filter'],
-            'tel' => ['nullable', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
-            'department' => ['nullable'],
-            'position' => ['nullable'],
+            'tel' => ['required', 'string', 'max:255', 'regex:/^[0-9][-0-9]+[0-9]$/'],
         ];
     }
 }

@@ -103,6 +103,11 @@ class ScheduleListController extends Controller
             $schedule_list = Schedule::where('date', '>=', date('Y-m-d', strtotime('-1 months')))->where('user_id', $user->id)->get();
 
             foreach ($schedule_list as $schedule) {
+
+                if($schedule->is_public == 1 && Auth::id() != $schedule->user_id){
+                    continue;
+                }
+
                 $foo = [];
                 $foo['id'] = $schedule->id;
                 $foo['resourceId'] = $user->id;

@@ -177,6 +177,8 @@ class SalesTodoController extends Controller
             }
         }
 
+        dd(fn() => collect(config("const.client_types"))->values());
+
         // レスポンス
         return inertia('SalesTodosCreate', [
             'client_types' => fn() => collect(config("const.client_types"))->values(),

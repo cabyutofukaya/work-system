@@ -1,4 +1,4 @@
-<style scoped>
+<style>
 .fc-day-sat {
     background-color: #eaf4ff;
 }
@@ -11,9 +11,6 @@
     background-color: white;
 }
 
-.fc-day-sun {
-    width: 100%;
-}
 </style>
 
 <template>
@@ -40,7 +37,7 @@
 
 
         <FullCalendar class='demo-app-calendar p-5' :options='calendarOptions' ref="fullCalendar" id="calendar_frame"
-            style="width: 95%;" v-if="$vuetify.breakpoint.smAndUp">
+        style="max-width: 1000px;" v-if="$vuetify.breakpoint.smAndUp">
         </FullCalendar>
 
         <v-card flat tile>
@@ -186,7 +183,7 @@
                                 <v-col cols="12" sm="2">タイトル</v-col>
                                 <v-col>
                                     <v-select label="スケジュール種別" name="title_type" v-model="form.title_type"  clearable
-                                        :items="['営業/外出', '出張', '社内業務', '会議', '来客対応', 'テレワーク', 'その他']"
+                                         :items="typeList"
                                         variant="underlined"></v-select>
                                 </v-col>
                                 <v-col v-if="$vuetify.breakpoint.smAndUp">
@@ -213,6 +210,16 @@
                                         :error="Boolean(form.errors.content)"
                                         :error-messages="form.errors.content"></v-textarea>
                                 </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols="12" sm="2">公開/非公開</v-col>
+                                <v-col cols="4">
+                                    <v-select name="is_public" v-model="form.is_public" 
+                                        :items="publicList" item-text="text" item-value="id"
+                                        variant="underlined"></v-select>
+                                </v-col>
+                                <v-col cols="8"></v-col>
                             </v-row>
 
 
@@ -301,7 +308,7 @@
                                 <v-col cols="12" sm="2">タイトル</v-col>
                                 <v-col>
                                     <v-select label="スケジュール種別" name="title_type" v-model="edit_form.title_type" clearable
-                                        :items="['営業/外出', '出張', '社内業務', '会議', '来客対応', 'テレワーク', 'その他']"
+                                        :items="typeList"
                                         variant="underlined"></v-select>
                                 </v-col>
                                 <v-col v-if="$vuetify.breakpoint.smAndUp">
@@ -330,6 +337,17 @@
                                         :error="Boolean(edit_form.errors.content)"
                                         :error-messages="edit_form.errors.content"></v-textarea>
                                 </v-col>
+                            </v-row>
+
+
+                            <v-row>
+                                <v-col cols="12" sm="2">公開/非公開</v-col>
+                                <v-col cols="4">
+                                    <v-select name="is_public" v-model="edit_form.is_public"
+                                           :items="publicList" item-text="text" item-value="id"
+                                        variant="underlined"></v-select>
+                                </v-col>
+                                <v-col cols="8"></v-col>
                             </v-row>
 
                         </div>
@@ -397,7 +415,7 @@ const dateString = '';
 export default {
     components: { Layout, Link, FullCalendar },
 
-    props: ['schedule', 'user', 'loginUser'],
+    props: ['schedule', 'user', 'loginUser','publicList','typeList'],
 
     data() {
 
@@ -427,6 +445,7 @@ export default {
                 saturday: false,
                 sunday: false,
                 route: 1,
+                is_public: 0,
             }),
 
             edit_form: this.$inertia.form({
@@ -441,6 +460,7 @@ export default {
                 user_name: null,
                 enabled: false,
                 route: 1,
+                is_public: 0,
             }),
             delete_form: this.$inertia.form({
                 id: 0,
@@ -521,6 +541,8 @@ export default {
 
             axios.get(`/schedule/getData/${eventObj.event.id}`)
                 .then((res) => {
+                    console.log(res.data);
+
                     this.displaySchedule = true;
                     this.edit_form.id = res.data.id;
                     this.edit_form.title = res.data.title;
@@ -531,6 +553,7 @@ export default {
                     this.edit_form.end_time = res.data.end_time;
                     this.edit_form.title_type = res.data.title_type ?? null;
                     this.edit_form.enabled = res.data.start_time ? false : true;
+                    this.edit_form.is_public = res.data.is_public;
                     this.delete_form.id = res.data.id;
 
                 })

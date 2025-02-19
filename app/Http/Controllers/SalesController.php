@@ -343,7 +343,7 @@ class SalesController extends Controller
 
         $month_sort_list = config('billing.month_sort_list');
 
-        dd($data);
+        // dd($data);
 
         return inertia('SalesCategory', [
             'data' => $data,

@@ -6,7 +6,7 @@
         メンバー情報の編集
       </v-card-title>
 
-      <v-card-text>
+      <!-- <v-card-text>
         <form @submit.prevent="updatePassword">
           <div class="description-form">
             <v-row>
@@ -51,9 +51,9 @@
             </v-col>
           </v-row>
         </form>
-      </v-card-text>
+      </v-card-text> -->
 
-      <v-divider class="my-4"></v-divider>
+      <!-- <v-divider class="my-4"></v-divider> -->
 
       <v-card-text>
         <form @submit.prevent="updateProfile">

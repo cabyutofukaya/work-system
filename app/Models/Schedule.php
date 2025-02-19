@@ -25,6 +25,7 @@ class Schedule extends BaseSchedule implements Auditable
         'date',
         'start_time',
         'end_time',
+        'is_public'
     ];
 
     /**
@@ -106,6 +107,7 @@ class Schedule extends BaseSchedule implements Auditable
             'title' => $param['title'],
             'content' => $param['content'],
             'title_type' => $param['title_type'],
+            'is_public' => $param['is_public'] ?? 0,
         ]);
 
         return $query;
@@ -122,6 +124,7 @@ class Schedule extends BaseSchedule implements Auditable
             'content' => $param['content'] ?? null,
             'user_id' => $param['user_id'],
             'title_type' => $param['title_type'] ?? null,
+            'is_public' => $param['is_public'] ?? 0,
         ]);
 
         return $query;

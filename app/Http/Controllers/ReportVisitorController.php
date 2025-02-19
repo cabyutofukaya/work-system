@@ -53,4 +53,21 @@ class ReportVisitorController extends Controller
         // $suggestion = [];
         return response()->json(['visitor_rate' => $visitor_rate], 200);
     }
+
+    public function read()
+    {
+        $reports_list = Report::where([
+            'is_private' => 0,
+        ])->where('date','>=', date('Y-m-d', strtotime('-3 month')))->get();
+        
+        foreach($reports_list as $report){
+            $report->report_visitors()->updateOrCreate([
+                'user_id' => auth()->id(),
+            ]);
+        }
+        
+
+    }
+
+
 }

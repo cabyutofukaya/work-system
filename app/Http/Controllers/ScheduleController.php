@@ -126,6 +126,8 @@ class ScheduleController extends Controller
             'user' => $user,
             'schedule' => $schedule,
             'loginUser' => Auth::user(),
+            'publicList' => config('schedule.is_public'),
+            'typeList' => config('schedule.type'),
         ]);
     }
 
@@ -149,6 +151,7 @@ class ScheduleController extends Controller
     public function store(StoreSchedule $request)
     {
         $param = $request->all();
+ 
         $param['user_id'] = Auth::id();
 
         if (!$request->rangeEnabled) {
@@ -237,6 +240,7 @@ class ScheduleController extends Controller
         $schedule = new Schedule;
 
         $param = $request->all();
+ 
         if ($request->enabled) {
             $param['start_time'] = null;
             $param['end_time'] = null;

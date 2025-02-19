@@ -10,6 +10,7 @@ use Encore\Admin\Show;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use App\Models\Client;
 
 /**
  * 一般ユーザ
@@ -39,6 +40,33 @@ class UserController extends BaseController
      */
     protected function grid(): Grid
     {
+
+        // $clients = Client::get();
+
+        // $type_list = config('const.client_list');
+   
+
+        // foreach ($clients as $client) {
+
+        //     $name_text = '';
+            
+        //     if($client->name_position == '前'){
+        //         $name_text .= $client->type_name;
+        //     }
+
+        //     $name_text .= $client->name;
+
+        //     if($client->name_position == '後ろ'){
+        //         $name_text .= $client->type_name;
+        //     }
+
+        //     Client::where('id',$client->id)->update([
+        //         'name_text' => $name_text,
+        //     ]);
+        // }
+
+        // dd('完了');
+
         $grid = new Grid($this->modelClass());
 
         $grid->header(function () {

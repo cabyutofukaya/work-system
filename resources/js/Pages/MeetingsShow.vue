@@ -28,6 +28,15 @@
                 </v-icon>
                 編集
               </Button>
+
+              <Button v-if="Number(meeting['user_id']) === Number($page.props.auth.user.id)"
+                :small="$vuetify.breakpoint.xs" class="ml-2" @click.native="addFileModal">
+                <v-icon left>
+                  mdi-file
+                </v-icon>
+                ファイル添付
+              </Button>
+              
             </v-col>
           </v-row>
 
@@ -96,6 +105,65 @@
               </v-col>
             </v-row>
           </div>
+
+
+          <template v-if="images_list && !$vuetify.breakpoint.xs">
+            <v-container fluid>
+              <v-row>
+                <v-col cols="3" v-for="(image, i_index) in images_list" :key="i_index">
+                  <v-card class="mx-auto" max-width="400">
+
+                    <div class="text-right" v-if="$page.props.auth.user.id == meeting.user_id">
+                  <v-icon color="error" class="text-right" @click.native="deleteFile(i_index)">
+                    mdi-close-circle-outline</v-icon>
+                </div>
+
+                    <v-img :src="`/storage/meeting/${image}`" max-height="250" min-height="150" cover
+                      @click.native="clickImage(image)" color="surface-variant"></v-img>
+
+                  </v-card>
+
+                </v-col>
+              </v-row>
+            </v-container>
+          </template>
+
+
+          <template v-if="images_list && $vuetify.breakpoint.xs">
+            <v-container fluid>
+              <v-row>
+                <v-col cols="12" v-for="(image, i_index) in images_list" :key="i_index">
+                  <v-card>
+                    <v-img :src="`/storage/meeting/${image}`" max-height="250" min-height="150"></v-img>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </template>
+
+          <template v-if="files_list">
+            <v-container fluid>
+              <v-row>
+                <v-col cols="12" v-for="(file, f_index) in files_list" :key="f_index" class="mb-3">
+
+                  <v-row>
+
+                    <a :href="`/storage/meeting/${file.name}`" target="_blank">
+                      {{ file.tmp_name }}
+                    </a>
+
+                    <div v-if="$page.props.auth.user.id == meeting.user_id" class="ml-8">
+                      <v-icon color="error" @click.native="deleteFile(f_index)">
+                        mdi-close-circle-outline</v-icon>
+                    </div>
+
+                  </v-row>
+
+                </v-col>
+              </v-row>
+            </v-container>
+          </template>
+
 
           <v-row>
 
@@ -230,6 +298,44 @@
           </v-card-text>
         </v-card>
       </v-dialog>
+
+
+
+      <!-- ファイル追加ダイアログ -->
+      <v-dialog v-model="fileAddDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'">
+        <v-card flat tile>
+          <v-card-title>
+            ファイルの追加
+          </v-card-title>
+
+          <v-card-text>
+            <v-list>
+              <v-file-input chips prepend-icon="" prepend-inner-icon="mdi-paperclip" name="file_form" id="file_form"
+                label="ファイルを選択する" accept="image/*, .pdf , .csv, .txt ,.xlsx , .xlsm"
+                @change.native="uploadFile"></v-file-input>
+            </v-list>
+          </v-card-text>
+
+          <v-card-text class="text-center">
+            <Button :small="$vuetify.breakpoint.xs" color="primary" @click.native="updateMeetingFile"
+              :loading="loading['update_file']">
+              ファイルを追加する
+            </Button>
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-text class="text-right">
+            <Button class="mt-4" :small="$vuetify.breakpoint.xs" @click.native="fileAddDialog = false">
+              <v-icon>
+                mdi-close
+              </v-icon>
+              閉じる
+            </Button>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
     </div>
   </Layout>
 </template>
@@ -247,7 +353,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
   name: 'MeetingsShow',
-  props: ['meeting', 'users', 'user'],
+  props: ['meeting', 'users', 'user', 'images_list', 'files_list'],
   data() {
     return {
       meetingType: this.$route().params.meetingType ?? null,
@@ -257,7 +363,20 @@ export default {
         meeting_id: this.meeting.id,
         comment: null,
       }),
-      loading: {}
+      loading: {},
+
+      file_name: undefined,
+      fileDialog: false,
+
+      fileAddDialog: false,
+      file: [],
+
+      formMeetingFileAdd: this.$inertia.form(`MeetingsFileAdd`, {
+        name: undefined,
+        type: undefined,
+        tmp_name: undefined,
+        id: this.$page['props']['meeting'].id,
+      }),
     };
   },
 
@@ -300,6 +419,81 @@ export default {
         this.$route('meetings.like', { meeting: $meetingId }), {}, {
         preserveScroll: true,
       });
+    },
+
+    clickImage(file_name) {
+      this.file_name = file_name;
+      this.fileDialog = true;
+    },
+
+    addFileModal() {
+      this.file = [];
+      this.fileAddDialog = true;
+    },
+
+    uploadFile(e) {
+
+      var formData = new FormData();
+
+      var file = e.target.files[0];
+
+      const config = {
+        header: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+
+
+      //appendの第一引数がkey、第二引数がデータ
+      formData.append("file", file);
+
+      axios.post("/upload/meeting/file", formData, config).then(res => {
+        console.log(res);
+        console.log(res.data);
+        console.log(res.data.name);
+
+        console.log(res.data);
+
+        this.formMeetingFileAdd.name = res.data.name;
+        this.formMeetingFileAdd.type = res.data.type;
+        this.formMeetingFileAdd.tmp_name = res.data.tmp_name;
+        // this.imageContent[id] = res.data.name;
+
+
+      }).catch(err => {
+        alert('写真のアップに失敗しました。もう一度実施お願いします。');
+      });
+    },
+
+
+
+    // ファイル更新
+    updateMeetingFile: function () {
+
+
+      this.formMeetingFileAdd.post(this.$route('meetings.update_file'), {
+        preserveState: (page) => Object.keys(page.props.errors).length,
+        onStart: () => this.$set(this.loading, "update_file", true),
+        onSuccess: () => this.$toasted.show('ファイルを更新しました'),
+        onFinish: () => this.$set(this.loading, "update_file", false),
+      })
+    },
+
+
+    deleteFile: function (meeting_file) {
+
+      this.$confirm('このファイルを削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
+        if (isAccept) {
+          //削除処理
+          this.formMeetingFileAdd.post(this.$route('meetings-file.delete', { meeting: this.meeting.id, meeting_file: meeting_file }), {
+            preserveState: (page) => Object.keys(page.props.errors).length,
+            onStart: () => this.$set(this.loading, "delete", true),
+            onSuccess: () => this.$toasted.show('ファイルを削除しました'),
+            onFinish: () => this.$set(this.loading, "delete", false),
+
+          })
+        }
+      })
     },
   }
 }
