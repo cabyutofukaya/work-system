@@ -54,6 +54,42 @@ class HomeController extends Controller
         // dd('uu');
 
 
+        // $clients = Client::get();
+
+        // $type_list = config('const.client_list');
+
+        // foreach ($clients as $client) {
+        // $name = $client->name;
+        // $name_2 = '';
+        // $name_position = '';
+
+        // foreach ($type_list as $type) {
+        //     if (preg_match('/' . $type .'/', $name)) {
+
+        //         $num = mb_strpos($name, $type);
+
+        //         if($num == 0){
+        //             $name_position = '前';
+        //         }else{
+        //             $name_position = '後ろ';
+        //         }
+
+        //         //残り文字
+        //         $name_2 = str_replace($type, '', $name);
+
+        //         Client::where('id',$client->id)->update([
+        //             'name' => $name_2,
+        //             'name_2' => $name,
+        //             'name_position' => $name_position,
+        //             'type_name' => $type,
+        //         ]);
+
+        //     }
+        // }
+
+        // }
+
+        // dd('完了');
 
         // $three_month = date('Y-m-d', strtotime('-3 month'));
 
