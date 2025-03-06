@@ -145,9 +145,9 @@
     <v-card flat tile>
 
 
-      <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar">
+      <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar" v-if="$vuetify.breakpoint.smAndUp" style="max-width: 1000px;"></FullCalendar>
 
-      </FullCalendar>
+      <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref="fullCalendar" v-if="!$vuetify.breakpoint.smAndUp" style="max-width: 90%;"></FullCalendar>
 
       <v-divider class="mx-4"></v-divider>
 

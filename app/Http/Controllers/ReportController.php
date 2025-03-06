@@ -390,7 +390,8 @@ class ReportController extends Controller
                         $query->whereLike('name', $word)
                             ->orWhereLike('name_kana', $word)
                             ->orWhereLike('business_name', $word)
-                            ->orWhereLike('business_name_kana', $word);
+                            ->orWhereLike('business_name_kana', $word)
+                            ->orWhereLike('name_text', $word);
                     });
                 }
             }
@@ -769,7 +770,8 @@ class ReportController extends Controller
                         $query->whereLike('name', $word)
                             ->orWhereLike('name_kana', $word)
                             ->orWhereLike('business_name', $word)
-                            ->orWhereLike('business_name_kana', $word);
+                            ->orWhereLike('business_name_kana', $word)
+                            ->orWhereLike('name_text', $word);
                     });
                 }
             }

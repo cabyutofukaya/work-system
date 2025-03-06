@@ -43,6 +43,8 @@ class AdminUserController extends BaseController
      */
     protected function grid(): Grid
     {
+       
+
         $grid = new Grid($this->modelClass());
 
         // 管理ユーザロール adminuser が設定されたレコードに絞り込む

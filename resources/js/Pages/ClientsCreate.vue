@@ -22,7 +22,6 @@
                     maxlength="200"
                     :error="Boolean(form.errors.name)"
                     :error-messages="form.errors.name"
-                    @keydown.enter="create"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -57,7 +56,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.name_kana)"
                     :error-messages="form.errors.name_kana"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -107,7 +106,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.postcode)"
                     :error-messages="form.errors.postcode"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -140,7 +139,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.address)"
                     :error-messages="form.errors.address"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -188,7 +187,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.url)"
                     :error-messages="form.errors.url"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -204,7 +203,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.email)"
                     :error-messages="form.errors.email"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -220,7 +219,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.representative)"
                     :error-messages="form.errors.representative"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -236,7 +235,6 @@
                     maxlength="200"
                     :error="Boolean(form.errors.representative_kana)"
                     :error-messages="form.errors.representative_kana"
-                    @keydown.enter="update"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -252,7 +250,23 @@
                     maxlength="200"
                     :error="Boolean(form.errors.representative_position)"
                     :error-messages="form.errors.representative_position"
-                    @keydown.enter="update"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+
+
+            <v-row>
+              <v-col cols="12" sm="4">代表者携帯番号</v-col>
+              <v-col>
+                <v-text-field
+                    dense filled
+                    prepend-inner-icon="mdi-pencil"
+                    name="representative_tel"
+                    v-model="form.representative_tel"
+                    maxlength="200"
+                    :error="Boolean(form.errors.representative_tel)"
+                    :error-messages="form.errors.representative_tel"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -269,7 +283,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.tel)"
                     :error-messages="form.errors.tel"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -286,7 +300,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.fax)"
                     :error-messages="form.errors.fax"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -302,7 +316,7 @@
                     maxlength="200"
                     :error="Boolean(form.errors.business_hours)"
                     :error-messages="form.errors.business_hours"
-                    @keydown.enter="create"
+                    
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -321,7 +335,7 @@
                       maxlength="200"
                       :error="Boolean(form.errors['client_type_taxibus.membership_fee'])"
                       :error-messages="form.errors['client_type_taxibus.membership_fee']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -338,7 +352,7 @@
                       maxlength="200"
                       :error="Boolean(form.errors['client_type_taxibus.fee_taxi_cab'])"
                       :error-messages="form.errors['client_type_taxibus.fee_taxi_cab']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -354,7 +368,7 @@
                       v-model="form['client_type_taxibus']['fee_taxi_tabinoashi']"
                       :error="Boolean(form.errors['client_type_taxibus.fee_taxi_tabinoashi'])"
                       :error-messages="form.errors['client_type_taxibus.fee_taxi_tabinoashi']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -370,7 +384,7 @@
                       v-model="form['client_type_taxibus']['fee_bus_cab']"
                       :error="Boolean(form.errors['client_type_taxibus.fee_bus_cab'])"
                       :error-messages="form.errors['client_type_taxibus.fee_bus_cab']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -386,7 +400,7 @@
                       v-model="form['client_type_taxibus']['fee_bus_tabinoashi']"
                       :error="Boolean(form.errors['client_type_taxibus.fee_bus_tabinoashi'])"
                       :error-messages="form.errors['client_type_taxibus.fee_bus_tabinoashi']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -483,7 +497,7 @@
                       :disabled="!Boolean(form['client_type_taxibus']['has_child_seat'])"
                       :error="Boolean(form.errors['client_type_taxibus.fee_child_seat'])"
                       :error-messages="form.errors['client_type_taxibus.fee_child_seat']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -508,7 +522,7 @@
                       :disabled="!Boolean(form['client_type_taxibus']['has_junior_seat'])"
                       :error="Boolean(form.errors['client_type_taxibus.fee_junior_seat'])"
                       :error-messages="form.errors['client_type_taxibus.fee_junior_seat']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
 
                 </v-col>
@@ -598,7 +612,7 @@
                       maxlength="200"
                       :error="Boolean(form.errors['client_type_travel.registration_number'])"
                       :error-messages="form.errors['client_type_travel.registration_number']"
-                      @keydown.enter="create"
+                      
                   ></v-text-field>
                 </v-col>
               </v-row>

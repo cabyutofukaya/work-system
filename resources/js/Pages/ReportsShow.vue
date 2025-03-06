@@ -85,12 +85,19 @@
                 <template v-else>
                   {{ report.user.name }}
 
-
                 </template>
               </div>
             </v-col>
 
+
+            <v-col cols="12" v-if="is_phone" style="margin-left: auto;">
+              <Link :href="`/reports?word=${report.user.name}`">日報の一覧へ</Link>
+            </v-col>
+
             <v-col cols="12" sm="" :class="{ 'text-right': $vuetify.breakpoint.smAndUp }">
+
+              <Link :href="`/reports?word=${report.user.name}`" v-if="!is_phone" style="margin-right:10px;">日報の一覧へ</Link>
+
               <v-chip small class="mr-2" @click="$vuetify.goTo($refs.commentVisitedUser)">
                 閲覧者
                 {{ Math.max(report["report_visitors_count"] - 1, 0) /* 閲覧者自身を除外するため一人減らす */ }}
@@ -123,16 +130,54 @@
 
         </v-card-text>
 
-        <v-card-text class="text-right" v-if="!is_phone">
+
+        <v-row>
+          <v-col cols="8">
+            <v-card-text class="text-left">
+              <a :href="`/reports/${link_list.pre.id}`" v-if="link_list['pre']">
+                <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  <v-icon left>
+                    mdi-menu-left
+                  </v-icon>
+                  前へ
+                </v-btn>
+              </a>
+
+              <a :href="`/reports/${link_list.next.id}`" v-if="link_list['next']">
+                <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  次へ
+                  <v-icon left>
+                    mdi-menu-right
+                  </v-icon>
+                </v-btn>
+              </a>
+            </v-card-text>
+          </v-col>
+
+          <v-col cols="4">
+            <v-card-text class="text-right">
+              <a :href=report_url>
+                <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  <v-icon left>
+                    mdi-arrow-left
+                  </v-icon>
+                  一覧へ
+                </v-btn>
+              </a>
+            </v-card-text>
+          </v-col>
+        </v-row>
+
+        <!-- <v-card-text class="text-right" v-if="!is_phone">
           <a :href=report_url>
             <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
               <v-icon left>
                 mdi-arrow-left
               </v-icon>
-              戻る
+              一覧へ
             </v-btn>
           </a>
-        </v-card-text>
+        </v-card-text> -->
 
         <div v-for="report_content in report['report_contents']" :key="report_content.id">
           <template v-if="report_content.type === 'work'">
@@ -220,7 +265,9 @@
                         <div>
                           <div>
                             <Link :href="$route('clients.show', { client: report_content.client.id })">
+                            <template v-if="report_content.client.name_position == '前'">{{ report_content.client.type_name }}</template>
                             {{ report_content.client.name }}
+                            <template v-if="report_content.client.name_position == '後ろ'">{{ report_content.client.type_name }}</template>
                             </Link>
                           </div>
                           <div class="mt-1" v-if="report_content.branch">
@@ -232,23 +279,40 @@
                         </div>
                       </div>
 
-                      <!-- <span v-if="report_content.departments || report_content.position">
+                      <span v-if="report_content.departments || report_content.position">
                       <h4 class="mt-2 mb-1">部署名 / 役職名</h4>
                       {{ report_content.departments }} {{ report_content.position }}
-                    </span> -->
+                    </span>
 
                       <template v-if="report_content['contact_persons'].length > 0">
                         <h4 class="mt-2 mb-1">面談者</h4>
                         <template v-for="contact_person in report_content['contact_persons']">
 
-                          <div class="mb-2"><a @click="openContactPersonDialog(contact_person.id)">{{
-                            contact_person.name }}</a> <br /><span style="font-size: small;">({{
-                                contact_person.department }} / {{ contact_person.position }})<br /></span></div>
+                          <div class="mb-2">
+                            ・ <a @click="openContactPersonDialog(contact_person.id)">
+                               {{contact_person.name }}
+                            </a> 様
+                            
+                            <template v-if="contact_person.department || contact_person.position">
+                              <span style="font-size: small;">
+                        (
+                          <template v-if="contact_person.department">{{ contact_person.department }}</template>
+                          <template v-if="contact_person.department && contact_person.position"> | </template>
+                          <template v-if="contact_person.position">{{ contact_person.position }}</template>
+                        )
+                        </span>
+                      </template>
+                    </div>
+                            
+                       
+
                           <!-- <v-divider></v-divider> -->
                         </template>
-                        <!-- <template v-if="report_content.participants">
-                        {{ report_content["participants"] }}
-                      </template> -->
+                      </template>
+
+                      <template v-if="report_content.participants">
+                        <h4 class="mt-2 mb-1">面談者</h4>
+                        {{ report_content["participants"] }} 様
                       </template>
 
                     </template>
@@ -268,7 +332,7 @@
 
                       <template v-if="report_content.participants">
                         <h4 class="mt-1">面談者</h4>
-                        {{ report_content["participants"] }}
+                        {{ report_content["participants"] }} 様
                       </template>
 
                     </template>
@@ -492,17 +556,57 @@
 
         <v-divider></v-divider>
 
-        <v-card-text class="text-right">
-          <!-- <BackButton v-if="is_phone"></BackButton> -->
+        <!-- <v-card-text class="text-right">
           <a :href=report_url>
             <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
               <v-icon left>
                 mdi-arrow-left
               </v-icon>
-              戻る
+              一覧へ
             </v-btn>
           </a>
-        </v-card-text>
+        </v-card-text> -->
+
+
+        <v-row>
+          <v-col>
+            <v-card-text class="text-left">
+              <a :href="`/reports/${link_list.pre.id}`" v-if="link_list['pre']">
+                <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  <v-icon left>
+                    mdi-menu-left
+                  </v-icon>
+                  前へ
+                </v-btn>
+              </a>
+
+              <a :href="`/reports/${link_list.next.id}`" v-if="link_list['next']">
+                <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  次へ
+                  <v-icon left>
+                    mdi-menu-right
+                  </v-icon>
+                </v-btn>
+              </a>
+            </v-card-text>
+          </v-col>
+
+          <v-col>
+            <v-card-text class="text-right">
+              <!-- <BackButton v-if="is_phone"></BackButton> -->
+              <a :href=report_url>
+                <v-btn tile depressed class="text-capitalize mt-4" color="#969797" dark :small="$vuetify.breakpoint.xs">
+                  <v-icon left>
+                    mdi-arrow-left
+                  </v-icon>
+                  一覧へ
+                </v-btn>
+              </a>
+            </v-card-text>
+          </v-col>
+
+        </v-row>
+
       </v-card>
 
       <!-- コメント入力ダイアログ -->
@@ -661,7 +765,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url', 'is_phone'],
+  props: ['report', 'users', 'mentions', 'mentions', 'user', 'report_url', 'is_phone','link_list'],
 
 
   data() {

@@ -395,6 +395,7 @@ class ClientController extends Controller
             'genres',
             'products',
             'users',
+            'client_telphones'
         ]);
 
         if ($client->client_type_id === "taxibus") {

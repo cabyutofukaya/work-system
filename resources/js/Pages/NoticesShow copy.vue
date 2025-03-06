@@ -27,22 +27,9 @@
         </v-row>
       </v-card-text>
 
-
-
-      <v-row>
-        <v-col>
-          <v-card-text class="mt-4 pb-0">
-            <h3>{{ notice.title }}</h3>
-          </v-card-text>
-        </v-col>
-        <v-col class="text-right">
-          <v-chip small class="mr-2" @click="$vuetify.goTo($refs.commentVisitedUser)">
-            閲覧者
-            {{ Math.max(notice["notice_visitors_count"], 0) /* 閲覧者自身を除外するため一人減らす */ }}
-          </v-chip>
-        </v-col>
-      </v-row>
-
+      <v-card-text class="mt-4 pb-0">
+        <h3>{{ notice.title }}</h3>
+      </v-card-text>
 
       <v-card-text class="pb-0">
         <div class="mb-1">
@@ -82,6 +69,7 @@
       <v-card-text>
         <span style="white-space: pre-line;">{{ notice["description"] }}</span>
       </v-card-text>
+
 
       <template v-if="images_list && !$vuetify.breakpoint.xs">
         <v-container fluid>
@@ -138,8 +126,9 @@
           </v-row>
         </v-container>
       </template>
+      
 
-      <!-- <v-card-text v-if="$page.props.auth.user.id == this.notice.user_id">
+      <v-card-text>
         <div v-for="(notice_file) in notice['notice_files']" :key="notice_file.id">
 
           <v-card-text>
@@ -160,45 +149,24 @@
                   </div>
                 </a>
 
+
                 <v-icon class="ml-5 mb-a" size="x-large" color="error"
                   @click="deleteFile(notice_file.id)">mdi-delete-outline</v-icon>
-
 
               </v-row>
             </div>
           </v-card-text>
         </div>
-      </v-card-text> -->
+      </v-card-text>
 
-      <div class="text-right" v-if="$page.props.auth.user.id == this.notice.user_id">
-        <Button :small="$vuetify.breakpoint.xs" @click.native="showDialogFile = true">
-          <v-icon left>
-            mdi-pencil
-          </v-icon>
-          ファイルの追加
-        </Button>
-      </div>
+      <Button :small="$vuetify.breakpoint.xs" class="ml-2" @click.native="showDialogFile = true">
+        <v-icon left>
+          mdi-pencil
+        </v-icon>
+        ファイル追加
+      </Button>
 
-
-
-      <v-card flat tile class="my-4" ref="commentVisitedUser">
-        <v-card-title>
-          閲覧者
-        </v-card-title>
-
-        <v-card-text class="mt-4">
-          <v-row>
-            <v-col cols="4" sm="2" v-for="user in users" :key="user['id']">
-              <Link :href="$route('users.show', { user: user['id'] })">
-              <span :class="{ 'visited-user': user['notice_visitors_exists'] }">{{ user['name'] }}</span>
-              </Link>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-
-
-      <v-divider class="my-3"></v-divider>
+      <v-divider></v-divider>
 
       <v-card-text class="text-right">
         <BackButton></BackButton>
@@ -279,41 +247,19 @@
       </v-card>
     </v-dialog>
 
-
-    <!-- コメント入力ダイアログ -->
-    <v-dialog v-model="fileDialog" :max-width="$vuetify.breakpoint.smAndUp ? '800px' : 'unset'"
-      @click:outside="fileDialog = false;">
-      <v-card flat tile>
-
-        <v-img :src="`/storage/notice/${file_name}`"></v-img>
-
-      </v-card>
-    </v-dialog>
-
   </Layout>
 </template>
-
-
-<style scoped>
-.visited-user {
-  background: linear-gradient(transparent 60%, #00ccff 60%);
-}
-</style>
-
 
 <script>
 import Layout from "./Layout";
 import { Link } from "@inertiajs/inertia-vue";
 
-
-
 export default {
   components: { Layout, Link },
 
-  props: ['user', 'login_user', 'images_list', 'files_list', 'users'],
+  props: ['user','images_list', 'files_list','login_user','users'],
 
   data() {
-
     return {
       notice: this.$page['props']['notice'],
       showDialog: false,
@@ -326,13 +272,10 @@ export default {
 
       formNoticeFileAdd: this.$inertia.form(`NoticesFileAdd`, {
         file: [],
-        id: this.$page['props']['notice'].id,
+        id:this.$page['props']['notice'].id,
       }),
 
       file_form: undefined,
-
-      file_name: undefined,
-      fileDialog: false,
     }
   },
 
@@ -363,7 +306,7 @@ export default {
 
     deleteFile: function (notice_file) {
 
-
+ 
 
       this.$confirm('このファイルを削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
         if (isAccept) {
@@ -384,17 +327,11 @@ export default {
 
 
       this.formNoticeFileAdd.post(this.$route('notices.update_file'), {
-        preserveState: (page) => Object.keys(page.props.errors).length,
-        onStart: () => this.$set(this.loading, "update_file", true),
-        onSuccess: () => this.$toasted.show('ファイルを更新しました'),
-        onFinish: () => this.$set(this.loading, "update_file", false),
-      })
-    },
-
-
-    clickImage(file_name) {
-      this.file_name = file_name;
-      this.fileDialog = true;
+          preserveState: (page) => Object.keys(page.props.errors).length,
+          onStart: () => this.$set(this.loading, "update_file", true),
+          onSuccess: () => this.$toasted.show('ファイルを更新しました'),
+          onFinish: () => this.$set(this.loading, "update_file", false),
+        })
     },
 
 

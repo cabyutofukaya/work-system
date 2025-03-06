@@ -145,7 +145,7 @@
 
 
               <v-card-text style="font-size: 16px;font-weight: bold;">
-                <a :href="$route('users.show', { id: user.id })" dusk="userShow">
+                <a :href="$route('users.show', { user: user.id })" dusk="userShow">
                   {{ user['name'] }}
                 </a>
               </v-card-text>
@@ -166,16 +166,17 @@
       <!-- </div> -->
 
       <v-list v-if="$vuetify.breakpoint.xs">
-        <div v-for="user in users" :key="user.id">
+        
+        <div v-for="user in users['data']" :key="user.id">
           <v-divider class="mx-4"></v-divider>
 
-          <Link as="v-list-item" :href="$route('users.show', { id: user.id })" dusk="userShow" class="my-2">
+          <Link as="v-list-item" dusk="userShow" class="my-2">
 
           <v-row>
 
             <v-col cols="3">
               <img :src="`/storage/user/${user.profile_img_file}`" alt="" class="c-img" height="80px"
-                v-if="user.profile_img_file">
+                v-if="user.profile_img_file" style="max-width: 80px;">
 
               <img :src="`/storage/user/noimg.jpeg`" alt="" class="c-img" height="80px" v-if="!user.profile_img_file">
 
@@ -183,7 +184,7 @@
 
             <v-col cols="9">
               <v-list-item-title style="font-weight: bold;">
-                {{ user["name"] }} <span v-if="name_kana">({{ user["name_kana"] }})</span>
+                {{ user["name"] }} <span v-if="user.name_kana">({{ user["name_kana"] }})</span>
               </v-list-item-title>
 
               <v-list-item-subtitle>

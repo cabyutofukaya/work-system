@@ -172,6 +172,22 @@
               </v-col>
             </v-row>
 
+
+            <v-row>
+              <v-col cols="12" sm="4">代表者携帯番号</v-col>
+              <v-col>
+                <v-text-field
+                    dense filled
+                    prepend-inner-icon="mdi-pencil"
+                    name="representative_tel"
+                    v-model="form.representative_tel"
+                    maxlength="200"
+                    :error="Boolean(form.errors.representative_tel)"
+                    :error-messages="form.errors.representative_tel"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
             <v-row>
               <v-col cols="12" sm="4">電話番号</v-col>
               <v-col>
@@ -199,6 +215,7 @@
               </v-col>
             </v-row>
 
+  
             <!-- 固有情報 タクシー・バス会社 -->
             <template v-if="client['client_type_taxibus']">
               <v-row>

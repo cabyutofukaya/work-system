@@ -1,6 +1,35 @@
 <template>
   <Layout>
 
+      <!-- 疑義録閲覧 -->
+      <v-dialog v-model="isReadMeeingDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="closeReadMeeingDialog">
+      <v-card flat tile>
+        <v-card-title>
+          <template>
+            お知らせ
+          </template>
+        </v-card-title>
+
+        <v-card-text>
+          未読の議事録があります<br /><a href="/meetings?is_visited=1">こちら</a>から確認してください。
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+
+
+        <v-card-text class="text-right">
+          <Button class="mt-4" @click.native="isReadMeeingDialog = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+            閉じる
+          </Button>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
 
     <!-- 絞り込み条件ダイアログ -->
     <v-dialog v-model="isReadDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
@@ -33,18 +62,15 @@
 
 
     <template v-if="$vuetify.breakpoint.xs">
-      <v-card class="ml-auto" max-width="400" flat tile>
+      <v-card class="mr-auto" max-width="400" flat tile>
 
-        <v-card-actions>
           <v-list-item class="w-100">
-            <v-img :width="50" :height="50" cover :src="`/storage/user/${user.img_file}`" v-if="user.img_file"></v-img>
-            <v-img :width="50" :height="50" cover src="/storage/user/noimg.jpeg" v-if="!user.img_file"></v-img>
-
-            <v-list-item-title style="font-size: large;margin-left: 5px;">お疲れ様です、{{ $page.props.auth.user.name
+            <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name
               }}さん!</v-list-item-title>
 
           </v-list-item>
-        </v-card-actions>
+
+      
       </v-card>
     </template>
 
@@ -67,7 +93,7 @@
               <v-img :width="30" :height="30" cover :src="`/storage/user/${user.img_file}`"
                 v-if="user.img_file"></v-img>
               <v-img :width="30" :height="30" cover src="/storage/user/noimg.jpeg" v-if="!user.img_file"></v-img>
-              <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name }}さん!!</v-list-item-title>
+              <v-list-item-title>お疲れ様です、{{ $page.props.auth.user.name }}さん!</v-list-item-title>
 
             </v-list-item>
           </v-card-actions>
@@ -714,7 +740,7 @@
 
               <!-- スマートフォンビュー -->
               <template v-else>
-                <v-col cols="12" class="text-right">]
+                <v-col cols="12" class="text-right">
 
                   <v-chip small class="mr-2">
                     いいね
@@ -754,7 +780,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment', 'meetings', 'user', 'is_read'],
+  props: ['notices', 'sales_todos', 'office_todos', 'reports', 'reports_latest_comment', 'meetings', 'user', 'is_read','is_read_meeting'],
 
   data: () => ({
     loading: {},
@@ -765,6 +791,7 @@ export default {
       windowSize: window.innerWidth,
       isReadDialog: Boolean(this.is_read != 0),
       loading: {},
+      isReadMeeingDialog: this.is_read_meeting,
 
       //既読率
       visitor_rate: undefined,

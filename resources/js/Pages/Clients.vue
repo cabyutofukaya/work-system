@@ -60,6 +60,11 @@
               </template>
 
 
+              <template v-if="client.business_name">
+                / {{ client.business_name }}
+              </template>
+
+
             </v-list-item-title>
 
             <v-list-item-subtitle>
@@ -184,6 +189,12 @@
                   v-model="form['vehicle']"></v-text-field>
               </v-list-item>
 
+
+              <v-list-item>
+                <v-select dense filled clearable name="product" label="商材" hint="指定した商材に関して日報が存在する企業を絞り込みます" persistent-hint
+                  maxlength="200" v-model="form.product_id" :items="products" item-value="id" item-text="name"></v-select>
+              </v-list-item>
+
               <!-- スイッチ -->
               <template v-if="client_type.id === 'taxibus'">
                 <v-list-item class="mt-4">
@@ -263,7 +274,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['client_type', 'client_type_column_names', 'genres', 'clients', 'form_params'],
+  props: ['client_type', 'client_type_column_names', 'genres', 'clients', 'form_params','products'],
 
   data() {
     return {

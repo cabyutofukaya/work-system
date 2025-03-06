@@ -231,4 +231,18 @@ class Client extends BaseClient implements Auditable
     {
         return $this->hasMany(ClientReportUser::class);
     }
+
+
+
+    /**
+     * 電話番号複数
+     *
+     * 自動生成されるリレーションは contact_people となるため別名を定義
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function client_telphones(): HasMany
+    {
+        return $this->hasMany(ClientTelphone::class);
+    }
 }

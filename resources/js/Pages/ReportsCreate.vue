@@ -96,20 +96,28 @@
                   </div>
 
 
+            
                   <template v-if="report_content['contact_persons'].length > 0">
                     <h4 class="mt-2 mb-1">面談者</h4>
                     <template v-for="contact_person in report_content['contact_persons']">
-                      <div class="mb-2">{{ contact_person.name }} <br /><span style="font-size: small;">({{
-                        contact_person.department }} / {{ contact_person.position }})<br /></span></div>
-                      <!-- <v-divider></v-divider> -->
+                      <div class="mb-2">
+                        ・ {{ contact_person.name }} 様
+
+                        <template v-if="contact_person.department || contact_person.position">
+                              <span style="font-size: small;">
+                        (
+                          <template v-if="contact_person.department">{{ contact_person.department }}</template>
+                          <template v-if="contact_person.department && contact_person.position"> | </template>
+                          <template v-if="contact_person.position">{{ contact_person.position }}</template>
+                        )
+                        </span>
+                      </template>
+
+                      </div>
+                        
                     </template>
 
-                    <!-- <template v-if="report_content.participants">
-  {{ report_content["participants"] }}
-</template> -->
-
                   </template>
-
 
                 </template>
 
@@ -128,7 +136,7 @@
 
                   <template v-if="report_content.participants">
                     <h4 class="mt-2">面談者</h4>
-                    {{ report_content['participants'] }}
+                    {{ report_content['participants'] }} 様
                   </template>
 
                 </template>
@@ -199,8 +207,10 @@
                 </div>
               </template>
 
-              <h4 class="mt-2 mb-1" v-if='report_content["product_description"]'>商材評価の備考欄</h4>
-              {{ report_content["product_description"] }}
+              <template v-if="report_content.product_description">
+              <h4 class="mt-2 mb-1">商材評価の備考欄</h4>
+              {{ report_content.product_description }}
+            </template>
 
             </v-col>
           </v-row>
@@ -359,12 +369,20 @@
             <span v-html="reportContentForm.type === 'work' ? '業務' : '営業'"></span>日報の<span
               v-html="reportContentMode === 'create' ? '追加' : '編集'"></span>
 
+             
+
             <span class="ml-auto" v-if="reportContentForm.type === 'sales'">
               <a href="/client-types/clients/create" target="_blank">
                 <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs">
                   会社登録
                 </v-btn>
               </a>
+
+              <v-btn tile depressed color="#969797" dark :small="$vuetify.breakpoint.xs" @click.native="dialog = false">
+              <v-icon>
+                mdi-close
+              </v-icon>
+            </v-btn>
             </span>
 
           </v-card-title>
@@ -478,6 +496,7 @@
                       <!-- カスタム選択済み表示 -->
                       <template v-slot:selection="{ item }">
 
+              
                         <template v-if="item.name_position == '前' || item.name_position == '後ろ'">
                           <template v-if="item.name_position == '前'">
                             {{ item.type_name }} {{ item.name }}
@@ -499,12 +518,22 @@
 
 
 
-
-
                         <!-- <span v-if="item.prefecture" class="font-weight-thin text-body-2">{{ item.prefecture }}</span> <span v-if="item.address" class="font-weight-thin">{{ item.address }}</span> -->
                       </template>
                       <!-- カスタム選択肢表示 -->
                       <template v-slot:item="{ item }">
+
+                        <template v-if="item.client_type_id == 'taxibus'">
+                            <v-icon class="mr-3">mdi-car</v-icon>
+                          </template>
+
+                          <template v-if="item.client_type_id == 'truck'">
+                            <v-icon class="mr-3">mdi-truck</v-icon>
+                          </template>
+
+                          <template v-if="item.client_type_id == 'travel'">
+                            <v-icon class="mr-3">mdi-office-building</v-icon>
+                          </template>
 
                         <template v-if="item.name_position == '前' || item.name_position == '後ろ'">
                           <template v-if="item.name_position == '前'">
@@ -609,7 +638,15 @@
                         <!-- カスタム選択肢表示 -->
                         <template v-slot:item="{ item }">
                           <!-- {{ item.name }} -->
-                          {{ item.name }} / ({{ item.department }} | {{ item.position }})
+                          {{ item.name }} 
+                          <template v-if="item.department || item.position">
+                            (
+                            <template v-if="item.department">{{ item.department }}</template>
+                            <template v-if="item.department && item.position"> | </template>
+                            <template v-if="item.position">{{ item.position }}</template>
+                            )
+                          </template>
+                          
                         </template>
                       </v-select>
 
@@ -653,7 +690,7 @@
 
                 <v-list-item>
                   <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="部署名" maxlength="300"
-                    name="department" v-model="reportContentForm.department"></v-text-field>
+                    name="departments" v-model="reportContentForm.departments"></v-text-field>
                 </v-list-item>
 
                 <v-list-item>
@@ -954,7 +991,7 @@ export default {
         departments: undefined,
         position: undefined,
 
-        contact_persons: undefined,
+        contact_persons: {},
         contact_person_id: undefined,
         free: false,
 
@@ -1131,7 +1168,6 @@ export default {
       // ただしv-selectではrequired属性が動作しないため個別に入力チェックを行う
 
 
-
       if (this.reportContentForm.free) {
 
         //フリー営業の場合
@@ -1229,6 +1265,7 @@ export default {
       console.log(this.reportContentForm);
 
 
+    
 
       // フォームに追加
       this.form.report_contents.push(this.reportContentForm);
@@ -1347,7 +1384,7 @@ export default {
 
       // フォームに送る値を書き換える
       const report_contents_update = this.form.report_contents[this.reportContentEditingIndex];
-      ["product_description", "description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments", "position", "contact_person_id"].forEach((key) => {
+      [ "product_description","description", "is_complaint", "is_zaitaku", "title", "client_id", "branch_id", "participants", "sales_method_id", "product_evaluation", "required_time", "departments", "position", "contact_person_id"].forEach((key) => {
         report_contents_update[key] = _.cloneDeep(this.reportContentForm[key]);
       });
 

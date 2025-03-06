@@ -57,7 +57,7 @@
                 </template>
 
                 <template v-if="client.name_position == '後ろ'">
-                {{ client.name }} {{ client.type_name }}
+                  {{ client.name }} {{ client.type_name }}
                 </template>
 
               </template>
@@ -65,7 +65,7 @@
               <template v-else>
                 {{ client.name }}
               </template>
-             
+
             </v-col>
           </v-row>
 
@@ -82,7 +82,7 @@
           </v-row>
 
 
-        
+
 
 
           <v-row v-if="client.business_name">
@@ -140,6 +140,12 @@
           </v-row>
 
 
+          <v-row v-if="client.representative_tel">
+            <v-col cols="12" sm="4">代表者電話番号</v-col>
+            <v-col>{{ client.representative_tel }}</v-col>
+          </v-row>
+
+
           <v-row v-if="client.tel">
             <v-col cols="12" sm="4">電話番号</v-col>
             <v-col><a :href="'tel:' + client.tel">{{ client.tel }}</a></v-col>
@@ -148,6 +154,45 @@
           <v-row v-if="client.fax">
             <v-col cols="12" sm="4">FAX番号</v-col>
             <v-col><a :href="'tel:' + client.fax">{{ client.fax }}</a></v-col>
+          </v-row>
+
+
+
+          <!-- その他電話番号エリア -->
+          <v-row>
+            <v-col cols="12" sm="4">電話番号(その他)</v-col>
+            <v-col>
+              <v-row v-for="client_telphone in client['client_telphones']" :key="client_telphone['id']">
+                <v-col>
+                  {{ client_telphone["name"] }} : {{ client_telphone["tel"] }}
+                </v-col>
+
+                <v-col cols="auto">
+                  <Link as="Button" :small="$vuetify.breakpoint.xs"
+                    @click.native="openUpdateTelphoneDialog(client_telphone)" dusk="businessDistrictEdit">
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon>
+                  編集
+                  </Link>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="12" sm="" v-if="!client['client_telphones'].length">
+                  その他の電話番号は設定されていません
+                </v-col>
+
+                <v-col cols="12" sm="" class="text-right">
+                  <Link as="Button" :small="$vuetify.breakpoint.xs" @click.native="openCreateTelphoneDialog()">
+                  <v-icon left>
+                    mdi-plus
+                  </v-icon>
+                  電話番号を追加する
+                  </Link>
+                </v-col>
+              </v-row>
+            </v-col>
           </v-row>
 
           <!-- 営業エリア -->
@@ -205,8 +250,10 @@
                       </v-icon>
                     </a><br>
                   </template>
-                  <template v-if="branch['tel']">TEL:<a :href="'tel:' + branch['tel']">{{ branch["tel"] }}</a></template>
-                  <template v-if="branch['fax']">FAX:<a :href="'tel:' + branch['fax']">{{ branch["fax"] }}</a></template>
+                  <template v-if="branch['tel']">TEL:<a :href="'tel:' + branch['tel']">{{ branch["tel"]
+                      }}</a></template>
+                  <template v-if="branch['fax']">FAX:<a :href="'tel:' + branch['fax']">{{ branch["fax"]
+                      }}</a></template>
                 </v-col>
 
                 <v-col cols="auto" class="text-right">
@@ -304,7 +351,7 @@
             <v-col>
               <v-row v-for="contact_person in client['contact_persons']" :key="contact_person['id']">
                 <v-col>
-                  名前:{{ contact_person["name"] }}<br>
+                  名前 : {{ contact_person["name"] }}<br>
                   <span v-if="contact_person['email']">
                     <a :href="'mailto:' + contact_person['email']">{{ contact_person["email"] }}</a><br>
                   </span>
@@ -312,7 +359,10 @@
                     <template v-if="contact_person['tel']"><a :href="'tel:' + contact_person['tel']">{{
                       contact_person["tel"] }}</a><br></template>
                   </span>
-                  所属部署:{{ contact_person["department"] }}/ 役職:{{ contact_person["position"] }}
+                  <template v-if="contact_person['department']">所属部署 : {{ contact_person["department"] }} / </template>
+
+                  <template v-if="contact_person['position']">役職 : {{ contact_person["position"] }}</template>
+
                 </v-col>
                 <v-col cols="auto" class="text-right">
                   <Link as="Button" :small="$vuetify.breakpoint.xs"
@@ -521,8 +571,8 @@
             <v-row v-if="client['client_type_restaurant']['languages']?.length">
               <v-col cols="12" sm="4">言語</v-col>
               <v-col>
-                <v-chip small class="mr-2 mb-2" v-for="(language, index) in client['client_type_restaurant']['languages']"
-                  :key="index">
+                <v-chip small class="mr-2 mb-2"
+                  v-for="(language, index) in client['client_type_restaurant']['languages']" :key="index">
                   {{ language }}
                 </v-chip>
               </v-col>
@@ -653,9 +703,11 @@
                     </v-list-item-subtitle>
 
                     <v-list-item-subtitle v-if="report_content.contact_persons.length > 0">
-                      <span v-for="(contact_person,c_index) in report_content.contact_persons">
-                        <template v-if="c_index != report_content.contact_persons.length - 1">{{ contact_person.name }} 様,</template>
-                        <template v-if="c_index == report_content.contact_persons.length - 1">{{ contact_person.name }} 様</template>
+                      <span v-for="(contact_person, c_index) in report_content.contact_persons">
+                        <template v-if="c_index != report_content.contact_persons.length - 1">{{ contact_person.name }}
+                          様,</template>
+                        <template v-if="c_index == report_content.contact_persons.length - 1">{{ contact_person.name }}
+                          様</template>
                       </span>
                     </v-list-item-subtitle>
 
@@ -664,6 +716,13 @@
                         {{ report_content.description }}
                       </div>
                     </v-list-item-subtitle>
+
+                    <v-list-item-subtitle class="overflow-hidden" v-if="report_content.product_description">
+                      <div class="text-nowrap overflow-hidden">
+                        {{ report_content.product_description }}
+                      </div>
+                    </v-list-item-subtitle>
+
                   </v-list-item-content>
                   </Link>
                 </div>
@@ -955,6 +1014,79 @@
       </v-card>
     </v-dialog>
 
+
+
+
+    <!-- 電話番号編集ダイアログ -->
+    <v-dialog v-model="telphoneDialog" :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
+      @click:outside="telphoneForm.clearErrors()">
+      <v-card flat tile>
+        <v-card-title>
+          <template v-if="this.telphoneDialogMode === 'update'">
+            その他の電話番号の編集
+          </template>
+          <template v-else>
+            その他の電話番号の作成
+          </template>
+        </v-card-title>
+
+        <v-card-text>
+          <v-list>
+            <v-list-item>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="名称" name="name"
+                v-model="telphoneForm.name" :error="Boolean(telphoneForm.errors.name)"
+                :error-messages="telphoneForm.errors.name"></v-text-field>
+            </v-list-item>
+
+            <v-list-item>
+              <v-text-field dense filled prepend-inner-icon="mdi-pencil" label="電話番号" name="tel"
+                v-model="telphoneForm.tel" :error="Boolean(telphoneForm.errors.tel)"
+                :error-messages="telphoneForm.errors.tel"></v-text-field>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+
+        <v-card-text class="text-center">
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="primary" v-if="this.telphoneDialogMode === 'update'"
+            @click.native="updateTelphone" :loading="loading['telphone-update']">
+          <v-icon left>
+            mdi-content-save-edit-outline
+          </v-icon>
+          この内容で更新する
+          </Link>
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="primary" v-if="this.telphoneDialogMode === 'store'"
+            @click.native="createTelphone" :loading="loading['telphone-create']">
+          <v-icon left>
+            mdi-content-save-outline
+          </v-icon>
+          この内容で作成する
+          </Link>
+        </v-card-text>
+
+        <v-card-text class="text-center">
+          <Link as="Button" :small="$vuetify.breakpoint.xs" color="error" v-if="telphoneDialogMode === 'update'"
+            @click.native="deleteTelphone" :loading="loading['telphone-delete']">
+          <v-icon left>
+            mdi-delete-outline
+          </v-icon>
+          この情報を削除する
+          </Link>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-text class="text-right">
+          <Button class="mt-4" :small="$vuetify.breakpoint.xs"
+            @click.native="telphoneForm.clearErrors(); telphoneDialog = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+            閉じる
+          </Button>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <!-- イメージオーバーレイ表示 -->
     <ImageOverlay v-bind:url.sync="imageOverlayUrl"></ImageOverlay>
   </Layout>
@@ -967,7 +1099,7 @@ import { Link } from "@inertiajs/inertia-vue";
 export default {
   components: { Layout, Link },
 
-  props: ['prefectures', 'sales_todos', 'report_contents', 'report_contents_count_by_fy', 'latest_evaluations', 'client', 'client_type_column_names','contanct_person_create'],
+  props: ['prefectures', 'sales_todos', 'report_contents', 'report_contents_count_by_fy', 'latest_evaluations', 'client', 'client_type_column_names', 'contanct_person_create'],
 
   data() {
 
@@ -976,12 +1108,12 @@ export default {
     var contactPersonDialog = false;
     var contactPersonDialogMode = null;
 
-    if(this.contanct_person_create){
+    if (this.contanct_person_create) {
       contactPersonDialog = true;
       contactPersonDialogMode = 'store';
     }
 
-    
+
     return {
       showContact: [],
       imageOverlayUrl: undefined,
@@ -1006,6 +1138,18 @@ export default {
         prefecture: null,
         address: null,
       }),
+
+
+      // 電話番号
+      telphoneDialog: false,
+      telphoneDialogMode: null, // store|update
+      telphoneForm: this.$inertia.form({
+        id: null,
+        client_id: this.client.id,
+        name: null,
+        tel: null,
+      }),
+
       loading: {}
     }
   },
@@ -1170,6 +1314,73 @@ export default {
         onFinish: () => this.$set(this.loading, "business-district-create", false),
       });
     },
+
+
+    // 電話番号新規作成ダイアログ
+    openCreateTelphoneDialog: function () {
+      this.telphoneDialog = true;
+      this.telphoneDialogMode = "store";
+
+      this.telphoneForm.id = null;
+      this.telphoneForm.name = null;
+      this.telphoneForm.tel = null;
+    },
+
+
+    // 電話番号更新ダイアログ
+    openUpdateTelphoneDialog: function (telphone) {
+      this.telphoneDialog = true;
+      this.telphoneDialogMode = "update";
+
+      this.telphoneForm.id = telphone.id;
+      this.telphoneForm.name = telphone.name;
+      this.telphoneForm.tel = telphone.tel;
+    },
+
+
+    // 電話番号新規作成
+    createTelphone: function () {
+      this.telphoneForm.post(this.$route('clients-telphones.store'), {
+        preserveScroll: true,
+        onStart: () => this.$set(this.loading, "clients-telphones-create", true),
+        onSuccess: () => {
+          this.$toasted.show('電話番号を作成しました');
+          this.telphoneDialog = false;
+        },
+        onFinish: () => this.$set(this.loading, "clients-telphones-create", false),
+      });
+    },
+
+    // 電話番号更新
+    updateTelphone: function () {
+      this.telphoneForm.put(this.$route('clients-telphones.update', { clients_telphone: this.telphoneForm.id }), {
+        preserveScroll: true,
+        onStart: () => this.$set(this.loading, "clients-telphones.update", true),
+        onSuccess: () => {
+          this.$toasted.show('電話番号を更新しました');
+          this.telphoneDialog = false;
+        },
+        onFinish: () => this.$set(this.loading, "clients-telphones.update", false),
+      })
+    },
+
+    // 電話番号削除
+    deleteTelphone: function () {
+      this.$confirm('この電話番号情報を削除してよろしいですか？<br>削除した項目を元に戻すことはできません').then(isAccept => {
+        if (isAccept) {
+          this.telphoneDialog = false;
+
+          this.telphoneForm.delete(this.$route('clients-telphones.destroy', { clients_telphone: this.telphoneForm.id }), {
+            preserveScroll: true,
+            onStart: () => this.$set(this.loading, "telphone-delete", true),
+            onSuccess: () => this.$toasted.show('営業エリア情報を削除しました'),
+            onFinish: () => this.$set(this.loading, "telphone-delete", false),
+          });
+        }
+      })
+    },
+
+
   }
 }
 </script>
