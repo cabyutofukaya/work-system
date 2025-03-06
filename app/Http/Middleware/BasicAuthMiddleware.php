@@ -19,13 +19,13 @@ class BasicAuthMiddleware
         $username = $request->getUser();
         $password = $request->getPassword();
 
-        // if ($username == 'charter' && $password == 'T2tvDpsn') {
-        //     return $next($request);
-        // }
-
-        if ($username == 'grouptube' && $password == 'Q4yGBhPxFzG2') {
+        if ($username == 'a' && $password == 'a') {
             return $next($request);
         }
+
+        // if ($username == 'grouptube' && $password == 'Q4yGBhPxFzG2') {
+        //     return $next($request);
+        // }
 
         abort(401, "Enter username and password.", [
             header('WWW-Authenticate: Basic realm="Sample Private Page"'),

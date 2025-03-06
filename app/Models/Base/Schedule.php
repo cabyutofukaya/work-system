@@ -38,4 +38,11 @@ class Schedule extends Model
 	{
 		return $this->belongsTo(User::class);
 	}
+
+	public function bookings()
+	{
+		return $this->belongsToMany(Booking::class)
+			->withPivot('id')
+			->withTimestamps();
+	}
 }

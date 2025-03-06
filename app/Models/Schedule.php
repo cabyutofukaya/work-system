@@ -19,13 +19,17 @@ class Schedule extends BaseSchedule implements Auditable
 
     protected $fillable = [
         'user_id',
+        'type',
         'title',
-        'title_type',
+        'category',
         'content',
         'date',
         'start_time',
         'end_time',
-        'is_public'
+        'all_day',
+        'is_public',
+        'zoom_url',
+        'zoom_id',
     ];
 
     /**
@@ -71,6 +75,15 @@ class Schedule extends BaseSchedule implements Auditable
         return $this->belongsTo(User::class)->withTrashed();
     }
 
+
+
+	public function guests()
+	{
+		return $this->hasMany(ScheduleGuest::class);
+	}
+  
+   
+
     /**
      * モデルの「起動」メソッド
      *
@@ -106,7 +119,7 @@ class Schedule extends BaseSchedule implements Auditable
             'date' => $param['date'],
             'title' => $param['title'],
             'content' => $param['content'],
-            'title_type' => $param['title_type'],
+            'category' => $param['category'],
             'is_public' => $param['is_public'] ?? 0,
         ]);
 
@@ -123,7 +136,7 @@ class Schedule extends BaseSchedule implements Auditable
             'title' => $param['title'] ?? null,
             'content' => $param['content'] ?? null,
             'user_id' => $param['user_id'],
-            'title_type' => $param['title_type'] ?? null,
+            'category' => $param['category'] ?? null,
             'is_public' => $param['is_public'] ?? 0,
         ]);
 

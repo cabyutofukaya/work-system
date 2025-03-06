@@ -176,10 +176,10 @@ Route::group(['middleware' => 'basicauth'], function () {
         Route::get('/redirect/schedule/{department}', [UserScheduleController::class, "redirect_schedule"])->name('schedule.redirect');
 
         // メンバースケジュール一覧
-        Route::get('/list/schedule/{department}', [ScheduleListController::class, "index"])->name('schedule.list.redirect');
+        Route::get('/list/schedule', [ScheduleListController::class, "index"])->name('schedule.list.redirect');
 
         // 日報一覧取得	// メンバースケジュール一覧
-        Route::get('/list/redirect/schedule/{department}', [ScheduleListController::class, "redirect_schedule"]);
+        // Route::get('/list/redirect/schedule/{department}', [ScheduleListController::class, "redirect_schedule"]);
 
 
         // 日報一覧取得
@@ -288,4 +288,4 @@ Route::get('/visitor/report/{user_id}', [ReportVisitorController::class, "index"
 // 日報ファイルアップ
 Route::post('report-file/upload', [UploadImageController::class, "upload"]);
 
-Route::get('/report-visitor/XM8EYK', [ReportVisitorController::class, "read"]);
+// Route::get('/report-visitor/XM8EYK', [ReportVisitorController::class, "read"]);

@@ -23,7 +23,7 @@
 
 <template>
     <Layout>
-
+        
         <v-row>
             <v-col cols="2">
                 <v-select dense filled v-model="department" :items="department_list" item-value="department" item-text="department" @change="changeDepartment"></v-select>

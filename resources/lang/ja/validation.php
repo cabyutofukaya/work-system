@@ -209,7 +209,7 @@ return [
         'position' => '役職',
         'date_start' => '開始日',
         'date_end' => '終了日',
-        'title_type' => 'スケジュール種別',
+        'category' => 'スケジュール種別',
 
         'required_time' => '商談所要時間',
 

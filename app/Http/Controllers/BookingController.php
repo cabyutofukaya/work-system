@@ -96,6 +96,7 @@ class BookingController extends Controller
             $n++;
         }
 
+    
         // fn() => collect(config("const.client_types"))->values(),
         return inertia('Bookings', [
             'bookings' => $bookings,
@@ -103,7 +104,8 @@ class BookingController extends Controller
             'room_id' => $room_id,
             'user' => Auth::user(),
             'roomType' => Room::get(['id', 'name']),
-            'timeList' => fn() => collect(config("const.timeList"))->values(),
+            'timeList' => config("booking.timeList"),
+            'startTimeList' => config("booking.startTimeList"),
             // config('const.timeList'),
         ]);
         // $rooms = Room::first();

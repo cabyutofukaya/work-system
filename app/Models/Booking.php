@@ -29,6 +29,7 @@ class Booking extends BaseBooking implements Auditable
         'time',
         'titile',
         'room_id',
+        'all_day',
     ];
 
     /**

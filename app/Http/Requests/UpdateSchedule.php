@@ -36,14 +36,19 @@ class UpdateSchedule extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => ['required'],
             'title' => ['required'],
             'content' => ['required'],
             'date' => ['required'],
-            'start_time' => ['required_if:enabled,false'],
-            // 'end_time' => ['required_if:enabled,false'],
-            // 'end_time' => ['required_if:enabled|after:start_time'],
-            'title' => ['required_without:title_type'],
-            'title_type' => ['required_without:title'],
+            'all_day' => ['required'],
+     
+            'end_time' => ['required_if:all_day,false'],
+            'start_time' => ['required_if:all_day,false'],
+            'end_date' => ['required_if:rangeEnabled,true'],
+          
+            'category' => ['required_without:title'],
+            'title' => ['required_without:category'],
+
             'content' => ['nullable'],
             'is_public' => ['required'],
         ];
