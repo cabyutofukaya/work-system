@@ -67,7 +67,7 @@ class User extends Authenticatable implements Auditable
      *
      * @var int
      */
-    protected $perPage = 66;
+    protected $perPage = 50;
 
     /**
      * コンストラクタ
@@ -100,31 +100,7 @@ class User extends Authenticatable implements Auditable
                 "username" => $user->username . "-deleted_at-" . now()->format('YmdHis'),
                 "email" => $user->email . "-deleted_at-" . now()->format('YmdHis'),
             ])->save();
-
-            // 削除したユーザをToDoの社内担当者から除外する
-            SalesTodoParticipant::where("user_id", $user->id)->delete();
-            OfficeTodoParticipant::where("user_id", $user->id)->delete();
         });
-    }
-
-    public function report_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(ReportVisitor::class);
-    }
-
-    public function meeting_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(MeetingVisitor::class);
-    }
-
-    public function notice_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(NoticeVisitor::class);
-    }
-
-    public function products(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'user_product')->withTimestamps();
     }
 
     /**
@@ -138,7 +114,7 @@ class User extends Authenticatable implements Auditable
         return $date->format("Y-m-d H:i");
     }
 
-        /**
+    /**
      * クエリスコープ 特定の会社タイプ
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -149,5 +125,4 @@ class User extends Authenticatable implements Auditable
     {
         return $query->where('type_id', $user_id);
     }
-
 }

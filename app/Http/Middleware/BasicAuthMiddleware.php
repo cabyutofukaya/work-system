@@ -23,14 +23,9 @@ class BasicAuthMiddleware
             return $next($request);
         }
 
-        // if ($username == 'grouptube' && $password == 'Q4yGBhPxFzG2') {
-        //     return $next($request);
-        // }
-
         abort(401, "Enter username and password.", [
             header('WWW-Authenticate: Basic realm="Sample Private Page"'),
             header('Content-Type: text/plain; charset=utf-8')
         ]);
-        
     }
 }

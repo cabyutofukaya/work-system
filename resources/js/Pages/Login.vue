@@ -1,55 +1,25 @@
 <template>
   <Layout>
-    <v-dialog
-        v-model="dialog"
-        :max-width="$vuetify.breakpoint.smAndUp ? '600px' : 'unset'"
-        persistent
-        no-click-animation
-    >
+    <v-dialog v-model="dialog" :max-width="$vuetify.breakpoint.smAndUp ? '400px' : 'unset'" persistent
+      no-click-animation>
       <v-form>
-        <v-card
-            flat tile
-        >
-          <v-card-title>
-            ログイン
-          </v-card-title>
+        <v-card>
 
           <v-card-text>
             <v-list>
-              <v-text-field
-                  dense filled
-                  label="ログインID"
-                  name="username"
-                  v-model="form.username"
-                  maxlength="200"
-                  :error="Boolean(form.errors.username)"
-                  :error-messages="form.errors.username"
-                  @keydown.enter="login"
-              ></v-text-field>
-
-              <v-text-field
-                  dense filled
-                  type="password"
-                  label="パスワード"
-                  name="password"
-                  v-model="form.password"
-                  maxlength="200"
-                  :error="Boolean(form.errors.password)"
-                  :error-messages="form.errors.password"
-                  @keydown.enter="login"
-              ></v-text-field>
+              <v-text-field prepend-icon="mdi-account-circle" label="ユーザ名" v-model="form.username"
+                :error="Boolean(form.errors.username)" :error-messages="form.errors.username" />
+              <v-text-field v-bind:type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword" prepend-icon="mdi-lock"
+                v-bind:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" label="パスワード" v-model="form.password"
+                :error="Boolean(form.errors.password)" :error-messages="form.errors.password" />
             </v-list>
           </v-card-text>
 
           <v-card-text class="text-center">
-            <Button
-                color="primary"
-                :small="$vuetify.breakpoint.xs"
-                @click.native="login"
-                :loading="loading['login']"
-            >
+            <v-btn color="primary" :small="$vuetify.breakpoint.xs" @click.native="login" :loading="loading['login']">
               ログイン
-            </Button>
+            </v-btn>
           </v-card-text>
         </v-card>
       </v-form>
@@ -65,14 +35,15 @@
 
 <script>
 import Layout from "./Layout";
-import {Link} from "@inertiajs/inertia-vue";
+import { Link } from "@inertiajs/inertia-vue";
 
 export default {
-  components: {Layout, Link},
+  components: { Layout, Link },
 
   data() {
     return {
       dialog: true,
+      showPassword: false,
       // フォームヘルパ
       form: this.$inertia.form({
         username: null,

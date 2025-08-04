@@ -18,9 +18,14 @@ mix.js('resources/js/app.js', 'public/js')
         'vuetify-loader',
         'resources/sass/vuetify/variables.scss'
     )
-    .vue()
-    // .postCss('resources/css/app.css', 'public/css', [])
+    .vue({ version: 2 })
+    .postCss('resources/css/app.css', 'public/css', [])
     .sass('resources/sass/app.scss', 'public/css')
     .version()
-    .sourceMaps(true, 'source-map')
-    .browserSync('http://grouptube-biz.local');
+    .sourceMaps(true, 'source-map');
+
+mix.webpackConfig({
+    resolve: {
+        extensions: ['.js', '.vue', '.json', '*']
+    }
+});

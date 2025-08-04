@@ -11,7 +11,7 @@ Vue.prototype.$config = JSON.parse(document.head.querySelector('meta[name="app-c
 // ほかモジュールより先にSentryをインポート
 import * as Sentry from "@sentry/vue";
 Vue.prototype.$sentry = Sentry; // グローバルに設定
-import {BrowserTracing} from "@sentry/tracing";
+import { BrowserTracing } from "@sentry/tracing";
 
 // 環境変数にdnsがあればSentryを設定
 if (Vue.prototype.$config['sentry_dsn']) {
@@ -24,13 +24,12 @@ if (Vue.prototype.$config['sentry_dsn']) {
     });
 }
 
-import {createInertiaApp} from '@inertiajs/inertia-vue'
-import {InertiaProgress} from '@inertiajs/progress';
+import { createInertiaApp } from '@inertiajs/inertia-vue'
+import { InertiaProgress } from '@inertiajs/progress';
 import vuetify from './plugins/vuetify'
 import Toasted from 'vue-toasted';
 import VuetifyConfirm from 'vuetify-confirm';
 import VueCurrencyFilter from 'vue-currency-filter';
-import * as GmapVue from 'gmap-vue';
 
 // Ziggyによるrouteヘルパをグローバルに利用可能にする
 Vue.prototype.$route = route;
@@ -59,15 +58,7 @@ Vue.use(VueCurrencyFilter, {
     symbolSpacing: false,
 });
 
-// GmapVue
-Vue.use(GmapVue, {
-    load: {
-        key: Vue.prototype.$config['google_map_api_key'],
-        libraries: 'places',
-        region: 'JP',
-        language: 'ja'
-    }
-});
+
 
 // Vue.prototype.$browserBackFlg = false
 // history.replaceState(null, '', null)
@@ -79,28 +70,10 @@ Vue.use(GmapVue, {
 //   }, 500)
 // })
 
-// グローバルコンポーネントを登録
-import Button from './Components/Button';
-import BackButton from './Components/BackButton';
-import Chip from './Components/Chip';
-import EvaluationIcon from './Components/EvaluationIcon';
-import GmapViewer from './Components/GmapViewer';
-import GmapPicker from './Components/GmapPicker';
-import ImageOverlay from './Components/ImageOverlay';
-import ProductEvaluationChart from './Components/ProductEvaluationChart';
-
-Vue.component('Button', Button);
-Vue.component('BackButton', BackButton);
-Vue.component('Chip', Chip);
-Vue.component('EvaluationIcon', EvaluationIcon);
-Vue.component('GmapViewer', GmapViewer);
-Vue.component('GmapPicker', GmapPicker);
-Vue.component('ImageOverlay', ImageOverlay);
-Vue.component('ProductEvaluationChart', ProductEvaluationChart);
 
 createInertiaApp({
     resolve: name => require(`./Pages/${name}`),
-    setup({el, App, props, plugin}) {
+    setup({ el, App, props, plugin }) {
         Vue.use(plugin);
 
         new Vue({
@@ -110,4 +83,4 @@ createInertiaApp({
     },
 });
 
-InertiaProgress.init({color: 'yellow'});
+InertiaProgress.init({ color: 'yellow' });
