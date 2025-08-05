@@ -142,6 +142,15 @@ MAMP アプリを起動し、「Start Servers」ボタンで Apache と MySQL �
 ### ダウンロードしたファイルへ移動
 cd work-system-main
 
+### 必要なディレクトリを作成
+mkdir -p storage/framework/views
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/cache
+mkdir -p bootstrap/cache
+chmod -R 775 storage
+chmod -R 775 bootstrap/cache
+
+
 ### 必要なライブラリをインストール
 composer install
 npm install && npm run dev
@@ -168,9 +177,9 @@ DB_PASSWORD=root
 php artisan config:cache
 
 ### DBのtable作成
-php artisan migrate
+php artisan migrate (yes)
 ### DBのシーディングを実行する
-php artisan db:seed
+php artisan db:seed (yes)
 
 ### laravelサーバー立ち上げ
 php artisan serve
