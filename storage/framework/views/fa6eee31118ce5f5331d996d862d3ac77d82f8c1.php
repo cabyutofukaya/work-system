@@ -1,2 +1,0 @@
-[<?php echo e($slot, false); ?>](<?php echo e($url, false); ?>)
-<?php /**PATH /home/shin-gt/grouptube-biz/production/releases/17/vendor/laravel/framework/src/Illuminate/Mail/resources/views/text/header.blade.php ENDPATH**/ ?>
