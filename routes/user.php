@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Users\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +14,3 @@ use App\Http\Controllers\Users\HomeController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-// ホーム
-Route::get('/', [HomeController::class, 'index']);
-
-
