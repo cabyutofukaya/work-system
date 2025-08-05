@@ -189,6 +189,6 @@ http://127.0.0.1:8000
 
 
 ###ログイン情報
-user01 / p@ssword
+user01 / password
 
 
