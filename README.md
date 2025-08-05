@@ -28,7 +28,8 @@
 ① PHP 8.3 のインストール
 XAMPP for Windows(https://www.apachefriends.org/jp/index.html) をインストール（PHP8.3対応版）
 
-または手動で PHP をインストール：PHP公式サイト(https://windows.php.net/download/)
+または手動で PHP をインストール：
+PHP公式サイト(https://windows.php.net/download/)
 環境変数（PATH）に php.exe のあるフォルダを追加
 
 インストール後、コマンドプロンプトで確認
@@ -131,7 +132,6 @@ MAMP アプリを起動し、「Start Servers」ボタンで Apache と MySQL �
 
 「作成」ボタンをクリック
 
-==============================
 
 
 ## 📦 セットアップ手順
