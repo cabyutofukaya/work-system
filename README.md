@@ -23,8 +23,8 @@
 ③npmのインストール
 ④MAMP(XAMPP)のインストール
 
-==============================
- Windows の場合
+
+## Windows の場合
 ① PHP 8.3 のインストール
 XAMPP for Windows(https://www.apachefriends.org/jp/index.html) をインストール（PHP8.3対応版）
 
@@ -74,9 +74,9 @@ npm -v
 
 ※ XAMPP のデフォルト設定では、ユーザー名は root、パスワードは空です。
 
-==============================
 
-🍎 Mac の場合
+
+## 🍎 Mac の場合
 ① PHP 8.3 のインストール
 Homebrew のインストール（未導入の場合）
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
