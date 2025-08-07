@@ -70,6 +70,5 @@ class RouteServiceProvider extends ServiceProvider
         Route::domain('123.localhost:8888')
             ->namespace($this->namespace)
             ->group(base_path('routes/user.php'));
-
     }
 }

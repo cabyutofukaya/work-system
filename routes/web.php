@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', LoginController::class)->name("login");
 
 Route::group(['middleware' => 'auth'], function () {
-    // ホーム
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Todo
+    Route::resource('/todos', TodoController::class)->except(["show", "create", "edit"]);
+    //完了切り替え
+    Route::patch('/todos/{todo}/toggle-done', [TodoController::class, 'toggleDone'])->name('todos.toggleDone');
+});
+
+Route::fallback(function () {
+    return redirect()->route('login');
 });

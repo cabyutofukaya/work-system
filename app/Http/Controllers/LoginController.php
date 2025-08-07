@@ -21,6 +21,6 @@ class LoginController extends Controller
     public function __invoke(Request $request): Response|ResponseFactory|RedirectResponse
     {
         // ログイン済みであればホームに移動
-        return Auth::guard('web')->check() ? redirect()->route('home') : inertia('Login');
+        return Auth::guard('web')->check() ? redirect()->route('todos.index') : inertia('Login');
     }
 }

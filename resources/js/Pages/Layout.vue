@@ -4,12 +4,18 @@
     <v-navigation-drawer permanent expand-on-hover v-model="drawer" :mini-variant.sync="mini" app
       @mouseenter="showDrawer" @mouseleave="hideDrawer">
       <v-list nav dense>
-        <v-list-item v-for="(item, index) in menuItems" :key="index" link>
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+    
+        <!-- ログアウト -->
+        <v-list-item @click="logout" dusk="logout">
+          <v-list-item-icon class="my-2" :class="{ 'my-1': $vuetify.breakpoint.xs }">
+            <v-icon :small="$vuetify.breakpoint.xs">mdi-logout</v-icon>
           </v-list-item-icon>
-          <v-list-item-title :style="{ fontWeight: 'bold' }">{{ item.title }}</v-list-item-title>
+
+          <v-list-item-content :class="{ 'py-0': $vuetify.breakpoint.xs }">
+            <v-list-item-title>ログアウト</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -40,20 +46,23 @@ export default {
     drawer: true,
     mini: true,
     scrollTopBtn: false,
-    menuItems: [
-      { title: 'ホーム', to: 'home', icon: 'mdi-view-dashboard' },
-      // { title: '議事録', to: 'meetings.index', icon: 'mdi-file-document-edit' },
-      // { title: '掲示板', to: 'boardings', icon: 'mdi-file-document-edit' },
-      // { title: 'お知らせ', to: 'notices.index', icon: 'mdi-information' },
-      // { title: '会議室予約', to: 'bookings.index', icon: 'mdi-table-edit' },
-      // { title: '書類情報', to: 'documents', icon: 'mdi-file-download' },
-      // { title: 'ユーザー管理', to: 'users.index', icon: 'mdi-account' },
-      // { title: 'スケジュール', to: 'schedule.index', icon: 'mdi-calendar' },
-      // { title: 'ToDo', to: 'office-todos.index', icon: 'mdi-calendar' },
-    ]
   }),
 
   methods: {
+
+    // ログアウト
+    logout() {
+      this.$inertia.post(this.$route('logout'), null, {
+        onSuccess: () => {
+          this.$toasted.show('ログアウトしました');
+
+          // Sentryのユーザ情報を削除
+          this.$sentry.configureScope((scope) => {
+            scope.clear()
+          });
+        }
+      })
+    },
     onScroll(e) {
       if (typeof window === 'undefined') return;
 
