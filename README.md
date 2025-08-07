@@ -163,7 +163,7 @@ cp .env_cp .env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=8889(※3306 XAMMPの場合)
-DB_DATABASE=work_system(MAMPで作成したDB名と同じ)
+DB_DATABASE=work-system(MAMPで作成したDB名と同じ)
 DB_USERNAME=root
 DB_PASSWORD=root
 
