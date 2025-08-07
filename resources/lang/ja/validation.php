@@ -161,6 +161,7 @@ return [
         // テーブル名
         'tables' => [
             'users' => 'メンバー',
+            'notices' => '社内連絡事項',
         ],
 
         'users' => [

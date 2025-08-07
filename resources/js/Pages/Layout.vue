@@ -5,10 +5,14 @@
       @mouseenter="showDrawer" @mouseleave="hideDrawer">
       <v-list nav dense>
         <v-list-item v-for="(item, index) in menuItems" :key="index" link>
+          <Link :href="$route(item.to)" class="d-flex align-center" style="text-decoration: none; width: 100%">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
-          <v-list-item-title :style="{ fontWeight: 'bold' }">{{ item.title }}</v-list-item-title>
+          <v-list-item-title :style="{ fontWeight: 'bold' }">
+            {{ item.title }}
+          </v-list-item-title>
+          </Link>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -42,14 +46,13 @@ export default {
     scrollTopBtn: false,
     menuItems: [
       { title: 'ホーム', to: 'home', icon: 'mdi-view-dashboard' },
-      // { title: '議事録', to: 'meetings.index', icon: 'mdi-file-document-edit' },
-      // { title: '掲示板', to: 'boardings', icon: 'mdi-file-document-edit' },
-      // { title: 'お知らせ', to: 'notices.index', icon: 'mdi-information' },
-      // { title: '会議室予約', to: 'bookings.index', icon: 'mdi-table-edit' },
-      // { title: '書類情報', to: 'documents', icon: 'mdi-file-download' },
-      // { title: 'ユーザー管理', to: 'users.index', icon: 'mdi-account' },
-      // { title: 'スケジュール', to: 'schedule.index', icon: 'mdi-calendar' },
-      // { title: 'ToDo', to: 'office-todos.index', icon: 'mdi-calendar' },
+      { title: 'タスク(Todo)', to: 'todos.index', icon: 'mdi-calendar' },
+      { title: '社内連絡事項', to: 'notices.index', icon: 'mdi-information' },
+      { title: '会議記録', to: 'meetings.index', icon: 'mdi-file-document-edit' },
+      { title: 'スケジュール', to: 'schedule.index', icon: 'mdi-calendar' },
+      { title: 'アカウント管理', to: 'users.index', icon: 'mdi-account' },
+
+
     ]
   }),
 

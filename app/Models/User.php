@@ -125,4 +125,14 @@ class User extends Authenticatable implements Auditable
     {
         return $query->where('type_id', $user_id);
     }
+
+    public function notice_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(NoticeVisitor::class);
+    }
+
+    public function meeting_visitors(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MeetingVisitor::class);
+    }
 }
