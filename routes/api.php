@@ -2,9 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ScheduleController;
-use App\Http\Controllers\Api\BookingController;
-use App\Http\Controllers\Api\MailController;
+use App\Http\Controllers\Api\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +15,13 @@ use App\Http\Controllers\Api\MailController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('calendar')->group(function () {
+    // スケジュール情報取得
+    Route::get('/', [CalendarController::class, "index"]);
+    // スケジュール情報登録
+    Route::post('/', [CalendarController::class, 'store']);
+    // スケジュール情報更新
+    Route::put('/{id}', [CalendarController::class, 'update']);
+    // スケジュール情報削除
+    Route::delete('/{id}', [CalendarController::class, 'destroy']);
 });
-

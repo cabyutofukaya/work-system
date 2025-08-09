@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\TodoController;
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', LoginController::class)->name("login");
 
 Route::group(['middleware' => 'auth'], function () {
-    // Todo
-    Route::resource('/todos', TodoController::class)->except(["show", "create", "edit"]);
-    //完了切り替え
-    Route::patch('/todos/{todo}/toggle-done', [TodoController::class, 'toggleDone'])->name('todos.toggleDone');
+    // スケジュール
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 });
 
 Route::fallback(function () {
